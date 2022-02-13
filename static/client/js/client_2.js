@@ -7,10 +7,4 @@ function getParameterByName(name)
 }
 
 var carNum = getParameterByName('car');
-
-function my(carNum)
-{
-    console.log(carNum);
-}
-
-my(carNum);
+console.log(carNum);

@@ -1,13 +1,80 @@
+{% extends 'client/client_base.html' %}
+
+{% block content %}
+
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'client/style/client_style_1.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'client/style/bootstrap.min.css' %}">
-<script src="{%static 'client/js/client_2.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'client/style/client_style_2.css' %}">
 
-<div class="bg_all">
-    <div class="bg">
-        <section>
-            <div class="alr"></div>
-        </section>
+<div class="container-fluid">
+    <div class="row-vh">
+        <div class="h-75">
+            <h5> </h5>
+            <div class="item">
+                <section>
+                    <div id="user"></div>
+                    <h5>어서오세요.</h5>
+                </section>
+            </div>   
+        </div>
 
+            <div id="time"></div>
+            <h3>초 뒤에 주문 AI가 나타납니다.</h3>
+        
+            
+        <div class="h-25">
+            <div id="order">
+                <h3> 간편한 메뉴 주문 방법</h3>
+                <div class="row">
+                    <div class="col-md-4" id="box1">
+                        <h5>음성인식을 통해 신속한 메뉴 주문</h5>
+                    </div>
+                    <div class="col-md-4" id="box2">
+                        <h5>멤버십을 통한 고객 맞춤 추천</h5>
+                    </div>
+                    <div class="col-md-4" id="box2">
+                        <h5>인기 메뉴 주문을 번호로 1초만에</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script language="javascript">
+    var sec = 6;
+    var time = document.getElementById("time");
+    var intervalId = setInterval(printtime, 1000);
+    var link = "http://localhost:8000/client/3/";
+
+    setTimeout(function(){
+        clearInterval(intervalId);
+    }, 6001);
+
+   function printtime()
+   {
+       sec = sec-1;
+       if ( sec < 2 )
+       {
+           //console.log("다음 페이지 이동");
+           window.location.href = link;
+       }
+       //console.log(sec);
+       time.innerHTML = '<h1>'+ (sec) + '</h1>';
+   }
+
+
+   function getParameterByName(name) 
+    { 
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"); 
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), 
+    results = regex.exec(location.search); 
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")); 
+    }
+
+    var carNum = getParameterByName('car');
+    console.log(carNum);
+
+
+
+</script>
+{% endblock %}

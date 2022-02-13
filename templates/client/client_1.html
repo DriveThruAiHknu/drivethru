@@ -1,22 +1,24 @@
+{% extends 'client/client_base.html' %}
+
+{% block content %}
+        
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'client/style/client_style_1.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'client/style/bootstrap.min.css' %}">
 
-<div class="bg_all">
-    <div class="bg">
-        <section>
-            <div class="wrapper">
-                <div class="circle"></div>
-            </div>
-        </section>
-        <h1>DT MEMBERSHIP</h1>
-        <div class="bg_car">
-
-            <form action="/client/2/" method="get">
-                <input id="input_car_text" name= car size=10 type="text" placeholder="차량 번호를 입력해주세요." />
-                <input id="input_car_btn" type="submit" value="확인"/>
-            </form>
-        </div>
-
+<section>
+    <div class="wrapper">
+        <div class="circle"></div>
     </div>
+</section>
+            
+<h1>STARBUCKS DT</h1>
+        
+<div class="bg_car">            
+    <form action="/client/2/" method="get">                    
+        <input id="input_car_text" name= car size=10 type="text" placeholder="차량 번호를 입력해주세요." />                    
+        <input id="input_car_btn" type="submit" value="확인"/>               
+    </form>          
 </div>
+
+
+{% endblock %}
