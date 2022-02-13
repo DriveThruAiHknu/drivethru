@@ -84,9 +84,9 @@ DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': 'dtdb',
-#        'USER': 'root',
-#        'PASSWORD': '1234',
-#        'HOST': 'localhost',
+#        'USER': 'samsasu',
+#        'PASSWORD': 'samsasu33',
+#        'HOST': '14.32.145.33',
 #        'PORT': '3306',
 #    }
 #}
