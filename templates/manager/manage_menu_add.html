@@ -1,0 +1,52 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'manager/style/manager_menu_add_style.css' %}">
+
+<div class="bg_all">
+    <!--페이지 제목-->
+    <section id="title" class="web-title">
+        <p>00카페 메뉴 추가</p> 
+    </section>
+    <!--이미지-->
+    <section id="picture" class="menu-picture">
+        <img src="/static/manager/image/what.png" alt="My Image"/>
+    </section>
+    <!--메뉴 옵션 작성과 추가 버튼-->
+    <section id="input" class="menu-input">
+        <form action="/">
+            <select class="menu-category" required>
+                <option value="">카테고리</option>
+                <option>COFFEE</option>
+                <option>LATTE</option>
+                <option>ADE</option>
+                <option>TEA</option>
+                <option>SMOTHIE</option>
+                <option>SHAKE</option>
+                <option>BAKERY</option>
+            </select><br/>
+            <input type="text" id="menuname" placeholder="메뉴명"><br/>
+            <input type="text" id="menuprice"  placeholder="가격"><br/>
+            <div class="file-upload-wrapper" data-text="이미지">
+                <input name="file-upload-field" type="file" accept="image/*" class="file-upload-field" value="">
+            </div><br/>
+            <div class="check-title">음료 옵션</div>
+            <div class="check-options">
+                <input type="checkbox" name="case[]" value="A"> HOT&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="B"> ICED&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="C"> 얼음&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="D"> 카페인&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="E"> 시럽<br/><br/>
+                <input type="checkbox" name="case[]" value="F"> 샷&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="G"> 우유&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="H"> 휘핑 크림&emsp;&emsp;
+                <input type="checkbox" name="case[]" value="I"> 자바칩&emsp;
+                <input type="checkbox" name="case[]" value="I"> 드리즐
+            </div>
+            <input type="submit" value="메뉴 추가">
+        </form>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/manager/js/menu_add.js"></script>
+</div>
