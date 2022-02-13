@@ -7,4 +7,10 @@ function getParameterByName(name)
 }
 
 var carNum = getParameterByName('car');
-console.log(carNum);
+
+function my(carNum)
+{
+    console.log(carNum);
+}
+
+my(carNum);

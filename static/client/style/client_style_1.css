@@ -97,8 +97,6 @@ h1{
 }
 
 
-
-
 @media ( max-width: 720px ) {
     #input_car_text {
         width: 240px;
