@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+html, body {
+    width:100%;
+    height:100%;
+    margin: 0;
+}
+.bg_all
+{
+    text-align: center;
+    background-color: #252525;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+}
+.bg{
+    display:inline-block;
+    background-color: #252525;
+    background-size: cover;
+    width:56.25vw;
+    height:100vh;
+    max-height:177.78vh;
+    max-width:100vw;
+    margin: 0 auto;
+  }
+
+/* 여기서 부터 */
+
+h1 {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.0em;
+    color:rgb(255, 255, 255);
+    text-shadow: 3px 3px rgba(37, 165, 37, 0.493);
+    visibility: hidden;
+    animation: scale2 1.5s 0.7s normal forwards;
+}
+
+.wrapper {
+    height: 400px;
+    display: flex;
+}
+
+.wrapper div{
+    margin: auto;
+    background: #0366346c;
+    background-size:100%;
+    background-image: url(../image/starbuck.png);
+    border-radius: 50%;
+    box-shadow: 5px 5px 8px 1px rgba(0, 0, 0, 0.377);
+}
+
+.circle {
+    width: 200px;
+    height: 200px;
+    top: 200px;
+    left: 200px;
+    /* 추가된 부분 */
+    animation: scale1 2s alternate forwards;
+}
+
+@keyframes scale1 {
+    0%   { transform: scale(0) }
+    100%  { transform: scale(1) }
+}
+
+@keyframes scale2 {
+    0%
+    {
+        transform: translateY(-20px);
+        visibility: hidden;
+    }
+    100%  
+    {  
+        transform: translateY(20px);
+        visibility: visible;
+    }
+}
+
+
+/* 다시 */
+
+.bg_login{
+    color: #fff;
+    margin-top: 4%;
+    height: 200px;
+    animation: scale2 1.5s 0.7s normal forwards;
+    visibility: hidden;
+}
+
+#input_login_text {
+    width: 300px;
+    height: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 17px;
+    border: 0;
+    border-radius: 15px;
+    border-top-right-radius: 0px;
+    border-end-end-radius: 0px;
+    outline: none;
+    padding-left:20px;
+    background-color: rgba(255, 255, 255, 0.267);
+}
+
+#input_login_btn {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 17px;
+    color: white;
+    background-color: #00592D;
+    width: 100px;
+    height: 50px;
+    border: 1px;
+    margin-left: -4px;
+    border-top-right-radius: 15px;
+    border-end-end-radius: 15px;
+    outline: none;
+}

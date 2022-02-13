@@ -7,8 +7,8 @@
 
 <div class="container-fluid">
     <div class="row-vh">
-        <div class="h-75">
-            <h5> </h5>
+        <div class="h-50">
+            <h1><br></h1>
             <div class="item">
                 <section>
                     <div id="user"></div>
@@ -17,11 +17,11 @@
             </div>   
         </div>
 
-            <div id="time"></div>
+            <div id="time"><h1>5</h1></div>
             <h3>초 뒤에 주문 AI가 나타납니다.</h3>
         
             
-        <div class="h-25">
+        <div class="h-50" id="box">
             <div id="order">
                 <h3> 간편한 메뉴 주문 방법</h3>
                 <div class="row">
@@ -41,7 +41,7 @@
 </div>
 
 <script language="javascript">
-    var sec = 6;
+    var sec = 5;
     var time = document.getElementById("time");
     var intervalId = setInterval(printtime, 1000);
     var link = "http://localhost:8000/client/3/";
@@ -56,7 +56,7 @@
        if ( sec < 2 )
        {
            //console.log("다음 페이지 이동");
-           window.location.href = link;
+           //window.location.href = link;
        }
        //console.log(sec);
        time.innerHTML = '<h1>'+ (sec) + '</h1>';
