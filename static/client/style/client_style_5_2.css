@@ -18,13 +18,13 @@ h1, h3, h4, h5{
 h1{
     margin-top: 5%;
     font-weight: 600;
-    color: #ffa6a9;
+    color: #79a992;
 }
 
 h5
 {
     font-weight: 500;
-    color:#ffffff;
+    color:#d8d8d8;
 }
 
 h3{
@@ -34,7 +34,7 @@ h3{
 }
 
 h4{
-  color: #79a992;
+  color: #ffa6a9;
   font-size: 1.8em;
   margin-top: 20%;
 }
