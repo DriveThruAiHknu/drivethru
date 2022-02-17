@@ -4,41 +4,60 @@
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'client/style/client_style_2.css' %}">
-
+<div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+</div>
 <div class="container-fluid">
     <div class="row-vh">
-        <div class="h-50">
+        <div class="h-50" id="top">
             <h1><br></h1>
             <div class="item">
                 <section>
-                    <div id="user"></div>
-                    <h5>어서오세요.</h5>
+                    <div id="user"><h5>AI 음성 인식을 통해<br>간편하게 주문하세요✨</h5></div>
+                </section>
+            </div>
+            <div class="item2">
+                <section>
+   
+                    <div id="time"><h1>5</h1></div>
+                    <div id="time_bt"><h3>초 뒤에 주문 AI가 나타납니다!</h3></div>
                 </section>
             </div>   
         </div>
-
-            <div id="time"><h1>5</h1></div>
-            <h3>초 뒤에 주문 AI가 나타납니다.</h3>
         
             
         <div class="h-50" id="box">
             <div id="order">
-                <h3> 간편한 메뉴 주문 방법</h3>
+                <h3 id="menu"><br>🍓메뉴 주문 방법🍓<br></h3>
                 <div class="row">
                     <div class="col-md-4" id="box1">
-                        <h5>음성인식을 통해 신속한 메뉴 주문</h5>
+                        <div class="bg_image1">
+                            <div class="image_num"><h4>1</h4></div>
+                            <div class="image1"></div>
+                        </div>
+                        <h5 id="menu">음성인식을 통해 신속한 메뉴 주문</h5>
                     </div>
                     <div class="col-md-4" id="box2">
-                        <h5>멤버십을 통한 고객 맞춤 추천</h5>
+                        <div class="bg_image2">
+                            <div class="image_num"><h4>2</h4></div>
+                            <div class="image2"></div>
+                        </div>
+                        <h5 id="menu">멤버십을 통한 고객 맞춤 추천</h5>
                     </div>
                     <div class="col-md-4" id="box2">
-                        <h5>인기 메뉴 주문을 번호로 1초만에</h5>
+                        <div class="bg_image3">
+                            <div class="image_num"><h4>3</h4></div>
+                            <div class="image3"></div>
+                        </div>
+                        <h5 id="menu">인기 메뉴 주문을 번호로 1초만에</h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by Freepik - Flaticon</a>
 
 <script language="javascript">
     var sec = 5;
@@ -56,7 +75,7 @@
        if ( sec < 2 )
        {
            //console.log("다음 페이지 이동");
-           //window.location.href = link;
+           window.location.href = link;
        }
        //console.log(sec);
        time.innerHTML = '<h1>'+ (sec) + '</h1>';

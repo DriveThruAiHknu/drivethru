@@ -125,3 +125,19 @@ h1{
     }
     
 }
+
+
+/* 사이즈 이상하면 */
+
+body{
+    background-color: #252525; 
+}
+
+/*
+.bg{
+    background-color: #252525; 
+}
+
+.bg_all{
+    background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
+} */

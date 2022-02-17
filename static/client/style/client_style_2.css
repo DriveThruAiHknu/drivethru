@@ -1,6 +1,34 @@
 h1, h2, h3, h4, h5{
     font-family: 'Noto Sans KR', sans-serif;
+    color:black;
+}
+
+h3#menu{
+    color: #ffffff;
+    font-size:1.8em;
+    margin-top: -5px;
+
+}
+#menu{
     color:white;
+    font-size:1.4em;
+    font-weight: lighter;
+}
+
+#time{
+    margin-top: 10%;
+}
+
+#time h1{
+    font-size: 4.0em;
+    color:#383a38;
+    font-weight: 800;
+}
+
+#time_bt h3{
+    font-size: 1.8em;
+    color:#475247;
+    font-weight: 700;
 }
 
 .row-vh
@@ -10,4 +38,203 @@ h1, h2, h3, h4, h5{
     margin-left: -15px;
     margin-right: -15px;
     background-size: cover;
+    /* background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%); */
 }
+
+/* 여기서부터 웨이브 애니메이션 */
+
+
+body {
+    background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
+    overflow: hidden;
+    width:100%;
+  }
+  
+  .ocean {
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    background: #f4f7f6;
+  }
+  
+  .wave {
+    background: url(../image/back_wave.svg) repeat-x;
+    position: absolute;
+    width: 6400px;
+    height: 198px;
+    animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+    transform: translate3d(0, 0, 0);
+  }
+  
+  .wave:nth-of-type(2) {
+    top: -175px;
+    animation: wave 15s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 7s ease -1.25s infinite;
+    opacity: 1;
+  }
+  
+  @keyframes wave {
+    0% {
+      margin-left: 0;
+    }
+    100% {
+      margin-left: -1600px;
+    }
+  }
+  @keyframes swell {
+    0%,
+      100% {
+      transform: translate3d(0, -25px, 0);
+    }
+    50% {
+      transform: translate3d(0, 5px, 0);
+    }
+  }
+  .endWave{
+      display:none;
+  }
+
+
+/* 여기서부터 본문 */
+
+.h-25{
+    border:4px solid pink;
+    background-color: #15654a;
+
+}
+
+
+#user h5{
+    margin-top: 15%;
+    font-size: 1.4em;
+    font-weight: 500;
+    color:#15654a;
+}
+
+.h-50#box{
+    background-color: #298868;
+    margin-top: 12%;
+    margin-bottom: -12%;
+    border-radius: 20px 20px 0px 0px;
+}
+
+#ai{
+    margin-top: 10%;
+}
+
+
+.image_num
+{
+    background-color:#24946e;
+    border-radius: 100%;
+    text-align: left;
+    width: 28px;
+    height: 28px;
+    padding: 4px 9px;
+}
+
+h4
+{    
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size:14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color:white;
+    text-align: center;
+
+}
+
+.bg_image1{
+    background-color: white;
+    border-radius: 8%;
+    width:155px;
+    height:155px;
+    padding: 10px;
+    margin:0 auto;
+    margin-top:3px;
+    margin-bottom: 9%;
+    box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+
+}
+
+.bg_image2{
+    background-color: white;
+    border-radius: 8%;
+    width:155px;
+    height:155px;
+    padding: 10px;
+    margin:0 auto;
+    margin-top:3px;
+    margin-bottom: 9%;
+    box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+
+.bg_image3{
+    background-color: white;
+    border-radius: 8%;
+    width:155px;
+    height:155px;
+    padding: 10px;
+    margin:0 auto;
+    margin-top:3px;
+    margin-bottom: 9%;
+    text-align: center;
+    box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
+}
+
+.image1{
+    margin-top: 7px;
+    width:88px;
+    height:88px;
+    background-image: url(../image/chat_green.png); 
+    background-size:cover;
+    display: inline-block;
+}
+
+.image2{
+    margin-top: 7px;
+    margin-left: 5px;
+    width:83px;
+    height:83px;
+    background-image: url(../image/member_green.png); 
+    background-size:cover;
+    display: inline-block;
+}
+
+.image3{
+    margin-left: 2px;
+    margin-top: 3px;
+    width:83px;
+    height:83px;
+    background-image: url(../image/rank_green.png); 
+    background-size:cover;
+    display: inline-block;
+}
+
+h3{
+    margin-bottom: 2%;
+}
+
+.row{
+    margin-top:3%;
+}
+
+/* 배경 리사이즈 */
+
+.container-fluid{
+    background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
+} 
+
+ /*
+.bg_all{
+    background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
+}
+
+*/

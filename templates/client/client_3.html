@@ -5,10 +5,198 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'client/style/client_style_3.css' %}">
 
-<div class="container">
+<div id="content_all">
 
 
-    
+    <div class="h-50" id="top">
+
+        <div class="row">
+
+            <div class="col-md-6" id="box1">
+                <h4 id="menu_txt"> 최근 주문 메뉴</h4>
+           
+
+            
+            <div class="row">
+                <!-- 상품 1, 2-->
+
+                <!-- 상품1 -->
+                <div class="col-md-6" id="item1">
+                    <div class="bg_image1">
+                        <div class="image1"></div>
+                        <div class="image_num_0"><h4>1</h4></div>
+                    </div>
+                    <div id="txt_box">
+                        <h5 class="new" id="new_1_id">[ICE] 아메리카노</h5>
+                        <h5 class="new" id="new_1_price">4.3</h5>
+                    </div>
+                </div>
+
+                <!-- 상품2 -->
+                <div class="col-md-6" id="item2">
+                    <div class="bg_image2">
+                        <div class="image2"></div>
+                        <div class="image_num_0"><h4>2</h4></div>
+                    </div>
+                    <div id="txt_box">
+                    <h5 class="new" id="new_2_id">[HOT] 카푸치노</h5>
+                    <h5 class="new" id="new_2_price">5.4</h5>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+            
+            <div class="col-md-6" id="box1">
+                <h4 id="menu_txt"> 최다 주문 메뉴</h4>
+
+            
+            <div class="row">
+                <!-- 상품 3, 4-->
+
+                <!-- 상품3 -->
+                <div class="col-md-6" id="item3">
+                    <div class="bg_image3">
+                        <div class="image3"></div>
+                        <div class="image_num"><h4>3</h4></div>
+                    </div>
+                    <div id="txt_box">
+                        <h5 class="new" id="new_3_id">[ICE] 카페라떼</h5>
+                        <h5 class="new" id="new_3_price">4.4</h5>
+                    </div>
+                </div>
+
+                <!-- 상품4 -->
+                <div class="col-md-6" id="item4">
+                    <div class="bg_image4">
+                        <div class="image4"></div>
+                        <div class="image_num"><h4>4</h4></div>
+                    </div>
+                    <div id="txt_box">
+                        <h5 class="new" id="new_4_id">[HOT] 코코아</h5>
+                        <h5 class="new" id="new_4_price">3.5</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- 상품 5, 6-->
+
+                <!-- 상품5 -->
+                <div class="col-md-6" id="item5">
+                    <div class="bg_image5">
+                        <div class="image5"></div>
+                        <div class="image_num_2"><h4>5</h4></div>
+                    </div>
+                    <div id="txt_box">
+                        <h5 class="new" id="new_5_id">[BAKERY] 곡물 빵</h5>
+                        <h5 class="new" id="new_5_price">4.1</h5>
+                    </div>
+                </div>
+
+                <!-- 상품6 -->
+                <div class="col-md-6" id="item6">
+                    <div class="bg_image6">
+                        <div class="image6"></div>
+                        <div class="image_num_2"><h4>6</h4></div>
+                    </div>
+                    <div id="txt_box">
+                        <h5 class="new" id="new_6_id">[ICE] 복숭아 티</h5>
+                        <h5 class="new" id="new_6_price">4.8</h5>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+
+        </div>
+
+    </div>
+
+    <!--주문 목록-->
+    <div class="h-25" id="mid">
+
+        <!-- 제목-->
+        <div class="row" id="title">
+            <div class="col-md-6"> 
+                <h3>주문하신 메뉴</h3>
+            </div>
+            <div class="col-md-3"> 
+                <h3>수량</h3>
+            </div>
+            <div class="col-md-3"> 
+                <h3>가격</h3>
+            </div>
+        </div>
+
+        <!-- 실제 항목-->
+        <!-- 주문목록-->
+        <div class="row">
+            <div class="col-md-6" id="border"> 
+                <h4 id="list_txt">아메리카노</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">1</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">4,300 원</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" id="border"> 
+                <h4 id="list_txt">카푸치노</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">3</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">5,400 원</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" id="border"> 
+                <h4 id="list_txt">카페라떼</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">1</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">4,400 원</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" id="border"> 
+                <h4 id="list_txt">카페라떼</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">1</h4>
+            </div>
+            <div class="col-md-3" id="border"> 
+                <h4 id="list_txt">4,400 원</h4>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+
+    <!-- ai -->
+    <div class="h-25" id="bot">
+        <div class="row" id="ai">
+            <div class="ai_img"></div>
+            <div class="ai_txt">
+                <h2 id="ai"> 주문하실 메뉴를 선택해주세요❗</h3>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 {% endblock %}
