@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import membership #membership 모델
 
 # Create your views here.
 def car(request):
