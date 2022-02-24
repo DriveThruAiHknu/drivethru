@@ -7,6 +7,9 @@ class membership(models.Model):
     userName = models.TextField(max_length=10)
     userCar = models.TextField(max_length=10)
 
+    def __str__(self):
+        return self.userName
+
 class order(models.Model):
     orderID = models.AutoField(primary_key=True)
     totalPrice = models.IntegerField

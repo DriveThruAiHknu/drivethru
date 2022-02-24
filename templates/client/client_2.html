@@ -14,7 +14,17 @@
             <h1><br></h1>
             <div class="item">
                 <section>
-                    <div id="user"><h5>AI 음성 인식을 통해<br>간편하게 주문하세요✨</h5></div>
+                    <div id="user">
+                        <h5 id="user_text">
+
+                        {% for post in post_list %}
+                            {% if post.userCar %}
+                                {{post.userName}}님❗<br>
+                            {% endif %}
+                        {% endfor %}
+                        AI 음성 인식을 통해<br>간편하게 주문하세요✨</h5>
+
+                    </div>
                 </section>
             </div>
             <div class="item2">
@@ -63,7 +73,18 @@
     var sec = 5;
     var time = document.getElementById("time");
     var intervalId = setInterval(printtime, 1000);
-    var link = "http://localhost:8000/client/3/";
+    var link1 = "http://localhost:8000/client/3/";
+    var link2 = "http://localhost:8000/client/4/";
+    var user = document.getElementById("user_text").innerHTML;
+    console.log(user);
+    if (user.includes("님"))
+    {
+        console.log("멤버십 있음");
+    }
+    else
+    {
+        console.log("멤버십 없음");
+    }
 
     setTimeout(function(){
         clearInterval(intervalId);
@@ -75,7 +96,14 @@
        if ( sec < 2 )
        {
            //console.log("다음 페이지 이동");
-           window.location.href = link;
+            if (user.includes("님"))
+            {
+                window.location.href = link1;
+            }
+            else
+            {
+                window.location.href = link2;
+            }
        }
        //console.log(sec);
        time.innerHTML = '<h1>'+ (sec) + '</h1>';
