@@ -52,6 +52,17 @@ def manage_menuadd(request):
     }
     return render(request, 'manager/manage_menu_add.html', context)
 
+def manage_recommendation_menu(request):
+    context = {
+        'a':''
+    }
+    return render(request, 'manager/manage_recommendation_menu.html', context)
+    
+def manage_orders(request):
+    context = {
+        'a':''
+    }
+    return render(request, 'manager/manage_orders.html', context)
 # database 도전
 
 def db(request):
