@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+
+  html, body {
+    width:100%;
+    height:100%;
+    margin: 0;
+}
+.bg_all
+{
+    text-align: center;
+    background-color: #252525;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    
+}
+.web-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    text-align: center;
+    font-weight: 500;
+    font-size: xx-large;
+    padding-top: 50px;
+    margin-bottom: 100px;
+    color: #eee;
+}
+.menu-lookup{
+    max-width: 600px;
+    max-height: 600px;
+    object-fit: contain;
+    float:left;
+    margin-left: 200px;
+    text-align: left;
+}
+select{
+    font-family: 'Noto Sans KR', sans-serif;
+    width: 500px; /* 원하는 너비설정 */ 
+    height: 50px;
+    padding-left: 25px; 
+    background: #fff url("/static/manager/image/selectpointer.png") no-repeat 95% 50%; /* 네이티브 화살표 대체 */ 
+    border-radius: 5px; 
+    border-color: #15654A;
+    border-width: 3px;
+    -webkit-appearance: none; /* 네이티브 외형 감추기 */ 
+    -moz-appearance: none; 
+    appearance: none;
+    margin-bottom: 3px;
+}
+select::-ms-expand{
+
+    display:none;/*for IE10,11*/
+ 
+}
+/*체크박스 커스텀*/
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    outline: none !important;
+    border: 2px solid #15654A;
+    border-radius: 2px;
+    background: #fbfbfb;
+}
+
+input[type="checkbox"]::before {
+    content: "\2713";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    overflow: hidden;
+    transform: scale(0) translate(-50%, -50%);
+    line-height: 1;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #15654A;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #15654A;
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+input[type="checkbox"]:checked::before {
+    border-radius: 2px;
+    transform: scale(1) translate(-50%, -50%);
+}
+.menu-catecory-output{
+    font-family: 'Noto Sans KR', sans-serif;
+    height: 65%;
+    width: 500px;
+    background-color: #eee;
+    border-radius: 5px;
+    padding-top: 10px;
+}
+.menu-catecory-output thead{
+    background: #f3f3f3;
+    color: #15654A;
+    font-size: 15px;
+    text-align: center;
+}
+.menu-catecory-output td{
+    text-align: center;
+    vertical-align: middle;
+}
+.menu-catecory-output img{
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: contain;
+}
+.menu-button{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 500px;
+    width: 300px;
+    float:left;
+}
+.input_recommended_add_btn{
+    width: 100px;
+    height: 100px;
+    text-align:center;
+    vertical-align:middle;
+    object-fit: contain;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-image: url( "../image/add.png" );
+    margin-top: 200px;
+}
+.input_recommended_delete_btn{
+    width: 100px;
+    height: 100px;
+    text-align:center;
+    vertical-align:middle;
+    object-fit: contain;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-image: url( "../image/delete.png" );
+    margin-top: 100px;
+}
+.menu-enter{
+    font-family: 'Noto Sans KR', sans-serif;
+    height: 55%;
+    width: 500px;
+    background-color: #eee;
+    border-radius: 5px;
+    float:left;
+    margin-top: 100px;
+}
+.menu-enter p{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 25px;
+    color: #15654A;
+    margin-top: 25px;
+}
+.menu-recommended-menu{
+    font-family: 'Noto Sans KR', sans-serif;
+    height: 300px;
+    width: 500px;
+    background-color: #eee;
+    border: none;
+    margin-top: 5px;
+}
+.menu-recommended-menu td{
+    text-align: center;
+    vertical-align: middle;
+}
+.menu-recommended-menu img{
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: contain;
+}
+.input_recommend_btn{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 17px;
+    margin-top: 50px;
+    background: none;
+    color: #15654A;
+    width: 200px;
+    height: 50px;
+    border: 3px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: #15654A;
+    outline: none;
+    text-align: center;
+}

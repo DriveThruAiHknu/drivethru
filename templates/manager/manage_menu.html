@@ -1,16 +1,19 @@
 {% load static %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="{% static 'manager/style/manager_menu_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'manager/style/manage_menu_style.css' %}">
 
 
 <div class="bg_all">
     <!--페이지 제목-->
     <section id="title" class="web-title">
-        <p>00카페 메뉴 목록</p> 
+        <button type="button" class="home_btn" onClick="history.back();"><img src="/static/manager/image/home.png"></button>
+        <p>00카페 메뉴 목록</p>
+        <button type="button" class="input_recommendation_btn" onClick="location.href='manage_recommendation_menu.html'"><img src="/static/manager/image/recommendation.png"></button>
+        <button type="button" class="orders_btn" onClick="location.href='manage_orders.html'"><img src="/static/manager/image/orders.png"></button>
     </section>
     <!--카페 메뉴 탭-->
     <section id="tabs" class="project-tab">
-        <div class="container-fluid">
+        <div class="menu">
             <div class="row">
                 <div class="col-md-12">
                     <nav>
