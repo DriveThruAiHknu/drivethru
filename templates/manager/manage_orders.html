@@ -1,0 +1,85 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'manager/style/manage_orders_style.css' %}">
+
+<div class="bg_all">
+    <!--페이지 제목-->
+    <section id="title" class="web-title">
+        <button type="button" class="home_btn" onClick="history.back();"><img src="/static/manager/image/back.png"></button>
+        <p>00카페 주문 확인</p> 
+    </section>
+    <!--카페 메뉴 탭-->
+    <section id="tabs" class="project-tab">
+        <div class="menu">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav>
+                        <div class="nav flex-column nav-tabs nav-fill" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-order1-tab" data-toggle="tab" href="#nav-order1" role="tab" aria-controls="nav-order1" aria-selected="true">주문번호 0001</a>
+                            <a class="nav-item nav-link" id="nav-order2-tab" data-toggle="tab" href="#nav-order2" role="tab" aria-controls="nav-order2" aria-selected="false">주문번호 0002</a>
+                            <a class="nav-item nav-link" id="nav-order3-tab" data-toggle="tab" href="#nav-order3" role="tab" aria-controls="nav-order3" aria-selected="false">주문번호 0003</a>
+                            <a class="nav-item nav-link" id="nav-order4-tab" data-toggle="tab" href="#nav-order4" role="tab" aria-controls="nav-order4" aria-selected="false">주문번호 0004</a>
+                            <a class="nav-item nav-link" id="nav-order5-tab" data-toggle="tab" href="#nav-order5" role="tab" aria-controls="nav-order5" aria-selected="false">주문번호 0005</a>
+                            <a class="nav-item nav-link" id="nav-order6-tab" data-toggle="tab" href="#nav-order6" role="tab" aria-controls="nav-order6" aria-selected="false">주문번호 0006</a>
+                            <a class="nav-item nav-link" id="nav-order7-tab" data-toggle="tab" href="#nav-order7" role="tab" aria-controls="nav-order7" aria-selected="false">주문번호 0007</a>
+                            <a class="nav-item nav-link" id="nav-order8-tab" data-toggle="tab" href="#nav-order8" role="tab" aria-controls="nav-order8" aria-selected="false">주문번호 0008</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-order1" role="tabpanel" aria-labelledby="nav-order1-tab">
+                            <ul class="order">
+                                <img src="/static/manager/image/item.png">
+                                <li class="fl tc w500 list">자바칩 프라푸치노</li>
+                                <li class="fl tc w120 list">Tall</li>
+                                <li class="fl tc w100 list">1개</li>
+                                <li class="fl tc w500 list"></li>
+                                <li class="fl tc w70">기본 옵션</li>
+                                <li class="tc w700">&nbsp;</li>
+                                <hr></hr>
+                            </ul>
+                            <ul class="order">
+                                <img src="/static/manager/image/item.png">
+                                <li class="fl tc w500 list">자바칩 프라푸치노</li>
+                                <li class="fl tc w120 list">Tall</li>
+                                <li class="fl tc w100 list">1개</li>
+                                <li class="fl tc w500 list"></li>
+                                <li class="fl tc w70">선택 옵션</li>
+                                <li class="tc w700">휘핑 크림X,&nbsp;&nbsp;샷 6추가,&nbsp;&nbsp;자바칩 추가,&nbsp;&nbsp;얼음량 많이,&nbsp;&nbsp;디카페인</li>
+                                <hr></hr>
+                            </ul>
+                            <ul class="order">
+                                <img src="/static/manager/image/item.png">
+                                <li class="fl tc w500 list">자바칩 프라푸치노</li>
+                                <li class="fl tc w120 list">Tall</li>
+                                <li class="fl tc w100 list">1개</li>
+                                <li class="fl tc w500 list"></li>
+                                <li class="fl tc w70">기본 옵션</li>
+                                <li class="tc w700">&nbsp;</li>
+                                <hr></hr>
+                            </ul>
+                            
+                        </div>
+                        <div class="tab-pane fade" id="nav-order2" role="tabpanel" aria-labelledby="nav-order2-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order3" role="tabpanel" aria-labelledby="nav-order3-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order4" role="tabpanel" aria-labelledby="nav-order4-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order5" role="tabpanel" aria-labelledby="nav-order5-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order6" role="tabpanel" aria-labelledby="nav-order6-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order7" role="tabpanel" aria-labelledby="nav-order7-tab">
+                        </div>
+                        <div class="tab-pane fade" id="nav-order8" role="tabpanel" aria-labelledby="nav-order8-tab">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/manager/js/menu_add.js"></script>
+</div>
