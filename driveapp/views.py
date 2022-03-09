@@ -34,7 +34,9 @@ def order3(request):
     context = {
         'a':''
     }
-    return render(request, 'client/client_5.html', context)      
+    return render(request, 'client/client_5.html', context)    
+
+#manage  
 def manage_login(request):
     context = {
         'a':''
@@ -63,6 +65,12 @@ def manage_orders(request):
         'a':''
     }
     return render(request, 'manager/manage_orders.html', context)
+
+def staff_orders(request):
+    context = {
+        'a':''
+    }
+    return render(request, 'manager/staff_orders.html', context)
 # database 도전
 
 def db(request):

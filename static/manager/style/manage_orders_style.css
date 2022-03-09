@@ -46,7 +46,8 @@ html, body {
 .project-tab {
     font-family: 'Noto Sans KR', sans-serif;
     background-color: #eee;
-    height: 75%;
+    height: 75.7%;
+    
 }
 .project-tab #tabs{
     background: #007b5e;
@@ -65,26 +66,34 @@ html, body {
 }
 .nav-tabs{
     float: left;
-    width: 20%;
+    width: 25%;
 }
 .project-tab .nav-link {
     border: 1px solid transparent;
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
     color: #707070;
     background-color: #343434;
     font-size: 30px;
     font-weight: 600;
 }
 .project-tab .nav-link:hover {
-    border: none;    
+    border: none;
+}
+.row{
+    width: 100%;
 }
 /*탭 안에 있는 테이블 커스텀*/
 .tab-content{
     font-family: 'Noto Sans KR', sans-serif;
     float: left;
-    width: 80%;  
+    width: 65%;  
     padding-top: 3%;  
+}
+.ordertime{
+    font-family: 'Noto Sans KR', sans-serif;
+    width: 800px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 5%;
 }
 .order{
     font-family: 'Noto Sans KR', sans-serif;
@@ -147,4 +156,16 @@ hr{
 .list {
 	height: 40px;
 	line-height: 40px;
+}
+/*주문 처리 완료 버튼*/
+.delete_order_btn {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 25px;
+    color: white;
+    background-color: #15654A;
+    width: 250px;
+    height: 60px;
+    border: 1px;
+    margin-top: 2%;
+    outline: none;
 }
