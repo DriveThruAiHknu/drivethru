@@ -99,7 +99,9 @@ html, body {
     border: none;
     
 }
-
+.row{
+    width: 100%;
+}
 /*탭 안에 있는 테이블 커스텀*/
 .project-tab thead{
     background: #f3f3f3;

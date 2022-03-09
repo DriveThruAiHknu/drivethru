@@ -3,9 +3,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login/', views.manage_login),
-    path('menu/', views.manage_menu),
-    path('menu/manage_menu_add.html',views.manage_menuadd),
-    path('menu/manage_orders.html',views.manage_orders),
-    path('menu/manage_recommendation_menu.html',views.manage_recommendation_menu),
+    path('login', views.manage_login),
+    path('menu', views.manage_menu),
+    path('manage-menu-addendum',views.manage_menuadd),
+    path('manage-orders',views.manage_orders),
+    path('manage-recommendation-menu',views.manage_recommendation_menu),
+    path('staff-orders',views.staff_orders),
+
 ]
