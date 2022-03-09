@@ -74,7 +74,6 @@ def manage_orders(request):
     }
     return render(request, 'manager/manage_orders.html', context)
 
-
 #다시 UI 수정
 
 def re1(request):
@@ -134,7 +133,7 @@ def staff_orders(request):
         'a':''
     }
     return render(request, 'manager/staff_orders.html', context)
-    
+  
 # database 도전
 
 def db(request):
@@ -154,6 +153,7 @@ class SearchFromView(FormView):
         context['form'] = form
         context['search_term'] = schWord
         context['object_list'] = post_list
+
         return render(self.request, self.template_name, context)
 
 
