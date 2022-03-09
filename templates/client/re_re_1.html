@@ -1,0 +1,120 @@
+{% extends 'client/client_base_2.html' %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'client/style/rere_client_style_1.css' %}">
+<div class="container-fluid">
+    <div class="row-vh">
+        <div class="h-50" id="top">
+            <h1><br></h1>
+            <div class="item">
+                <section>
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                    </div>
+
+                    <br><h1>STARBUCKS DT</h1>
+                </section>
+            </div>
+
+            <div class="bg_car">            
+                <form action="/client/rere/2" method="get">                    
+                    <input id="input_car_text" name= car size=10 type="text" placeholder="차량 번호를 입력해주세요." />                    
+                    <input id="input_car_btn" type="submit" value="확인"/>               
+                </form>
+            </div>
+        </div>
+        
+            
+        <div class="h-50" id="box">
+            <div id="order">
+                <h3 id="menu"><br>🍓메뉴 주문 방법🍓<br></h3>
+                <div class="row">
+                    <div class="col-md-4" id="box1">
+                        <div class="bg_image1">
+                            <div class="image_num"><h4>1</h4></div>
+                            <div class="image1"></div>
+                        </div>
+                        <h5 id="menu">추천 메뉴를 확인하여 1번 ~ 6번 <br>메뉴를 음성으로 주문합니다.</h5>
+                    </div>
+                    <div class="col-md-4" id="box2">
+                        <div class="bg_image2">
+                            <div class="image_num"><h4>2</h4></div>
+                            <div class="image2"></div>
+                        </div>
+                        <h5 id="menu">이외의 메뉴는 안내에 따라 상품<br>이름과 옵션을 말하여 주문합니다.</h5>
+                    </div>
+                    <div class="col-md-4" id="box2">
+                        <div class="bg_image3">
+                            <div class="image_num"><h4>3</h4></div>
+                            <div class="image3"></div>
+                        </div>
+                        <h5 id="menu">주문을 완료하고 픽업 장소에서<br> 픽업 장소에서 제품을 수령합니다.</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by Freepik - Flaticon</a>
+
+<script language="javascript">
+    var sec = 5;
+    var time = document.getElementById("time");
+    var intervalId = setInterval(printtime, 1000);
+    //var link1 = "http://localhost:8000/client/3/";
+    //var link2 = "http://localhost:8000/client/4/";
+    var link1 = "http://3.37.186.91:8000/client/3/";
+    var link2 = "http://3.37.186.91:8000/client/4/";
+
+    var user = document.getElementById("user_text").innerHTML;
+    console.log(user);
+    if (user.includes("님"))
+    {
+        console.log("멤버십 있음");
+    }
+    else
+    {
+        console.log("멤버십 없음");
+    }
+
+    setTimeout(function(){
+        clearInterval(intervalId);
+    }, 6001);
+
+   function printtime()
+   {
+       sec = sec-1;
+       if ( sec < 2 )
+       {
+           //console.log("다음 페이지 이동");
+            if (user.includes("님"))
+            {
+                window.location.href = link;
+            }
+            else
+            {
+                window.location.href = link;
+            }
+       }
+       //console.log(sec);
+       time.innerHTML = '<h1>'+ (sec) + '</h1>';
+   }
+
+
+   function getParameterByName(name) 
+    { 
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"); 
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), 
+    results = regex.exec(location.search); 
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")); 
+    }
+
+    var carNum = getParameterByName('car');
+    console.log(carNum);
+
+
+
+</script>
+{% endblock %}
