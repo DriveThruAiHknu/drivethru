@@ -21,7 +21,8 @@
             </div>
 
             <div class="bg_car">            
-                <form action="/client/menu/member-orders" method="get">                    
+                <form action="/api/currentusers" method="post">
+                    {% csrf_token %}                    
                     <input id="input_car_text" name= car size=10 type="text" placeholder="차량 번호를 입력해주세요." />                    
                     <input id="input_car_btn" type="submit" value="확인"/>               
                 </form>

@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('client/', include('driveapp.clienturls')),
     path('manager/', include('driveapp.managerurls')),
+    path('api/', include('drive_restapi.apiurls')),
 ]
