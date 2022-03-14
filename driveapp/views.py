@@ -59,9 +59,7 @@ def user_car(request):
             userCar = userCar,
             membership = membership
         )
-
         user.save()
-
         return render(request, 'client/user_car.html')
         """
     context = {

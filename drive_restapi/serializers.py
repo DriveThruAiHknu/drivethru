@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import users
 from .models import currentusers
 from .models import members
+from .models import prods
 
 class usersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,4 +21,10 @@ class currentusersSerializer(serializers.ModelSerializer):
 class membersSerializer(serializers.ModelSerializer):
     class Meta:
         model = members
+        fields = '__all__'
+
+# a. 현재 메뉴 목록
+class prodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = prods
         fields = '__all__'

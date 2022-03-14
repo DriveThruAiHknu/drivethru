@@ -41,8 +41,10 @@ urlpatterns = [
     path('orders/<int:memberid>/last', views.orderView.as_view(), name='order'), #최근 주문 메뉴
     path('prods/prodrecommend', views.orderView.as_view()), #점장 추천 메뉴
     path('prods/prosalesrate', views.orderView.as_view()), #인기 메뉴
-    path('orders', views.orderView.as_view()) #고객 주문 세부 정보 입력
+    path('orders', views.orderView.as_view()), #고객 주문 세부 정보 입력
     
     #관리자
-
+    # 1) 메뉴
+    path('prods', views.prodView.as_view(), name='prod'), #현재 모든 자동차 고객 입력
+    path('prods/<int:prodID>', views.prodView.as_view()), #일부 삭제
 ]   
