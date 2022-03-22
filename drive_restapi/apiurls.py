@@ -25,14 +25,11 @@ from . import views
 
 app_name = 'rest_api'
 urlpatterns = [
-    #연습
-    path('', views.userView.as_view(), name='user'),
-    path('<int:userID>', views.userView.as_view()), #api/5(userID)가 전달되는 경우 -> GET
 
     #고객
     # 1) 차량
-    path('currentusers', views.currentuserView.as_view(), name='currentuser'), #현재 모든 자동차 고객 입력
-    path('currentusers/<int:currentuserID>', views.currentuserView.as_view()), #일부 삭제
+    path('todayusers', views.todayUserView.as_view(), name='todayuser'), #현재 모든 자동차 고객 입력
+    path('todayusers/<int:todayuserID>', views.todayUserView.as_view()), #일부 삭제
 
     path('members', views.memberView.as_view(), name='member'), #현재 모든 자동차 고객 입력
     path('members/<int:memberID>', views.memberView.as_view()), #멤버십 고객 자동차 일부 조회

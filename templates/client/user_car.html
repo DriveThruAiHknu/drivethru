@@ -21,10 +21,10 @@
             </div>
 
             <div class="bg_car">            
-                <form action="/api/currentusers" method="post">
-                    {% csrf_token %}                    
-                    <input id="input_car_text" name= car size=10 type="text" placeholder="차량 번호를 입력해주세요." />                    
-                    <input id="input_car_btn" type="submit" value="확인"/>               
+                <form method="post" id="car">
+                    {% csrf_token %}           
+                    <input id="input_car_text" name="todayUserCar" size=10 type="text" placeholder="차량 번호를 입력해주세요." />                    
+                    <input id="input_car_btn" type="submit" onclick="send();" value="확인"/>               
                 </form>
             </div>
         </div>
@@ -62,7 +62,25 @@
 </div>
 <br><br><a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by Freepik - Flaticon</a>
 
+<!--
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+-->
+
 <script language="javascript">
+function send() 
+{ 
+    //alert("send"); 
+    document.getElementById("car").submit();
+}
 
 </script>
 {% endblock %}

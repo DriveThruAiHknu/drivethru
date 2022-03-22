@@ -1,8 +1,10 @@
 from multiprocessing import dummy
 from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 # Create your views here.
-
 # DB - users 모델로 연습
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -77,76 +79,76 @@ class userView(APIView):
 
 [ 고객 ]
 
-currentuserView : 현재 들어온 차량
+todayuserView : 현재 들어온 차량
 memberView : 고객 멤버십
 
 """
 
 
 # import DB models
-from .models import currentusers
+from .models import todayUsers
 from .models import members
-from .serializers import currentusersSerializer
+from .serializers import todayUsersSerializer
 from .serializers import membersSerializer
 
 
 # 1. 현재 들어온 차량 뷰
-class currentuserView(APIView):
+class todayUserView(APIView):
     """
-    POST /currentusers -> 현재 들어온 차량 입력
+    POST /todayusers -> 현재 들어온 차량 입력
     """
     def post(self, request):
-        currentuser_serializer = currentusersSerializer(data=request.data) #Request의 data를 currentusersSerializer로 변환
+        todayUser_serializer = todayUsersSerializer(data=request.data) #Request의 data를 todayusersSerializer로 변환
 
-        if currentuser_serializer.is_valid(): #유효하면
-            currentuser_serializer.save() #currentusersSerialize 유효성 검사 후 DB에 저장
-            return Response(currentuser_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
+        if todayUser_serializer.is_valid(): #유효하면
+            todayUser_serializer.save() #todayUsersSerialize 유효성 검사 후 DB에 저장
+            return Response(todayUser_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
         else:
-            return Response(currentuser_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(todayUser_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
     """
-    GET /currentusers -> 현재 들어온 차량 전부 조회
-        /currentusers/{currentuserID} -> 해당 차량 ID만 조회
+    GET /todayusers -> 현재 들어온 차량 전부 조회
+        /todayusers/{todayuserID} -> 해당 차량 ID만 조회
     """
     def get(self, request, **kwargs):
-        if kwargs.get('currentuserID') is None: #api 뒤에 currentuserID가 없으면 전부 조회
-            currentuser_queryset = currentusers.objects.all()
-            currentuser_queryset_serializer = currentusersSerializer(currentuser_queryset, many=True)
-            return Response(currentuser_queryset_serializer.data, status=status.HTTP_200_OK)
+        if kwargs.get('todayuserID') is None: #api 뒤에 todayuserID가 없으면 전부 조회
+            todayUser_queryset = todayUsers.objects.all()
+            todayUser_queryset_serializer = todayUsersSerializer(todayUser_queryset, many=True)
+            return Response(todayUser_queryset_serializer.data, status=status.HTTP_200_OK)
 
         else: #userID가 있으면 해당 아이디만 조회
-            currentuser_id = kwargs.get('currentuserID') #url에 있는 id 가져오기
-            currentuser_serializer = currentusersSerializer(currentusers.objects.get(currentuserID=currentuser_id)) #id에 해당하는 정보 불러오기
-            return Response(currentuser_serializer.data, status=status.HTTP_200_OK)
+            todayUser_id = kwargs.get('todayuserID') #url에 있는 id 가져오기
+            todayUser_serializer = todayUsersSerializer(todayUsers.objects.get(todayUserID=todayUser_id)) #id에 해당하는 정보 불러오기
+            return Response(todayUser_serializer.data, status=status.HTTP_200_OK)
  
     """
-    PUT /currentusers/{currentuserID} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
+    PUT /todayusers/{todayuserID} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
     """
     def put(self, request, **kwargs):
-        if kwargs.get('currentuserID') is None: #url에 currentuserID 없으면 실패
-            return Response("URL에 currentuserID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
+        if kwargs.get('todayuserID') is None: #url에 todayuserID 없으면 실패
+            return Response("URL에 todayuserID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
         
         else: #url에 ID 있으면
-            currentuser_id = kwargs.get('currentuserID') #currentuser_id 변수에 넣기
-            currentuser_object = currentusers.objects.get(currentuserID=currentuser_id) #id에 해당하는 객체 인스턴스 가져오기
+            todayUser_id = kwargs.get('todayuserID') #todayUser_id 변수에 넣기
+            todayUser_object = todayUsers.objects.get(todayUserID=todayUser_id) #id에 해당하는 객체 인스턴스 가져오기
 
-            update_currentuser_serailizer = currentusersSerializer(currentuser_object, data=request.data) #새로 요청한 데이터로 직렬화
-            if update_currentuser_serailizer.is_valid(): #유효성 검사
-                update_currentuser_serailizer.save() #유효하면 DB 저장
-                return Response(update_currentuser_serailizer.data, status=status.HTTP_200_OK)
+            update_todayUser_serailizer = todayUsersSerializer(todayUser_object, data=request.data) #새로 요청한 데이터로 직렬화
+            if update_todayUser_serailizer.is_valid(): #유효성 검사
+                update_todayUser_serailizer.save() #유효하면 DB 저장
+                return Response(update_todayUser_serailizer.data, status=status.HTTP_200_OK)
             else: #유효하지 않으면 실패
                 return Response("모든 컬럼의 값을 입력해야 합니다!", status=status.HTTP_400_BAD_REQUEST)
 
     """
-    DELETE /currentusers/{currentuserID} -> 현재 들어온 차량 삭제
+    DELETE /todayusers/{todayuserID} -> 현재 들어온 차량 삭제
     """
     def delete(self, request, **kwargs ):
-        if kwargs.get('currentuserID') is None: #currentuserID 값이 URL에 없으면
+        if kwargs.get('todayuserID') is None: #todayuserID 값이 URL에 없으면
             return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
         else:
-            currentuser_id = kwargs.get('currentuserID')
-            currentuser_object = currentusers.objects.get(currentuserID=currentuser_id)
-            currentuser_object.delete()
+            todayUser_id = kwargs.get('todayuserID')
+            todayUser_object = todayUsers.objects.get(todayUserID=todayUser_id)
+            todayUser_object.delete()
             return Response("해당 데이터 삭제", status=200)
 
 
@@ -213,7 +215,7 @@ class memberView(APIView):
 
 class orderView(APIView):
     """
-    POST /currentusers -> 현재 들어온 차량 입력
+    POST /todayusers -> 현재 들어온 차량 입력
     """
 
 

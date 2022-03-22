@@ -1,41 +1,37 @@
 from django.db import models
 
 # Create your models here.
+
 class cafe(models.Model):
     managerPassword = models.IntegerField(primary_key=True)
     staffPassword = models.IntegerField()
 
-# 나중에 삭제
-class users(models.Model):
-    userID = models.AutoField(primary_key=True)
-    userCar = models.TextField(max_length=10)
-    userName = models.TextField(max_length=10)
-    membership = models.BooleanField()
+class login(models.Model):
+    loginID = models.IntegerField(primary_key=True)
+    password = models.IntegerField()
 
-    def __str__(self):
-        return self.userCar
-
-# 여기서부터가 새로
 class members(models.Model):
     memberID = models.AutoField(primary_key=True)
     memberCar = models.TextField(max_length=10)
     memberName = models.TextField(max_length=10)
 
     def __str__(self):
-        return self.memberCar     
+        return self.memberName
 
-class currentusers(models.Model):
-    currentuserID = models.AutoField(primary_key=True)
-    currentuserCar = models.TextField(max_length=10)
+class todayUsers(models.Model):
+    todayUserID = models.AutoField(primary_key=True)
+    todayUserCar = models.TextField(max_length=10)
 
     def __str__(self):
-        return self.currentuserCar      
+        return self.todayUserCar
 
 class orders(models.Model):
     orderID = models.AutoField(primary_key=True) # 자동으로 1씩 증가하는 값
-    userID = models.ForeignKey(users, on_delete=models.CASCADE, db_column="userID") # 알아서 PK 참조
+    memberID = models.ForeignKey(members, on_delete=models.CASCADE, db_column="memberID") # 알아서 PK 참조
+    todayUserID = models.ForeignKey(todayUsers, on_delete=models.CASCADE, db_column="todayUserID") # 알아서 PK 참조
     orderPrice = models.IntegerField()
     orderDate = models.DateTimeField(auto_now_add=True) # 처음 생성시 한번만 자동입력
+    orderTodayID = models.IntegerField() #오류나서 int로 바꿈
 
 class prods(models.Model):
     prodID = models.AutoField(primary_key=True) # 자동으로 1씩 증가하는 값
@@ -43,7 +39,7 @@ class prods(models.Model):
     prodName = models.TextField(max_length=10)
     prodPrice = models.IntegerField()
     prodImage = models.ImageField(blank = True) # 경로 지정 필요 /prodImage/ URL 추가 필요
-    prodRecommed = models.BooleanField()
+    prodRecommend = models.BooleanField()
     prodHotOrCold = models.IntegerField()
     prodCafAmount = models.BooleanField()
     prodSyrup = models.IntegerField() # 0 false 1 true 취급
