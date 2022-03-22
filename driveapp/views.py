@@ -55,7 +55,8 @@ def user_car(request):
 
         #POST 전송 데이터에 있는 'todayUserCar' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
         todayuserCar = request.POST['todayUserCar']
-        url = 'http://localhost:8000/api/todayusers'
+        #url = 'http://localhost:8000/api/todayusers'
+        url = 'http://3.37.186.91:8000/api/todayusers'
         data = {"todayUserCar" : todayuserCar}
         response = requests.post(url, data=data)
         #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
@@ -72,48 +73,7 @@ def user_car(request):
             else:
                 return redirect('/client/menu/non-member-orders')
         #return redirect('/client/menu/member-orders') #같은 앱 내 주소로 이동
-
-    """
-    if request.method == 'POST':
-        url = 'http://localhost:8000/api/todayusers'
-        #headers = {'Content-Type': 'application/json; charset=utf-8'}
-        todayuserCar = request.POST.get('todayuserCar', False)
-        #print(todayuserCar)
-        response = requests.post(url, json={'todayuserCar':todayuserCar}).json()
-        print(response['todayuserCar'])
-        #return render(request, 'member_order.html', {'car':response['todayuserCar']})
-        return render(request, 'client/member_order.html', {'car':response})
-
-    if request.method == 'GET':
-        member = members.objects.all() #currentusers 데이터 가져오기
-        c = request.GET.get('car') #m에 url "?car="형식에서 뒤에 있는 값 가져오기
-        if c:
-            member = members.filter(memberCar__icontains=c) #폼 값 = memberCar과 동일한 값 가져오기
-        return render(request, 'client/user_car.html', {'post_list': member, 'm':c, })
-    
-    elif request.method == 'POST':
-        userCar = request.POST['userCar']
-        membership = False
         
-        user = users(
-            userCar = userCar,
-            membership = membership
-        )
-
-        user.save()
-
-        return render(request, 'client/user_car.html')
-ㅡ
-        todayuserCar = request.POST['todayuserCar']
-        member = members.objects.all()
-        member = members.filter(memberCar__icontains=todayuserCar) #폼 값 = todayuserCar과 동일한 값 가져오기
-        if member:
-            print(member)
-        else:
-            print(member+"와 일치하는 건 없음")
-        return render(request, 'member_order.html', {'member':member})
-
-    """
     return render(request, 'client/user_car.html', context)   
 
 
