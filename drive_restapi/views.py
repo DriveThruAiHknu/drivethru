@@ -8,17 +8,17 @@ from rest_framework import status
 # DB - users 모델로 연습
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import usersSerializer
+from .serializers import todayUsersSerializer
 from rest_framework import status
-from .models import users
+from .models import todayUsers
 
-
+'''
 class userView(APIView):
     """
     POST /user
     """
     def post(self, request):
-        user_serializer = usersSerializer(data=request.data) #Request의 data를 UserSerializer로 변환
+        user_serializer = todayUsersSerializer(data=request.data) #Request의 data를 UserSerializer로 변환
 
         if user_serializer.is_valid(): #유효하면
             user_serializer.save() #usersSerialize 유효성 검사 후 DB에 저장
@@ -33,12 +33,12 @@ class userView(APIView):
     def get(self, request, **kwargs):
         if kwargs.get('userID') is None: #api 뒤에 userID가 없으면 전부 조회
             user_queryset = users.objects.all()
-            user_queryset_serializer = usersSerializer(user_queryset, many=True)
+            user_queryset_serializer = todayUsersSerializer(user_queryset, many=True)
             return Response(user_queryset_serializer.data, status=status.HTTP_200_OK)
 
         else: #userID가 있으면 해당 아이디만 조회
             user_id = kwargs.get('userID') #url에 있는 id 가져오기
-            user_serializer = usersSerializer(users.objects.get(userID=user_id)) #id에 해당하는 정보 불러오기
+            user_serializer = todayUsersSerializer(users.objects.get(userID=user_id)) #id에 해당하는 정보 불러오기
             return Response(user_serializer.data, status=status.HTTP_200_OK)
  
     """
@@ -52,7 +52,7 @@ class userView(APIView):
             user_id = kwargs.get('userID') #user_id 변수에 넣기
             user_object = users.objects.get(userID=user_id) #id에 해당하는 객체 인스턴스 가져오기
 
-            update_user_serailizer = usersSerializer(user_object, data=request.data) #새로 요청한 데이터로 직렬화
+            update_user_serailizer = todayUsersSerializer(user_object, data=request.data) #새로 요청한 데이터로 직렬화
             if update_user_serailizer.is_valid(): #유효성 검사
                 update_user_serailizer.save() #유효하면 DB 저장
                 return Response(update_user_serailizer.data, status=status.HTTP_200_OK)
@@ -73,6 +73,7 @@ class userView(APIView):
             user_object.delete()
             return Response("해당 데이터 삭제", status=200)
 
+'''
 
 # 여기서 부터 시작!!
 """

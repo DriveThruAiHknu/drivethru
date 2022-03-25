@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from drive_restapi.models import members, todayUsers
+from drive_restapi.models import prods
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
@@ -13,12 +14,10 @@ def manage_login(request):
         'a':''
     }
     return render(request, 'manager/manage_login.html', context)
-def manage_menu(request):
-    context = {
-        'a':''
-    }
-    return render(request, 'manager/manage_menu.html', context)
+def manage_menu(request):    
+    class_prods = prods.objects.all()
 
+    return render(request, 'manager/manage_menu.html', {'class_prods':class_prods})
 def manage_menuadd(request):
     context = {
         'a':''
@@ -55,8 +54,8 @@ def user_car(request):
 
         #POST 전송 데이터에 있는 'todayUserCar' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
         todayuserCar = request.POST['todayUserCar']
-        #url = 'http://localhost:8000/api/todayusers'
-        url = 'http://3.37.186.91:8000/api/todayusers'
+        url = 'http://localhost:8000/api/todayusers'
+        #url = 'http://3.37.186.91:8000/api/todayusers'
         data = {"todayUserCar" : todayuserCar}
         response = requests.post(url, data=data)
         #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
