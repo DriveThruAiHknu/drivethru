@@ -9,6 +9,7 @@ class cafe(models.Model):
 class login(models.Model):
     loginID = models.IntegerField(primary_key=True)
     password = models.IntegerField()
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 class member(models.Model):
@@ -23,6 +24,9 @@ class today_user(models.Model):
     today_user_id = models.AutoField(primary_key=True)
     today_user_car = models.TextField(max_length=10)
 =======
+=======
+
+>>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 class members(models.Model):
     memberID = models.AutoField(primary_key=True)
     memberCar = models.TextField(max_length=10)
@@ -34,6 +38,7 @@ class members(models.Model):
 class todayUsers(models.Model):
     todayUserID = models.AutoField(primary_key=True)
     todayUserCar = models.TextField(max_length=10)
+<<<<<<< HEAD
 >>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 
     def __str__(self):
@@ -47,6 +52,11 @@ class receipt(models.Model):
     receipt_price = models.IntegerField()
     receipt_date = models.DateTimeField(auto_now_add=True) # 처음 생성시 한번만 자동입력
     receipt_today_id = models.IntegerField() #오류나서 int로 바꿈
+=======
+
+    def __str__(self):
+        return self.todayUserCar
+>>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 
 class prod(models.Model):
     prod_id = models.AutoField(primary_key=True) # 자동으로 1씩 증가하는 값

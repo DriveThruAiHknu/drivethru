@@ -1,6 +1,7 @@
 from multiprocessing import dummy
 from django.shortcuts import render
 <<<<<<< HEAD
+<<<<<<< HEAD
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,6 +15,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # Create your views here.
+=======
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+# Create your views here.
+>>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 # DB - users 모델로 연습
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -83,6 +91,9 @@ class userView(APIView):
             return Response("해당 데이터 삭제", status=200)
 
 '''
+<<<<<<< HEAD
+>>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
+=======
 >>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 
 """
