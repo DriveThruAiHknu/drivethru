@@ -1,5 +1,6 @@
 from multiprocessing import dummy
 from django.shortcuts import render
+<<<<<<< HEAD
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +8,82 @@ from .models import todayUsers
 from .serializers import todayUsersSerializer
 
 # Create your views here.
+=======
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+# Create your views here.
+# DB - users 모델로 연습
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import todayUsersSerializer
+from rest_framework import status
+from .models import todayUsers
+
+'''
+class userView(APIView):
+    """
+    POST /user
+    """
+    def post(self, request):
+        user_serializer = todayUsersSerializer(data=request.data) #Request의 data를 UserSerializer로 변환
+
+        if user_serializer.is_valid(): #유효하면
+            user_serializer.save() #usersSerialize 유효성 검사 후 DB에 저장
+            return Response(user_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
+        else:
+            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    """
+    GET /user -> 전체 조회
+    GET /user/{userID} -> 해당 ID만 조회
+    """
+    def get(self, request, **kwargs):
+        if kwargs.get('userID') is None: #api 뒤에 userID가 없으면 전부 조회
+            user_queryset = users.objects.all()
+            user_queryset_serializer = todayUsersSerializer(user_queryset, many=True)
+            return Response(user_queryset_serializer.data, status=status.HTTP_200_OK)
+
+        else: #userID가 있으면 해당 아이디만 조회
+            user_id = kwargs.get('userID') #url에 있는 id 가져오기
+            user_serializer = todayUsersSerializer(users.objects.get(userID=user_id)) #id에 해당하는 정보 불러오기
+            return Response(user_serializer.data, status=status.HTTP_200_OK)
+ 
+    """
+    PUT /user/{user_id} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
+    """
+    def put(self, request, **kwargs):
+        if kwargs.get('userID') is None: #url에 userID 없으면 실패
+            return Response("URL에 userID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
+        
+        else: #url에 ID 있으면
+            user_id = kwargs.get('userID') #user_id 변수에 넣기
+            user_object = users.objects.get(userID=user_id) #id에 해당하는 객체 인스턴스 가져오기
+
+            update_user_serailizer = todayUsersSerializer(user_object, data=request.data) #새로 요청한 데이터로 직렬화
+            if update_user_serailizer.is_valid(): #유효성 검사
+                update_user_serailizer.save() #유효하면 DB 저장
+                return Response(update_user_serailizer.data, status=status.HTTP_200_OK)
+            else: #유효하지 않으면 실패
+                return Response("모든 컬럼의 값을 입력해야 합니다!", status=status.HTTP_400_BAD_REQUEST)
+
+
+ 
+    """
+    DELETE /user/{user_id}
+    """
+    def delete(self, request, **kwargs ):
+        if kwargs.get('userID') is None: #userID 값이 URL에 없으면
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user_id = kwargs.get('userID')
+            user_object = users.objects.get(userID=user_id)
+            user_object.delete()
+            return Response("해당 데이터 삭제", status=200)
+
+'''
+>>>>>>> a0b2b0e45b50005aebc8e5eb58ea4c0fab8e66d3
 
 """
 
