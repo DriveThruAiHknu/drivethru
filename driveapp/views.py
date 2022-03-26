@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
-from drive_restapi.models import members, todayUsers
-from drive_restapi.models import prods
+from drive_restapi.models import member, today_user
+from drive_restapi.models import prod
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
@@ -15,7 +15,7 @@ def manage_login(request):
     }
     return render(request, 'manager/manage_login.html', context)
 def manage_menu(request):    
-    class_prods = prods.objects.all()
+    class_prods = prod.objects.all()
 
     return render(request, 'manager/manage_menu.html', {'class_prods':class_prods})
 def manage_menuadd(request):
@@ -62,7 +62,7 @@ def user_car(request):
 
 
         #MEMBER 데이터와 동일하면 MEMBER-ORDER 페이지로 이동
-        member = members.objects.all() #member 데이터 db에서 가져오기
+        member = member.objects.all() #member 데이터 db에서 가져오기
         if todayuserCar:
             member = member.filter(memberCar__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
             messages.info(request,member.exists())
