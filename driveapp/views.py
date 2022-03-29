@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
-from drive_restapi.models import member, today_user
 from drive_restapi.models import prod
 from django.shortcuts import redirect
 import requests, json
@@ -42,8 +41,12 @@ def staff_orders(request):
     }
     return render(request, 'manager/staff_orders.html', context)
   
+from drive_restapi.models import member, today_user
+
+members = member.objects.all() #member 데이터 db에서 가져오기
 # 2) 고객
 def user_car(request):
+
     context = {
         'a'
         :''
@@ -56,15 +59,14 @@ def user_car(request):
         todayuserCar = request.POST['todayUserCar']
         url = 'http://localhost:8000/api/todayusers'
         #url = 'http://3.37.186.91:8000/api/todayusers'
-        data = {"todayUserCar" : todayuserCar}
+        data = {"today_user_car" : todayuserCar}
         response = requests.post(url, data=data)
         #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
 
 
         #MEMBER 데이터와 동일하면 MEMBER-ORDER 페이지로 이동
-        member = member.objects.all() #member 데이터 db에서 가져오기
         if todayuserCar:
-            member = member.filter(memberCar__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
+            member = members.filter(member_car__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
             messages.info(request,member.exists())
 
             if (member.exists() == True): #member에 존재하는 게 True라면

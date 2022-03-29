@@ -202,7 +202,7 @@ body {
 }
 
 #mid{
-    margin-top: 1%;
+    margin-top: -0.5%;
     background-color: white;
     background-size: cover;
     margin-bottom:5%;
@@ -210,7 +210,7 @@ body {
 
 
 #bot{
-    margin-top:-3.1%;
+    margin-top:-4.1%;
     background-color: #282828;;
     background-size: cover;
     margin-left: 3%;
@@ -235,10 +235,25 @@ body {
 }
 
 #list_txt{
-    margin-top: 10px;
     color:rgb(82, 82, 82);
+    margin-top:15px;
 }
 
+#op_txt{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color:rgb(82, 82, 82);
+    font-size: 1.2em;
+    text-align: left; 
+}
+
+#total_txt{
+    color: white;
+}
+
+#total_real{
+    color:#006635;
+}
 
 #border{
     
@@ -248,7 +263,24 @@ body {
     border-width: 0px 2.5px 2.5px 0px ;
 }
 
+#border2{
+    
+    background-color: rgb(226, 150, 150);
+    border-style: solid;
+    border-color: #2e835b #2e835b #2e835b #2e835b;
+    border-width: 0px 2.5px 2.5px 0px ;
+}
+
+#border3{
+    
+    background-color: rgb(81, 104, 92);
+    border-style: solid;
+    border-color: #2e835b #2e835b #2e835b #2e835b;
+    border-width: 0px 2.5px 2.5px 0px ;
+}
+
 /* 하단 */
+
 .ai_txt
 {
     width: 120%;

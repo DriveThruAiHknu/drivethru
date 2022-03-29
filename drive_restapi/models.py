@@ -23,7 +23,7 @@ class today_user(models.Model):
     today_user_car = models.TextField(max_length=10)
 
     def __str__(self):
-        return self.todayUserCar
+        return self.today_user_car
 
 class receipt(models.Model):
     receipt_id = models.AutoField(primary_key=True) # 자동으로 1씩 증가하는 값
@@ -49,6 +49,9 @@ class prod(models.Model):
     prod_java_chip = models.BooleanField()
     prod_driz = models.BooleanField()
     prod_sales_rate = models.IntegerField()
+
+    def __str__(self):
+        return self.prod_name
 
 class item(models.Model):
     item_id = models.AutoField(primary_key=True) # 자동으로 1씩 증가하는 값
