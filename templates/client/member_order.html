@@ -225,228 +225,156 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script>
+
+
+    /* 메인 */
     var txt = document.getElementById("ai_say");
-    txt.innerHTML = "🌿만나서 반갑습니다! 스타벅스입니다🌿";
+    //$("#ai_say").text("🌿어서오세요! 스타벅스입니다🌿");
+    txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
 
-    /* fetch로 저장된 오디오 가져오는 함수 */
-    function PlayAudio(num) {
-        var url = "http://localhost:8000/client/play?file_name=" + num
-        return fetch(url).then(function(response) {
-            return response.blob();
-        });
+    window.onload=function()
+    {
+
+        //setVoiceList();
+        //speech("안녕");
+        
+        /*var u = new SpeechSynthesisUtterance();
+        u.text = "만나서 반갑습니다. 스타벅스입니다";
+        speechSynthesis.speak(u);*/
+
+        setTimeout(() => 
+        { 
+            //console.log(window.speechSynthesis.getVoices());
+            order();
+        }, 1000);
     }
 
-    /* fetch로 마이크 녹음 (처음에만 -> 몇초 이상 지나도 계속 기다려줌) */
-    function Voice1() {
-        var url = "http://localhost:8000/client/voice1"
-        return fetch(url).then(function(response) {
-            return response.text();
-        });
-    }
 
-    /* fetch로 마이크 녹음 (이후에 -> 한번이라도 주문했으면 50초 이상이면 주문 끝) */
-    function Voice2() {
-        var url = "http://localhost:8000/client/voice2"
-        return fetch(url).then(function(response) {
-            return response.text();
-        });
-    }
-
-    // KAKAO STT 가져오는 함수 
-    function STT(file_name) {
-        var url = "http://localhost:8000/client/stt?file_name=" + file_name
-        return fetch(url,{
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(this.obj)
-        }).then(response => response.json())
-        .then(res => {//console.log("객체",res);
-        //console.log("문자열로",JSON.stringify(res));
-        var str = JSON.stringify(res).slice(8, JSON.stringify(res).length-2);
-        txt.innerHTML = str; 
-        return str;})
-    }
-
-    // KAKAO TTS 가져오는 함수
-    function TTS(text) {
-        var url = "http://localhost:8000/client/tts?text=" + text
-        return fetch(url).then(function(response) {
-            return response.blob();
-        });
-    }
-
-    /* async-await으로 비동기함수를 순서대로 처리하는 함수 */
+    /* 실제 비동기 처리 코드 */
     async function order()
     {
         var audio_once = false; //한번이라도 주문했는지
 
         try
         {
-            var audio1 = await PlayAudio(1);
-            if (audio1 != null ) 
-            {
-                txt.innerHTML = "주문을 원하시는 메뉴나 번호를 말씀해주세요💚";
-                var audio2 = await PlayAudio(2);
-                if (audio2 != null)
-                {
-                    while(true)
-                    {                        
-                        if (audio_once == false) //한 번도 주문 안했으면
-                        {
-                            txt.innerHTML = "(인식 중입니다)"; //로딩 애니메이션 들어가면 좋을 거 같음
-                            console.log("한번도 주문 안함");
-                            var voice = await Voice1(); //계속 기다려주면서 녹음
-                            audio_once = true
-                        }
-                        else //한번이라도 주문했으면
-                        {
-                            txt.innerHTML = '(주문을 끝내시고 싶으시면 기다려주세요)'; //로딩 애니메이션 들어가면 좋을 거 같음
-                            console.log("한번이라도 주문 함.");
-                            var voice = await Voice2(); //일정 시간 지나면 그냥 끝냄.
-                        }
+            var audio1 = await tts("어서오세요. 스타벅스입니다!","주문을 원하시는 메뉴나 번호를 말씀해주세요💚");
+            var audio2 = await tts("주문을 원하시는 메뉴나 번호를 말씀해주세요~","인식 중...");
 
-                        if (voice == "저장")
-                        {
-                            console.log("녹음 실행함");
-                            var say = await STT("주문");
-
-                            if (say != null)
-                            {
-                                console.log(say);
-
-                                if (say != "결제")
-                                {
-                                    //say를 어디 리스트에 추가해서 따로 저장해두기
-
-                                    say_ = say.replace(/ /g,","); //공백 사이에 쉼표 추가 (말 이상하게 들려서)
-                                    var tts = await TTS(say_);
-                                    if ( tts != null)
-                                    {
-                                        txt.innerHTML = "메뉴를 선택하셨습니다."
-                                        var audio5 = await PlayAudio(5);
-                                        if (audio5 != null)
-                                        {
-                                            txt.innerHTML = "결제 또는 추가할 메뉴를 말씀해주세요~"
-                                            var audio6 = await PlayAudio(6);
-                                            {
-                                                if (audio6 != null)
-                                                {
-                                                    console.log("다시 시작ㅠㅠ");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                else if (say == "결제")
-                                {
-                                    txt.innerHTML = "✔️ 결제 안내를 도와드리겠습니다";
-                                    var audio7 = await PlayAudio(7);
-                                    {
-                                        if (audio7 != null)
-                                        {
-                                            console.log("끝!");
-                                            break;
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                        else if ( voice == "대기초과")
-                        {
-                            txt.innerHTML = "✔️ 결제 안내를 도와드리겠습니다";
-                                    var audio7 = await PlayAudio(7);
-                                    {
-                                        if (audio7 != null)
-                                        {
-                                            console.log("끝!");
-                                            break;
-                                        }
-                                    }
-                        }
-                    }
-                }
-            }
+            // 83초 대기
+            await new Promise((resolve, reject) => setTimeout(resolve, 8300));
+            var stt = await speech_to_text();
+            
         }
-        catch (error)
+        catch(error)
         {
             console.log(error);
         }
-        
+            
     }
 
+    /* STT */
+    var isRecognizing = false;
 
-    /* 메인 */
-    window.onload=function(){
-        order();
-    }
-    
-    
-
-
-
-
-
-    /*
-    <AJAX> 비동기라서 동시에 실행되는 문제
-
-    var txt = document.getElementById("ai_say");
-    txt_change = "🌿어서오세요! 스타벅스입니다🌿";
-    txt.innerHTML = txt_change;
-
-    function js_play(num, inner)
+    try 
+    { 
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+    } 
+    catch(e)
     {
-        //ajax 통신
-        $.ajax({
-        type: "GET",
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        url: "http://localhost:8000/client/play?file_name="+num
-        }).done(function(o){
-            txt.innerHTML = inner
-        });
+        console.error(e);
     }
-    
-    function js_tts()
+
+    recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 5;
+    //recognition.continuous = true;
+
+    function speech_to_text()
     {
-        //ajax 통신
-        $.ajax({
-        type: "GET",
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        url: "http://localhost:8000/client/tts?text= 어서오세요! 스타벅스입니다~ "
-        }).done(function(o){
-            txt.innerHTML = "주문을 원하시는 메뉴나 번호를\n말씀해주세요💚\n"
-        });
+        recognition.start();
+        isRecognizing = true;
+
+        recognition.onstart = function()
+        {
+            console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.");
+        }   
+
+        recognition.onresult = function(event) 
+        {
+            var resText = event.results[0][0].transcript;
+            var txt = document.getElementById("ai_say");
+            console.log('You said: ', resText);
+            txt.innerHTML = resText;
+        };
     }
 
-    window.onload=function(){
 
-        txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
-        js_play(1, "주문을 원하시는 메뉴나 번호를\n말씀해주세요💚\n")
-        //js_play(2, "주문을 원하시는 메뉴나 번호를\n말씀해주세요💚\n")
-        
-    }*/
 
-    /* 
-    <axios - Promise 기반> 코드 가독성 떨어짐. then 지옥
 
-    axios.defaults.withCredentials = true;
 
-    axios
-    .get("http://localhost:8000/client/play?file_name=1")
-    // 응답(성공)
-    .then(function(response) {
-        txt.innerHTML = "주문을 원하시는 메뉴나 번호를 말씀해주세요💚";
-        PlayAudio(2)
-    })
-    // 응답(실패)
-    .catch(function(error) {
-    console.log(error)
-    })
-    // 응답(항상 실행)
-    .then(function() {
-    // ...
-    })
-    */
+
+
+    /* TTS */
+    var voices = [];
+
+
+    function setVoiceList() {
+        voices = window.speechSynthesis.getVoices();
+    }
+    if (window.speechSynthesis.onvoiceschanged !== undefined) 
+    {
+        window.speechSynthesis.onvoiceschanged = setVoiceList;
+    }
+
+
+    function tts(txt, print_txt) 
+    {
+        var end = false;
+
+        if(!window.speechSynthesis) 
+        {
+            alert("음성 재생을 지원하지 않는 브라우저입니다. 크롬, 파이어폭스 등의 최신 브라우저를 이용하세요");
+            return;
+        }
+
+        var lang = 'ko-KR';
+        var utterThis = new SpeechSynthesisUtterance(txt);
+
+        utterThis.onend = function (event) 
+        {
+            //console.log('말 끝남');
+            //console.log(print_txt," 출력할 차례 ");
+            var txt = document.getElementById("ai_say");
+            txt.innerHTML = print_txt;
+        };
+
+        utterThis.onerror = function(event) 
+        {
+            console.log('error', event);
+        };
+
+        var voiceFound = false;
+
+        for(var i = 0; i < voices.length ; i++) 
+        {
+            if(voices[i].lang.indexOf(lang) >= 0 || voices[i].lang.indexOf(lang.replace('-', '_')) >= 0) 
+            {
+                utterThis.voice = voices[i];
+                voiceFound = true;
+            }
+        }
+        if(!voiceFound) 
+        {
+            alert('voice not found');
+            return;
+        }
+
+        utterThis.lang = lang;
+        utterThis.pitch = 1;
+        utterThis.rate = 1; //속도
+
+        window.speechSynthesis.speak(utterThis);
+    }
 
 </script>
 {% endblock %}
