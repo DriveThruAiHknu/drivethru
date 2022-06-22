@@ -229,6 +229,7 @@
 
     /* 메인 */
     var txt = document.getElementById("ai_say");
+    var say_return = "";
     //$("#ai_say").text("🌿어서오세요! 스타벅스입니다🌿");
     txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
 
@@ -257,13 +258,81 @@
 
         try
         {
-            var audio1 = await tts("어서오세요. 스타벅스입니다!","주문을 원하시는 메뉴나 번호를 말씀해주세요💚");
-            var audio2 = await tts("주문을 원하시는 메뉴나 번호를 말씀해주세요~","인식 중...");
+            var audio1 = await tts("어서오세요. 스타벅스입니다!");
+
+            txt.innerHTML = "주문을 원하시는 메뉴나 번호를 말씀해주세요💚";
+            var audio2 = await tts("주문을 원하시는 메뉴나 번호를 말씀해주세요!");
+
+            txt.innerHTML = "인식 중 ...!"; //로딩 애니메이션 들어가면 좋을 거 같음
 
             // 83초 대기
-            await new Promise((resolve, reject) => setTimeout(resolve, 8300));
-            var stt = await speech_to_text();
+            //await new Promise((resolve, reject) => setTimeout(resolve, 8300));
+
+            var audio_once = true;
+
+            while(true)
+            {
+                if(audio_once) // 주문한적 X
+                {
+                    console.log("주문한 적 X");
+                    var stt1 = await speech_to_text();
+
+                    if (stt1.length > 1) //한 글자 이상 들어오면
+                    {
+                        txt.innerHTML = "✅"+stt1;
+                        var audio3 = await tts(stt1+"\n메뉴를 선택하셨습니다!");
+
+                        txt.innerHTML = '결제 또는 추가할 메뉴를 말씀해주세요❗';
+                        var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요!");
+
+                        audio_once = false;
+                    }
+                    else //한 글자도 안 들어오면
+                    {
+                        txt.innerHTML = "✔️ 인식하지 못했습니다. 다시 한번 말씀해주세요!";
+                        var audio5 = await tts("인식하지 못했습니다. 다시 한번 말씀해주세요!");
+                    }
+                }
+                
+                else // 1메뉴 이상 주문 O
+                {
+                    console.log("한번 이상 주문");
+                    txt.innerHTML = '📌 "결제"라고 말씀하시면 주문이 종료됩니다.';
+
+                    var stt2 = await speech_to_text();
+
+                    if (stt2.length > 1) //한 글자 이상 들어오면
+                    {
+                        if (stt2 == "결제" | stt2 == "결재" | stt2 == "첫째") //결제 원하면
+                        {
+                            console.log("주문 종료");
+                            txt.innerHTML="✔️ 결제 안내를 도와드리겠습니다";
+                            var audio5 = await tts("결제 안내를 도와드리겠습니다!");
+                            await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+                            break;
+                        }
+                        else //계속 메뉴 받고 싶으면
+                        {
+                            txt.innerHTML = "✅"+stt2;
+                            var audio3 = await tts(stt2+" 메뉴를 선택하셨습니다.");
+
+                            txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
+                            var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요~");
+                        }
+                    }
+                    else //한 글자도 안 들어오면
+                    {
+                        txt.innerHTML="✔️ 인식하지 못했습니다. 다시 한번 말씀해주세요!";
+                        var audio5 = await tts("인식하지 못했습니다. 다시 한번 말씀해주세요!");
+                    }
+
+
+
+
+                }
+            }
             
+            location.href="/client/end";
         }
         catch(error)
         {
@@ -284,34 +353,51 @@
         console.error(e);
     }
 
-    recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
+    recognition.lang = 'ko-KR';
     recognition.interimResults = false;
-    recognition.maxAlternatives = 5;
-    //recognition.continuous = true;
+    recognition.maxAlternatives = 100; //클수록 발음대로 안적고 문장 적합도로.
+    recognition.continuous = false; //음성인식 안끝나고 계속됨
 
-    function speech_to_text()
+    async function speech_to_text()
     {
+        var resText = "";
+        var txt = document.getElementById("ai_say");
         recognition.start();
         isRecognizing = true;
 
         recognition.onstart = function()
         {
-            console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.");
+            console.log("------------------------음성인식 시작------------------------");
         }   
 
         recognition.onresult = function(event) 
         {
-            var resText = event.results[0][0].transcript;
-            var txt = document.getElementById("ai_say");
-            console.log('You said: ', resText);
+            resText = event.results[0][0].transcript;
+            //console.log('You said: ', resText);
             txt.innerHTML = resText;
+
+            if (resText == "결제" | resText == "결제.")
+            {
+                console.log("결제라고 말함");
+                return "결제";
+            }
+
+            console.log('STT 반환:', resText);
+
         };
+
+        await new Promise(resolve =>
+            recognition.onend = e => {
+            {
+                console.log("------------------------음성인식 종료------------------------");
+                resolve();
+            }})
+        
+        recognition.stop();
+
+        resText = resText.replace(".","");
+        return resText;
     }
-
-
-
-
-
 
 
     /* TTS */
@@ -327,7 +413,7 @@
     }
 
 
-    function tts(txt, print_txt) 
+    async function tts(txt) 
     {
         var end = false;
 
@@ -340,14 +426,12 @@
         var lang = 'ko-KR';
         var utterThis = new SpeechSynthesisUtterance(txt);
 
-        utterThis.onend = function (event) 
-        {
-            //console.log('말 끝남');
-            //console.log(print_txt," 출력할 차례 ");
-            var txt = document.getElementById("ai_say");
-            txt.innerHTML = print_txt;
-        };
+        utterThis.text = txt;
+        utterThis.lang = lang;
+        utterThis.pitch = 1;
+        utterThis.rate = 1; //속도
 
+        //기존
         utterThis.onerror = function(event) 
         {
             console.log('error', event);
@@ -368,12 +452,22 @@
             alert('voice not found');
             return;
         }
-
-        utterThis.lang = lang;
-        utterThis.pitch = 1;
-        utterThis.rate = 1; //속도
-
+        
+        /*utterThis.onend = function (event) 
+        {
+            //console.log('말 끝남');
+            //console.log(print_txt," 출력할 차례 ");
+            var txt = document.getElementById("ai_say");
+            txt.innerHTML = print_txt;
+        };
         window.speechSynthesis.speak(utterThis);
+        */
+
+        await new Promise(function(resolve) 
+        {
+            utterThis.onend = resolve;
+            window.speechSynthesis.speak(utterThis);
+        });
     }
 
 </script>
