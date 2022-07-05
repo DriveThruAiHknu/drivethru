@@ -39,7 +39,7 @@
                         <div class="image_num_0"><h4>1</h4></div>
                     </div>
                     <div id="txt_box">
-                        <h5 class="new" id="new_1_id">[ICE] 아메리카노</h5>
+                        <h5 class="new" id="new_1_id">[ICE] 카페 아메리카노</h5>
                         <h5 class="new" id="new_1_price">4.3</h5>
                     </div>
                 </div>
@@ -149,69 +149,39 @@
             </div>
         </div>
 
-        <!-- 실제 항목-->
-        <!-- 주문목록-->
-        <div class="row">
-            <div class="col-md-3" id="border"> 
-                <h4 id="list_txt">아메리카노</h4>
-            </div>
-            <div class="col-md-4" id="border"> 
-                <h5 id="op_txt">✔️ice ✔️시럽 바닐라 2 ✔️샷 3<br>✔️우유 저지방 ✔️휘핑 O ✔️드리즐 초코</h5>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">4,300 원</h4>
-            </div>
-            <div class="col-md-1" id="border"> 
-                <h4 id="list_txt">1</h4>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">4,300 원</h4>
-            </div>
-        </div>
+        <div id="content"></div>
 
-        <div class="row">
-            <div class="col-md-3" id="border"> 
-                <h4 id="list_txt">카푸치노</h4>
+            <!-- 실제 항목-->
+            <!-- 주문목록-->
+            <!--
+            <div class="row">
+                <div class="col-md-3" id="border"> 
+                    <h4 id="list_txt" class="menu_1"></h4>
+                </div>
+                <div class="col-md-4" id="border"> 
+                    <h5 id="op_txt" class="op_1"><br></h5>
+                </div>
+                <div class="col-md-2" id="border"> 
+                    <h4 id="list_txt" class="price_1"></h4>
+                </div>
+                <div class="col-md-1" id="border"> 
+                    <h4 id="list_txt" class="ea_1"></h4>
+                </div>
+                <div class="col-md-2" id="border"> 
+                    <h4 id="list_txt" class="total_1"></h4>
+                </div>
             </div>
-            <div class="col-md-4" id="border"> 
-                <h5 id="op_txt">✔️ice ✔️시럽 X ✔️샷 5<br>✔️우유 X ✔️휘핑 O ✔️드리즐 X</h5>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">5,400 원</h4>
-            </div>
-            <div class="col-md-1" id="border"> 
-                <h4 id="list_txt">3</h4>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">16,200 원</h4>
-            </div>
-        </div>
+            -->
 
-        <div class="row">
-            <div class="col-md-3" id="border"> 
-                <h4 id="list_txt">카페라떼</h4>
+            <div class="row">
+                <div class="col-md-6" id="border3"> 
+                    <h3 id="total_txt">주문 금액</h3>
+                </div>
+                <div class="col-md-6" id="border2">
+                    <h3 id="total_real">0 원</h3>
+                </div>
             </div>
-            <div class="col-md-4" id="border"> 
-                <h5 id="op_txt">✔️hot ✔️시럽 카라멜 1 ✔️샷 2<br>✔️우유 기본 ✔️휘핑 X ✔️드리즐 초코</h5>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">4,400 원</h4>
-            </div>
-            <div class="col-md-1" id="border"> 
-                <h4 id="list_txt">2</h4>
-            </div>
-            <div class="col-md-2" id="border"> 
-                <h4 id="list_txt">8,800 원</h4>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6" id="border3"> 
-                <h3 id="total_txt">주문 금액</h3>
-            </div>
-            <div class="col-md-6" id="border2">
-                <h3 id="total_real">8,800 원</h3>
-            </div>
+            
         </div>
     </div>
 
@@ -228,28 +198,80 @@
 
 
     /* 메인 */
+    var menu_list = new Array();
+    var op_list = new Array();
+    var price_list = new Array(); //상품 1개 가격*수량 + 옵션
+    var ea_list = new Array();
+    var morpheme_list = new Array();
+    var morpheme_str = "";
+    var menu_price = 0;
+    var total_price = 0;
+
     var txt = document.getElementById("ai_say");
-    var say_return = "";
-    //$("#ai_say").text("🌿어서오세요! 스타벅스입니다🌿");
+    var forms = document.getElementById("content");
+    var forms_txt = '';
+    var total_real = document.getElementById("total_real");
+
+
+    var menu_default = "\n";
+    var op_default = "✔️ice ✔️시럽 X ✔️샷 2<br>✔️우유 기본 ✔️휘핑 X ✔️드리즐 X";
+    var price_default = "0 원\n";
+    var ea_default = "1\n";
+    var total_default = "0 원\n";
+
     txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
 
     window.onload=function()
     {
-
-        //setVoiceList();
-        //speech("안녕");
-        
-        /*var u = new SpeechSynthesisUtterance();
-        u.text = "만나서 반갑습니다. 스타벅스입니다";
-        speechSynthesis.speak(u);*/
-
         setTimeout(() => 
-        { 
-            //console.log(window.speechSynthesis.getVoices());
+        {
             order();
         }, 1000);
     }
 
+    /* 데이터베이스 가져오기 */
+    var db_str = '{{ prods|escapejs }}';
+    var db_list = db_str.slice(1, -1);
+    db_list = db_list.split('),');
+
+    //데이터베이스 - 전체(db)
+    var db = new Array();
+    for (var i=0; i<db_list.length; i++)
+    {
+        db.push(db_list[i].replace(/\'|\"|\(|\)| /g,"").split(','));
+    }
+
+    //데이터베이스 - 메뉴(db_menu)
+    var db_menu = new Array();
+    for (var j=0; j<db.length; j++)
+    {
+        db_menu.push(db[j][2]);
+    }
+
+    //데이터베이스 - 가격(db_price)
+    var db_price = new Array();
+    for (var k=0; k<db.length; k++)
+    {
+        db_price.push(db[k][3]);
+    }
+
+    /* fetch로 view에 있는 분석기로 문장 보내는 함수 */
+    function stem_analyzer(resText) {
+                var url = "http://localhost:8000/client/analyzer?resText=" + resText
+                return fetch(url,{
+                    headers: {'Content-Type': 'application/json; charset=utf-8'},
+                    body: JSON.stringify(this.obj)
+                }).then(response => response.json())
+                .then(res => {//console.log("객체",res);
+                var str = JSON.stringify(res);
+                var str_slice = str.slice(1,-1).replace(/\'|\"|\\/g,'');
+                str_slice = str_slice.split(',');
+                morpheme_list = str_slice;
+                morpheme_str = str_slice;
+                //console.log('리스트:', morpheme_list);
+                //console.log('문자:', morpheme_str);
+                return morpheme_str;})
+    }
 
     /* 실제 비동기 처리 코드 */
     async function order()
@@ -265,9 +287,6 @@
 
             txt.innerHTML = "인식 중 ...!"; //로딩 애니메이션 들어가면 좋을 거 같음
 
-            // 83초 대기
-            //await new Promise((resolve, reject) => setTimeout(resolve, 8300));
-
             var audio_once = true;
 
             while(true)
@@ -279,8 +298,91 @@
 
                     if (stt1.length > 1) //한 글자 이상 들어오면
                     {
+                        
                         txt.innerHTML = "✅"+stt1;
-                        var audio3 = await tts(stt1+"\n메뉴를 선택하셨습니다!");
+
+                        /* 형태소 분석기 실행 */
+                        var stt_morpheme = await stem_analyzer(stt1);
+                        //console.log("return: ",stt_morpheme); -> 아메리카노,하나
+                        console.log("전역 호출: ",morpheme_list); //-> [아메리카노,하나]
+                        //console.log("전역 호출 문자: ", morpheme_str); -> 아메리카노,하나
+
+                        /* DB 메뉴 이름, 가격 */
+                        for (var x=0; x<morpheme_list.length; x++)
+                        {
+                            for (var y=0; y<db_menu.length; y++)
+                            {
+                                if (morpheme_list[x] == db_menu[y])
+                                {
+                                    console.log('메뉴 인식 완료 : ');
+                                    menu_list.push(db_menu[y]);
+                                    menu_price = db_price[y]; //가격 옵션이랑 수량 다 해서 price_list에 push 해야됨.
+                                    //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz, 14 sales_rate
+                                    op_list.push([ db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13], db[y][14]]);
+                                    break;
+                                }
+                            }
+                        }
+
+                        var audio3 = await tts(menu_list[menu_list.length-1]+"\n메뉴를 선택하셨습니다!");
+
+                        console.log('추가된 메뉴',menu_list);
+                        console.log('메뉴 가격',menu_price);
+                        console.log('추가된 옵션',op_list);
+
+                        /* DB 옵션 */
+                        var hot_cold = "";
+                        var caf_amount = "";
+                        var syrup = "";
+                        var shot = "";
+                        var milk = ""; 
+                        var whip = "";
+                        var java_chip = "";
+                        var driz = "";
+                        var sales_rate = "";
+
+                        //if () //html에 옵션
+                        /* ========= 여기 해야함 ========== */
+                        
+                        /* 수량 계산 */
+                        for (var x=0; x<morpheme_list.length; x++)
+                        {
+                            for (var num=1; num<10; num++)
+                            if (morpheme_list[x].indexOf(String(num)) == 0) //1~9가 속하는 문자열이 있으면 0
+                            {
+                                console.log("수량: ",Number(morpheme_list[x]));
+                                ea_list.push(Number(morpheme_list[x]));
+                                //수량 인식 못했을 때 에러 처리
+                                break;
+                            }
+                        }
+
+                        price_list.push(menu_price*ea_list[ea_list.length-1]); //옵션도 더해야함
+                        total_price += Number(price_list[price_list.length-1]);
+
+
+                        /* 결제 리스트에 추가 */
+
+                        forms_txt ='<div class="row">\
+                            <div class="col-md-3" id="border"> \
+                                <h4 id="list_txt" class="menu">'+menu_list[menu_list.length-1]+'</h4>\
+                            </div>\
+                            <div class="col-md-4" id="border">\
+                                <h5 id="op_txt" class="op">✔️ice ✔️시럽 바닐라 0 ✔️샷 0<br>✔️우유 저지방 ✔️휘핑 X ✔️드리즐 X</h5>\
+                            </div>\
+                            <div class="col-md-2" id="border"> \
+                                <h4 id="list_txt" class="price">'+menu_price+' 원</h4>\
+                            </div>\
+                            <div class="col-md-1" id="border"> \
+                                <h4 id="list_txt" class="ea">'+ea_list[ea_list.length-1]+'</h4>\
+                            </div>\
+                            <div class="col-md-2" id="border"> \
+                                <h4 id="list_txt">'+price_list+' 원</h4>\
+                            </div>\
+                            </div>';
+
+                        forms.innerHTML = forms_txt;
+                        total_real.innerHTML = total_price+' 원';
 
                         txt.innerHTML = '결제 또는 추가할 메뉴를 말씀해주세요❗';
                         var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요!");
@@ -314,7 +416,87 @@
                         else //계속 메뉴 받고 싶으면
                         {
                             txt.innerHTML = "✅"+stt2;
-                            var audio3 = await tts(stt2+" 메뉴를 선택하셨습니다.");
+
+                            /* 형태소 분석기 실행 */
+                            var stt_morpheme = await stem_analyzer(stt2);
+                            console.log("전역 호출: ",morpheme_list); //-> [아메리카노,하나]
+
+                            /* DB 메뉴 이름, 가격 */
+                            for (var x=0; x<morpheme_list.length; x++)
+                            {
+                                for (var y=0; y<db_menu.length; y++)
+                                {
+                                    if (morpheme_list[x] == db_menu[y])
+                                    {
+                                        console.log('메뉴 인식 완료 : ');
+                                        menu_list.push(db_menu[y]);
+                                        menu_price = db_price[y]; //가격 옵션이랑 수량 다 해서 price_list에 push 해야됨.
+                                        //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz, 14 sales_rate
+                                        op_list.push([ db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13], db[y][14]]);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            var audio3 = await tts(menu_list[menu_list.length-1]+"\n메뉴를 선택하셨습니다!");
+
+                            console.log('추가된 메뉴',menu_list);
+                            console.log('메뉴 가격',menu_price);
+                            console.log('추가된 옵션',op_list);
+
+                             /* DB 옵션 */
+                            var hot_cold = "";
+                            var caf_amount = "";
+                            var syrup = "";
+                            var shot = "";
+                            var milk = ""; 
+                            var whip = "";
+                            var java_chip = "";
+                            var driz = "";
+                            var sales_rate = "";
+
+                            //if () //html에 옵션
+                            /* ========= 여기 해야함 ========== */
+
+                            /* 수량 계산 */
+                            for (var x=0; x<morpheme_list.length; x++)
+                            {
+                                for (var num=1; num<10; num++)
+                                if (morpheme_list[x].indexOf(String(num)) == 0) //1~9가 속하는 문자열이 있으면 0
+                                {
+                                    console.log("수량: ",Number(morpheme_list[x]));
+                                    ea_list.push(Number(morpheme_list[x]));
+                                    //수량 인식 못했을 때 에러 처리
+                                    break;
+                                }
+                            }
+
+                            price_list.push(menu_price*ea_list[ea_list.length-1]); //옵션도 더해야함
+                            total_price += Number(price_list[price_list.length-1]);
+                            
+    
+                            /* 결제 리스트에 추가 */
+
+                            forms_txt +='<div class="row">\
+                                <div class="col-md-3" id="border"> \
+                                    <h4 id="list_txt" class="menu">'+menu_list[menu_list.length-1]+'</h4>\
+                                </div>\
+                                <div class="col-md-4" id="border">\
+                                    <h5 id="op_txt" class="op">✔️ice ✔️시럽 바닐라 0 ✔️샷 0<br>✔️우유 저지방 ✔️휘핑 X ✔️드리즐 X</h5>\
+                                </div>\
+                                <div class="col-md-2" id="border"> \
+                                    <h4 id="list_txt" class="price">'+menu_price+' 원</h4>\
+                                </div>\
+                                <div class="col-md-1" id="border"> \
+                                    <h4 id="list_txt" class="ea">'+ea_list[ea_list.length-1]+'</h4>\
+                                </div>\
+                                <div class="col-md-2" id="border"> \
+                                    <h4 id="list_txt">'+price_list[price_list.length-1]+' 원</h4>\
+                                </div>\
+                                </div>';
+
+                            forms.innerHTML = forms_txt;
+                            total_real.innerHTML = total_price+' 원';
 
                             txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
                             var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요~");
@@ -332,7 +514,7 @@
                 }
             }
             
-            location.href="/client/end";
+            //location.href="/client/end"; -> 풀기!!!!!!!!!!!!!!!
         }
         catch(error)
         {
@@ -355,7 +537,7 @@
 
     recognition.lang = 'ko-KR';
     recognition.interimResults = false;
-    recognition.maxAlternatives = 100; //클수록 발음대로 안적고 문장 적합도로.
+    recognition.maxAlternatives = 50; //클수록 발음대로 안적고 문장 적합도로.
     recognition.continuous = false; //음성인식 안끝나고 계속됨
 
     async function speech_to_text()
@@ -373,7 +555,6 @@
         recognition.onresult = function(event) 
         {
             resText = event.results[0][0].transcript;
-            //console.log('You said: ', resText);
             txt.innerHTML = resText;
 
             if (resText == "결제" | resText == "결제.")
@@ -452,16 +633,6 @@
             alert('voice not found');
             return;
         }
-        
-        /*utterThis.onend = function (event) 
-        {
-            //console.log('말 끝남');
-            //console.log(print_txt," 출력할 차례 ");
-            var txt = document.getElementById("ai_say");
-            txt.innerHTML = print_txt;
-        };
-        window.speechSynthesis.speak(utterThis);
-        */
 
         await new Promise(function(resolve) 
         {
