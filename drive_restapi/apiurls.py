@@ -22,7 +22,6 @@ urlpatterns = format_suffix_patterns([
 """
 
 from . import views
-
 app_name = 'rest_api'
 urlpatterns = [
 
