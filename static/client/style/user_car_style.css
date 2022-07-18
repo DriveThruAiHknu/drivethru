@@ -1,11 +1,14 @@
-h2, h3, h4, h5{
+h2,
+h3,
+h4,
+h5 {
     font-family: 'Noto Sans KR', sans-serif;
-    color:black;
+    color: black;
 }
 
-h1{
+h1 {
     font-family: 'Noto Sans KR', sans-serif;
-    color:#557763; 
+    color: #557763;
     font-size: 2.8em;
     text-shadow: 3px 3px rgba(128, 173, 142, 0.493);
     visibility: hidden;
@@ -13,20 +16,20 @@ h1{
     margin-top: -3%;
 }
 
-h3#menu{
+h3#menu {
     color: #ffffff;
-    font-size:1.8em;
+    font-size: 1.8em;
     margin-top: -5px;
 
 }
-#menu{
-    color:white;
-    font-size:1.3em;
+
+#menu {
+    color: white;
+    font-size: 1.3em;
     font-weight: lighter;
 }
 
-.row-vh
-{
+.row-vh {
     width: auto;
     max-width: 120%;
     margin-left: -15px;
@@ -41,67 +44,71 @@ h3#menu{
 body {
     background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
     overflow: hidden;
-    width:100%;
-  }
-  
-  .ocean {
+    width: 100%;
+}
+
+.ocean {
     height: 40px;
     width: 100%;
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     background: #f4f7f6;
-  }
-  
-  .wave {
+}
+
+.wave {
     background: url(../image/back_wave.svg) repeat-x;
     position: absolute;
     width: 6400px;
     height: 198px;
     animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
     transform: translate3d(0, 0, 0);
-  }
-  
-  .wave:nth-of-type(2) {
+}
+
+.wave:nth-of-type(2) {
     top: -175px;
     animation: wave 15s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 7s ease -1.25s infinite;
     opacity: 1;
-  }
-  
-  @keyframes wave {
+}
+
+@keyframes wave {
     0% {
-      margin-left: 0;
+        margin-left: 0;
     }
+
     100% {
-      margin-left: -1600px;
+        margin-left: -1600px;
     }
-  }
-  @keyframes swell {
+}
+
+@keyframes swell {
+
     0%,
-      100% {
-      transform: translate3d(0, -25px, 0);
+    100% {
+        transform: translate3d(0, -25px, 0);
     }
+
     50% {
-      transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 5px, 0);
     }
-  }
-  .endWave{
-      display:none;
-  }
+}
+
+.endWave {
+    display: none;
+}
 
 
 /* 여기서부터 본문 */
 
-.h-50#box{
+.h-50#box {
     background-color: #2e835b;
     margin-top: 12%;
     margin-bottom: -12%;
     border-radius: 20px 20px 0px 0px;
 }
 
-.image_num
-{
-    background-color:#24946e;
+.image_num {
+    background-color: #24946e;
     border-radius: 100%;
     text-align: left;
     width: 28px;
@@ -109,105 +116,105 @@ body {
     padding: 4px 9px;
 }
 
-h4
-{    
+h4 {
     font-family: 'Noto Sans KR', sans-serif;
-    font-size:14px;
+    font-size: 14px;
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color:white;
+    color: white;
     text-align: center;
 
 }
 
-.bg_image1{
+.bg_image1 {
     background-color: white;
     border-radius: 8%;
-    width:145px;
-    height:145px;
+    width: 145px;
+    height: 145px;
     padding: 10px;
-    margin:0 auto;
-    margin-top:3px;
+    margin: 0 auto;
+    margin-top: 3px;
     margin-bottom: 9%;
     box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
     text-align: center;
 
 }
 
-.bg_image2{
+.bg_image2 {
     background-color: white;
     border-radius: 8%;
-    width:145px;
-    height:145px;
+    width: 145px;
+    height: 145px;
     padding: 10px;
-    margin:0 auto;
-    margin-top:3px;
+    margin: 0 auto;
+    margin-top: 3px;
     margin-bottom: 9%;
     box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
 
-.bg_image3{
+.bg_image3 {
     background-color: white;
     border-radius: 8%;
-    width:145px;
-    height:145px;
+    width: 145px;
+    height: 145px;
     padding: 10px;
-    margin:0 auto;
-    margin-top:3px;
+    margin: 0 auto;
+    margin-top: 3px;
     margin-bottom: 9%;
     text-align: center;
     box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
 }
 
-.image1{
+.image1 {
     margin-top: 7px;
-    width:80px;
-    height:80px;
-    background-image: url(../image/rank_green.png); 
-    background-size:cover;
+    width: 80px;
+    height: 80px;
+    background-image: url(../image/rank_green.png);
+    background-size: cover;
     display: inline-block;
 }
 
-.image2{
+.image2 {
     margin-top: 7px;
     margin-left: 5px;
-    width:83px;
-    height:83px;
-    background-image: url(../image/chat_green.png); 
-    background-size:cover;
+    width: 83px;
+    height: 83px;
+    background-image: url(../image/chat_green.png);
+    background-size: cover;
     display: inline-block;
 }
 
-.image3{
+.image3 {
     margin-left: 2px;
     margin-top: 3px;
-    width:80px;
-    height:80px;
-    background-image: url(../image/member_green.png); 
-    background-size:cover;
+    width: 80px;
+    height: 80px;
+    background-image: url(../image/member_green.png);
+    background-size: cover;
     display: inline-block;
 }
 
-h3{
+h3 {
     margin-bottom: 2%;
 }
 
-.row{
-    margin-top:3%;
+.row {
+    margin-top: 3%;
 }
 
 /* 배경 리사이즈 */
 
-.container-fluid{
-    background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
-} 
+.container-fluid {
+    /*background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);*/
+    /* !!!!!!!!!!!!!!!!!!!!디자인 이상한거 같으면 주석 없애고 원래로 되돌릴 수 있음 */
+}
 
- /*
+/*
 .bg_all{
     background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);
 }
@@ -222,10 +229,10 @@ h3{
     display: flex;
 }
 
-.wrapper div{
+.wrapper div {
     margin: auto;
     background: #0366346c;
-    background-size:100%;
+    background-size: 100%;
     background-image: url(../image/starbuck.png);
     border-radius: 50%;
     box-shadow: 5px 5px 8px 1px rgba(0, 0, 0, 0.377);
@@ -241,24 +248,28 @@ h3{
 }
 
 @keyframes scale1 {
-    0%   { transform: scale(0) }
-    100%  { transform: scale(1) }
+    0% {
+        transform: scale(0)
+    }
+
+    100% {
+        transform: scale(1)
+    }
 }
 
 @keyframes scale2 {
-    0%
-    {
+    0% {
         transform: translateY(-20px);
         visibility: hidden;
     }
-    100%  
-    {  
+
+    100% {
         transform: translateY(20px);
         visibility: visible;
     }
 }
 
-.bg_car{
+.bg_car {
     color: #fff;
     margin-top: 0%;
     height: 200px;
@@ -269,7 +280,7 @@ h3{
 #input_car_text {
     width: 300px;
     height: 50px;
-    color:#375343;
+    color: #375343;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 17px;
     border: 1px;
@@ -277,7 +288,7 @@ h3{
     border-top-right-radius: 0px;
     border-end-end-radius: 0px;
     outline: none;
-    padding-left:20px;
+    padding-left: 20px;
     background-color: rgba(178, 190, 181, 0.267);
 }
 
