@@ -121,12 +121,9 @@ def user_end(request):
 
 
 #3) 형태소 분석기
-
-
 """
 형태소 분석기
 """
-
 from ckonlpy.tag import Postprocessor
 from ckonlpy.tag import Twitter
 import pandas as pd
@@ -135,16 +132,13 @@ from ckonlpy.utils import load_replace_wordpair
 from ckonlpy.utils import load_ngram
 
 from django.http import JsonResponse
-
-"""
-from rest_framework.decorators import api_view
-@api_view(['GET'])
-"""
+import os
 
 def stem_analyzer(requests):
     print("stt로 받은 문자열")
     print(requests.GET['resText'])
     sent = requests.GET['resText']
+
 
     twitter = Twitter()
 
@@ -173,35 +167,60 @@ def stem_analyzer(requests):
         twitter.add_dictionary(i, 'Noun')
  
     #문장에 필요없는 단어
-    stopwords = load_wordset('.\\tutorials\\stopwords.txt')
+    stopwords = load_wordset('./tutorials/stopwords.txt')
 
     #의미가 같은 것으로 변경할 단어
-    replace = load_replace_wordpair('.\\tutorials\\replacewords.txt')
+    replace = load_replace_wordpair('./tutorials/replacewords.txt')
 
     #띄어쓰기 없애는 단어로
-    ngrams = load_ngram('.\\tutorials\\ngrams.txt')
+    ngrams = load_ngram('./tutorials/ngrams.txt')
 
+    #첫번째 분석 하기
+    postprocessor = Postprocessor(
+            base_tagger = twitter, # base tagger
+            replace = replace, # 해당 단어 set 치환
+            stopwords = stopwords # 해당 단어 필터
+        )
+
+    mywords = ""
+    for i in postprocessor.pos(sent):
+        mywords+=i[0]
+
+    #print("단어 변환+단어 삭제 결과:  "+mywords)
+
+    #두번째 분석 하기
     postprocessor = Postprocessor(
         base_tagger = twitter, # base tagger
+        replace = replace, # 해당 단어 set 치환
         stopwords = stopwords, # 해당 단어 필터
-        #passwords = passwords, # 해당 단어만 선택
-        #passtags = passtags, # 해당 품사만 선택
-        ngrams = ngrams, # 해당 복합 단어 set을 한 단어로 결합
-        replace = replace # 해당 단어 set 치환
     )
+
+    mywords2 = ""
+    for i in postprocessor.pos(mywords):
+        mywords2+=i[0]
+    #print("단어 변환+단어 삭제2 결과:  "+mywords2)
+        
+    #띄어쓰기만 조정
+    postprocessor = Postprocessor(
+        base_tagger = twitter, # base tagger
+        ngrams = ngrams # 해당 복합 단어 set을 한 단어로 결합
+    )
+
     orderdata = []
     order = []
     delete_word = [' ', '-']
 
-    for i in postprocessor.pos(sent):
+    for i in postprocessor.pos(mywords2):
         orderdata.append(i[0])
+    #print("단어만 추가: ", orderdata)
 
-    print("단어만 추가: ", orderdata)
+    #부호 삭제하여 리스트에 추가
+
     for i in orderdata:
         for j in delete_word:
             i=i.replace(j, '')
         order.append(i)
     print("\n")
-    print("형태소 분석한 문장:", order)
+    print("결과:", order)
 
     return JsonResponse(order, safe=False)
