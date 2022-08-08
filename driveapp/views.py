@@ -6,7 +6,7 @@ import requests, json
 from django.contrib import messages
 from django.http import HttpResponse
 from django.http import JsonResponse
-
+from django.urls import reverse
 
 """
 1) 관리자
@@ -27,8 +27,62 @@ def manage_menuadd(request):
     context = {
         'a':''
     }
-    return render(request, 'manager/manage_menu_add.html', context)
 
+    if request.method == "POST":
+        prod_category = request.POST.get('prod_category')
+        prod_name = request.POST.get('prod_name')
+        prod_price = request.POST.get('prod_price')
+        prod_image = request.POST.get('prod_image')
+        prod_option = request.POST.getlist('prod_option[]')
+
+        if 'HOT' in prod_option and "ICED" in prod_option:
+            prod_hot_cold = 3
+        elif 'HOT' not in prod_option and "ICED" in prod_option:
+            prod_hot_cold = 2
+        elif 'HOT' in prod_option and "ICED" not in prod_option:
+            prod_hot_cold = 1
+        else:
+            prod_hot_cold = 0
+        
+        if "카페인" in prod_option:
+            prod_caf_amount = True
+        else:
+            prod_caf_amount = False
+
+        if "시럽" in prod_option:
+            prod_syrup = 1
+        else:
+            prod_syrup = 0
+
+        if "샷" in prod_option:
+            prod_shot = True
+        else:
+            prod_shot = False
+
+        if "우유" in prod_option:
+            prod_milk = True
+        else:
+            prod_milk = False
+
+        if "휘핑 크림" in prod_option:
+            prod_whip = True
+        else:
+            prod_whip = False
+
+        if "자바칩" in prod_option:
+            prod_java_chip = True
+        else:
+            prod_java_chip = False
+
+        if "드리즐" in prod_option:
+            prod_driz = True
+        else:
+            prod_driz = False
+
+        prod_add = prod(prod_category=prod_category, prod_name=prod_name, prod_price=int(prod_price), prod_image=prod_image, prod_recommend = False, prod_hot_cold=prod_hot_cold ,prod_caf_amount=prod_caf_amount, prod_syrup=prod_syrup, prod_shot=prod_shot, prod_milk=prod_milk, prod_whip=prod_whip, prod_java_chip=prod_java_chip, prod_driz=prod_driz, prod_sales_rate=0)
+        prod_add.save(force_insert=True)
+
+    return render(request, 'manager/manage_menu_add.html', context)
 
 def manage_recommendation_menu(request):
     context = {

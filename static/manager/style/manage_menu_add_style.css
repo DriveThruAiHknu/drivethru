@@ -21,8 +21,25 @@
     font-weight: 500;
     font-size: xx-large;
     padding-top: 50px;
-    margin-bottom: 100px;
+    margin-bottom: 150px;
     color: #eee;
+}
+p{
+    float: left;
+    margin-left: 800px;
+}
+.home_btn{
+    margin-top: 50px;
+    margin-left: 10px;
+    background: none;
+    border: none;
+    outline: none;
+    float: left;
+}
+.home_btn img{
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: contain;
 }
 
 .menu-picture img{
@@ -30,7 +47,7 @@
     max-height: 600px;
     object-fit: contain;
     float:left;
-    margin-left: 150px;
+    margin-left: 250px;
     text-align: left;
 }
 
@@ -39,7 +56,7 @@
     max-height: 600px;
     text-align: left;
     float:left;
-    margin-left: 100px;
+    margin-left: 200px;
 }
 select{
     font-family: 'Noto Sans KR', sans-serif;

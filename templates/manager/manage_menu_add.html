@@ -5,44 +5,46 @@
 <div class="bg_all">
     <!--페이지 제목-->
     <section id="title" class="web-title">
+        <button type="button" class="home_btn" onClick="location.href ='/manager/menu'"><img src="/static/manager/image/back.png"></button>
         <p>00카페 메뉴 추가</p> 
     </section>
     <!--이미지-->
     <section id="picture" class="menu-picture">
-        <img src="/static/manager/image/what.png" alt="My Image"/>
+        <img src="/static/manager/image/what.png" id="img_section" alt="My Image"/>
     </section>
     <!--메뉴 옵션 작성과 추가 버튼-->
     <section id="input" class="menu-input">
-        <form action="/">
-            <select class="menu-category" required>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <select name="prod_category" class="menu-category" value="{{ prod_category }}" required>
                 <option value="">카테고리</option>
-                <option>COFFEE</option>
-                <option>LATTE</option>
-                <option>ADE</option>
-                <option>TEA</option>
-                <option>SMOTHIE</option>
-                <option>SHAKE</option>
-                <option>BAKERY</option>
+                <option value="COFFEE">COFFEE</option>
+                <option value="LATTE">LATTE</option>
+                <option value="ADE">ADE</option>
+                <option value="TEA">TEA</option>
+                <option value="SMOTHIE">SMOTHIE</option>
+                <option value="SHAKE">SHAKE</option>
+                <option value="BAKERY">BAKERY</option>
             </select><br/>
-            <input type="text" id="menuname" placeholder="메뉴명"><br/>
-            <input type="text" id="menuprice"  placeholder="가격"><br/>
+            <input type="text" name="prod_name" id="menuname" value="{{ prod_name }}" placeholder="메뉴명"><br/>
+            <input type="text" name="prod_price" id="menuprice"  value="{{ prod_price }}" placeholder="가격"><br/>
             <div class="file-upload-wrapper" data-text="이미지">
-                <input name="file-upload-field" type="file" accept="image/*" class="file-upload-field" value="">
+                <input name="prod_image" type="file" accept="image/*" class="file-upload-field" value="{{ prod_image }}">
             </div><br/>
             <div class="check-title">음료 옵션</div>
             <div class="check-options">
-                <input type="checkbox" name="case[]" value="A"> HOT&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="B"> ICED&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="C"> 얼음&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="D"> 카페인&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="E"> 시럽<br/><br/>
-                <input type="checkbox" name="case[]" value="F"> 샷&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="G"> 우유&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="H"> 휘핑 크림&emsp;&emsp;
-                <input type="checkbox" name="case[]" value="I"> 자바칩&emsp;
-                <input type="checkbox" name="case[]" value="I"> 드리즐
+                <input type="checkbox" name="prod_option[]" value="HOT"> HOT&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="ICED"> ICED&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="얼음"> 얼음&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="카페인"> 카페인&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="시럽"> 시럽<br/><br/>
+                <input type="checkbox" name="prod_option[]" value="샷"> 샷&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="우유"> 우유&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="휘핑 크림"> 휘핑 크림&emsp;&emsp;
+                <input type="checkbox" name="prod_option[]" value="자바칩"> 자바칩&emsp;
+                <input type="checkbox" name="prod_option[]" value="드리즐"> 드리즐
             </div>
-            <input type="submit" value="메뉴 추가">
+            <input type="submit" class="submit" value="메뉴 추가">
         </form>
     </section>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

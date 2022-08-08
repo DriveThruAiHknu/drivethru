@@ -35,16 +35,15 @@ html, body {
     font-weight: 500;
     font-size: xx-large;
     margin-top: 50px;
-    margin-left: 700px;
+    margin-left: 800px;
     color: #eee;
     
 }
 .input_recommendation_btn{
     margin-top: 50px;
-    margin-left: 700px;
+    margin-left: 600px;
     background: none;
     border: none;
-    outline: none;
 }
 .input_recommendation_btn img{
     max-width: 40px;
@@ -56,7 +55,6 @@ html, body {
     margin-left: 30px;
     background: none;
     border: none;
-    outline: none;
 }
 .orders_btn img{
     max-width: 40px;
