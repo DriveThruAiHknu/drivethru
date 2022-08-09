@@ -20,6 +20,18 @@ def manage_login(request):
 
 def manage_menu(request):    
     class_prods = prod.objects.all()
+
+    if request.method == "POST":
+        checked_prod_id  = request.POST.getlist('chk_box[]')
+        for pk in checked_prod_id:
+            print(pk)
+            try:
+                delete_prod_id = prod.objects.get(prod_id = pk)
+                delete_prod_id.delete()
+                print("Record deleted successfully!")
+            except:
+                print("Record doesn't exists")
+
     return render(request, 'manager/manage_menu.html', {'class_prods':class_prods})
 
 
@@ -32,7 +44,7 @@ def manage_menuadd(request):
         prod_category = request.POST.get('prod_category')
         prod_name = request.POST.get('prod_name')
         prod_price = request.POST.get('prod_price')
-        prod_image = request.POST.get('prod_image')
+        prod_image = request.FILES['prod_image']
         prod_option = request.POST.getlist('prod_option[]')
 
         if 'HOT' in prod_option and "ICED" in prod_option:

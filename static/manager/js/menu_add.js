@@ -1,11 +1,11 @@
 //메뉴 추가 버튼 누르면 입력 완료 알림
-var cols = document.querySelectorAll('submit');
+var cols = document.querySelectorAll('.submit');
 [].forEach.call(cols, function(col){
   col.addEventListener("click" , click , false );
 });
 
 function click(e){
-    window.alert("✅메뉴 추가 완료");
+    window.alert("✔메뉴 추가 완료");
 }
 
 //추가한 이미지 섬네일
