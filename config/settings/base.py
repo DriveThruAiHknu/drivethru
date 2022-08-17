@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -136,3 +137,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# Media files 
+#1. 업로드 되는 이미지 파일 위치를 정하는 설정 
+MEDIA_ROOT = os.path.join(BASE_DIR,'이미지')
+
+#2. 업로드 된 이미지의 주소를 생성하는 설정 
+MEDIA_URL = '/이미지/' # 아무거나 해도 됌
+
+#3. urls.py 

@@ -4,5 +4,5 @@ var cols = document.querySelectorAll('#buttons .input_delete_btn');
 });
 
 function click(e){
-  window.alert("delete");
+  window.alert("❌메뉴 삭제 완료");
 }

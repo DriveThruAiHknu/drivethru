@@ -11,392 +11,31 @@
         <button type="button" class="input_recommendation_btn" onClick="location.href='manage-recommendation-menu'"><img src="/static/manager/image/recommendation.png"></button>
         <button type="button" class="orders_btn" onClick="location.href='manage-orders'"><img src="/static/manager/image/orders.png"></button>
     </section>
-    <!--카페 메뉴 탭-->
-    <section id="tabs" class="project-tab">
-        <div class="menu">
-            <div class="row">
-                <div class="col-md-12">
-                    <nav>
-                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-total-tab" data-toggle="tab" href="#nav-total" role="tab" aria-controls="nav-total" aria-selected="true">전체 메뉴</a>
-                            <a class="nav-item nav-link" id="nav-coffee-tab" data-toggle="tab" href="#nav-coffee" role="tab" aria-controls="nav-coffee" aria-selected="false">COFFEE</a>
-                            <a class="nav-item nav-link" id="nav-latte-tab" data-toggle="tab" href="#nav-latte" role="tab" aria-controls="nav-latte" aria-selected="false">LATTE</a>
-                            <a class="nav-item nav-link" id="nav-ade-tab" data-toggle="tab" href="#nav-ade" role="tab" aria-controls="nav-ade" aria-selected="false">ADE</a>
-                            <a class="nav-item nav-link" id="nav-tea-tab" data-toggle="tab" href="#nav-tea" role="tab" aria-controls="nav-tea" aria-selected="false">TEA</a>
-                            <a class="nav-item nav-link" id="nav-smoothie-tab" data-toggle="tab" href="#nav-smoothie" role="tab" aria-controls="nav-smoothie" aria-selected="false">SMOOTHIE</a>
-                            <a class="nav-item nav-link" id="nav-shake-tab" data-toggle="tab" href="#nav-shake" role="tab" aria-controls="nav-shake" aria-selected="false">SHAKE</a>
-                            <a class="nav-item nav-link" id="nav-bakery-tab" data-toggle="tab" href="#nav-bakery" role="tab" aria-controls="nav-bakery" aria-selected="false">BAKERY</a>
-                        </div>
-                    </nav>
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-total" role="tabpanel" aria-labelledby="nav-total-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                        <th>드리즐</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!--views.py안에 manage_menu함수에 변수 정의해서 return-->
-                                    {% for class in class_prods %}
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
-                                        <td>{{class.prodName}}</td>
-                                        <td>{{class.prodPrice}}원</td>
-                                        {% if class.prodHotOrCold is 0 %}<!--베이커리-->
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                        {% elif  class.prodHotOrCold is 1 %}<!--핫-->
-                                            <td><input type="checkbox" name="chk_option" value="1"checked></td>
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                        {% else %}<!--아이스-->
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                            <td><input type="checkbox" name="chk_option" value="2"checked></td>
-                                        {% endif %}
-                                        
-                                        {% if class.prodHotOrCold is 2 %}<!--얼음양-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-
-                                        {% if class.prodCafAmount is True %}<!--카페인-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-
-                                        {% if class.prodSyrup is 0 %}<!--시럽-->
-                                            <td><input type="checkbox" name="chk_option" value="0"></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="1"checked></td>
-                                        {% endif %}
-                                        {% if class.prodShot is True %}<!--샷-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodMilk is True %}<!--우유-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodWhip is True %}<!--휘핑-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodJavaChip is True %}<!--자바칩-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodDriz is True %}<!--드리즐-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-coffee" role="tabpanel" aria-labelledby="nav-coffee-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                        <th>드리즐</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for class in class_prods %}
-                                    {% if class.prodCategory == "COFFEE" %}
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
-                                        <td>{{class.prodName}}</td>
-                                        <td>{{class.prodPrice}}원</td>
-                                        {% if class.prodHotOrCold is 0 %}<!--베이커리-->
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                        {% elif  class.prodHotOrCold is 1 %}<!--핫-->
-                                            <td><input type="checkbox" name="chk_option" value="1"checked></td>
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                        {% else %}<!--아이스-->
-                                            <td><input type="checkbox" name="chk_option" value=""/></td>
-                                            <td><input type="checkbox" name="chk_option" value="2"checked></td>
-                                        {% endif %}
-
-                                        {% if class.prodHotOrCold is 2 %}<!--얼음양-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-
-                                        {% if class.prodCafAmount is True %}<!--카페인-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-
-                                        {% if class.prodSyrup is 0 %}<!--시럽-->
-                                            <td><input type="checkbox" name="chk_option" value="0"></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="1"checked></td>
-                                        {% endif %}
-                                        {% if class.prodShot is True %}<!--샷-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodMilk is True %}<!--우유-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodWhip is True %}<!--휘핑-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodJavaChip is True %}<!--자바칩-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                        {% if class.prodDriz is True %}<!--드리즐-->
-                                            <td><input type="checkbox" name="chk_option" value="true" checked></td>
-                                        {% else %}
-                                            <td><input type="checkbox" name="chk_option" value="false"/></td>
-                                        {% endif %}
-                                    </tr>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-latte" role="tabpanel" aria-labelledby="nav-latte-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                        <td>모카라떼</td>
-                                        <td>6300원</td>
-                                        <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-ade" role="tabpanel" aria-labelledby="nav-ade-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                        <td>자몽에이드</td>
-                                        <td>6300원</td>
-                                        <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-tea" role="tabpanel" aria-labelledby="nav-tea-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                        <td>캐모마일</td>
-                                        <td>6300원</td>
-                                        <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-smoothie" role="tabpanel" aria-labelledby="nav-smoothie-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                        <td>블루베리 스무디</td>
-                                        <td>6300원</td>
-                                        <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-shake" role="tabpanel" aria-labelledby="nav-shake-tab">
-                            <table class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="checkall" /></th>
-                                        <th></th>
-                                        <th>이름</th>
-                                        <th>가격</th>
-                                        <th>HOT</th>
-                                        <th>ICED</th>
-                                        <th>얼음</th>
-                                        <th>카페인</th>
-                                        <th>시럽</th>
-                                        <th>샷</th>
-                                        <th>우유</th>
-                                        <th>휘핑</th>
-                                        <th>자바칩</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                        <td>밀크쉐이크</td>
-                                        <td>6300원</td>
-                                        <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                        <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="nav-bakery" role="tabpanel" aria-labelledby="nav-bakery-tab">
-                            <table class="table" cellspacing="0">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--카페 메뉴 탭-->
+        <section id="tabs" class="project-tab">
+            <div class="menu">
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav>
+                            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-total-tab" data-toggle="tab" href="#nav-total" role="tab" aria-controls="nav-total" aria-selected="true">전체 메뉴</a>
+                                <a class="nav-item nav-link" id="nav-coffee-tab" data-toggle="tab" href="#nav-coffee" role="tab" aria-controls="nav-coffee" aria-selected="false">COFFEE</a>
+                                <a class="nav-item nav-link" id="nav-latte-tab" data-toggle="tab" href="#nav-latte" role="tab" aria-controls="nav-latte" aria-selected="false">LATTE</a>
+                                <a class="nav-item nav-link" id="nav-ade-tab" data-toggle="tab" href="#nav-ade" role="tab" aria-controls="nav-ade" aria-selected="false">ADE</a>
+                                <a class="nav-item nav-link" id="nav-tea-tab" data-toggle="tab" href="#nav-tea" role="tab" aria-controls="nav-tea" aria-selected="false">TEA</a>
+                                <a class="nav-item nav-link" id="nav-smoothie-tab" data-toggle="tab" href="#nav-smoothie" role="tab" aria-controls="nav-smoothie" aria-selected="false">SMOOTHIE</a>
+                                <a class="nav-item nav-link" id="nav-shake-tab" data-toggle="tab" href="#nav-shake" role="tab" aria-controls="nav-shake" aria-selected="false">SHAKE</a>
+                                <a class="nav-item nav-link" id="nav-bakery-tab" data-toggle="tab" href="#nav-bakery" role="tab" aria-controls="nav-bakery" aria-selected="false">BAKERY</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-total" role="tabpanel" aria-labelledby="nav-total-tab">
+                                <table class="table" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th><input type="checkbox" id="checkall" /></th>
+                                            <th></th>
                                             <th></th>
                                             <th>이름</th>
                                             <th>가격</th>
@@ -409,46 +48,775 @@
                                             <th>우유</th>
                                             <th>휘핑</th>
                                             <th>자바칩</th>
+                                            <th>드리즐</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for class in class_prods %}
                                         <tr>
-                                            <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"></td>
-                                            <td>오트밀 쿠키</td>
-                                            <td>6300원</td>
-                                            <td><input type="checkbox" name="chk_option" value="hot"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="iced"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="얼음"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="카페인"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="시럽"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="샷"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="우유"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="휘핑"/></td>
-                                            <td><input type="checkbox" name="chk_option" value="자바칩"/></td>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image }}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
                                         </tr>
-                                </tbody>
-                            </table>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-coffee" role="tabpanel" aria-labelledby="nav-coffee-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "COFFEE" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image }}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-latte" role="tabpanel" aria-labelledby="nav-latte-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "LATTE" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-ade" role="tabpanel" aria-labelledby="nav-ade-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "ADE" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tea" role="tabpanel" aria-labelledby="nav-tea-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "TEA" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-smoothie" role="tabpanel" aria-labelledby="nav-smoothie-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "SMOOTHIE" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-shake" role="tabpanel" aria-labelledby="nav-shake-tab">
+                                <table class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>이름</th>
+                                            <th>가격</th>
+                                            <th>HOT</th>
+                                            <th>ICED</th>
+                                            <th>얼음</th>
+                                            <th>카페인</th>
+                                            <th>시럽</th>
+                                            <th>샷</th>
+                                            <th>우유</th>
+                                            <th>휘핑</th>
+                                            <th>자바칩</th>
+                                            <th>드리즐</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for class in class_prods %}
+                                        {% if class.prod_category == "SHAKE" %}
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                            {% if class.prod_image %}
+                                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                            {% else %}
+                                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                            {% endif %}
+                                            <td>{{class.prod_name}}</td>
+                                            <td>{{class.prod_price}}원</td>
+                                            {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                            {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% else %}<!--핫&아이스-->
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                            {% endif %}
+
+                                            {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% elif class.prod_hot_cold is 3 %}
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+
+                                            {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                <td><input type="checkbox" name="chk_option" value="0"></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                            {% endif %}
+                                            {% if class.prod_shot is True %}<!--샷-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_milk is True %}<!--우유-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_whip is True %}<!--휘핑-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                            {% if class.prod_driz is True %}<!--드리즐-->
+                                                <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                            {% else %}
+                                                <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-bakery" role="tabpanel" aria-labelledby="nav-bakery-tab">
+                                <table class="table" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                            <th></th>
+                                                <th>이름</th>
+                                                <th>가격</th>
+                                                <th>HOT</th>
+                                                <th>ICED</th>
+                                                <th>얼음</th>
+                                                <th>카페인</th>
+                                                <th>시럽</th>
+                                                <th>샷</th>
+                                                <th>우유</th>
+                                                <th>휘핑</th>
+                                                <th>자바칩</th>
+                                                <th>드리즐</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for class in class_prods %}
+                                            {% if class.prod_category == "BAKERY" %}
+                                            <tr>
+                                                <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                                                {% if class.prod_image %}
+                                                <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image}}"></td>
+                                                {% else %}
+                                                <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                                                {% endif %}
+                                                <td>{{class.prod_name}}</td>
+                                                <td>{{class.prod_price}}원</td>
+                                                {% if class.prod_hot_cold is 0 %}<!--베이커리-->
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                {% elif class.prod_hot_cold is 1 %}<!--핫-->
+                                                    <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                    <td><input type="checkbox" name="chk_option" value=""/></td>
+                                                {% elif class.prod_hot_cold is 2 %}<!--아이스-->
+                                                    <td><input type="checkbox" name="chk_option" value="1"/></td>
+                                                    <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                                {% else %}<!--핫&아이스-->
+                                                    <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                    <td><input type="checkbox" name="chk_option" value="2"checked></td>
+                                                {% endif %}
+
+                                                {% if class.prod_hot_cold is 2 %}<!--얼음양-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% elif class.prod_hot_cold is 3 %}
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+        
+                                                {% if class.prod_caf_amount is True %}<!--카페인-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+        
+                                                {% if class.prod_syrup is 0 %}<!--시럽-->
+                                                    <td><input type="checkbox" name="chk_option" value="0"></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="1"checked></td>
+                                                {% endif %}
+                                                {% if class.prod_shot is True %}<!--샷-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+                                                {% if class.prod_milk is True %}<!--우유-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+                                                {% if class.prod_whip is True %}<!--휘핑-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+                                                {% if class.prod_java_chip is True %}<!--자바칩-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+                                                {% if class.prod_driz is True %}<!--드리즐-->
+                                                    <td><input type="checkbox" name="chk_option" value="true" checked></td>
+                                                {% else %}
+                                                    <td><input type="checkbox" name="chk_option" value="false"/></td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
+        <!--옵션 상세 설명-->
+        <section id="options" class="coffee-options">
+            <div>-<b>카페인</b>: 일반,&emsp;디카페인,&emsp;1/2 디카페인&emsp;&emsp;&emsp;
+                -<b>시럽</b>: 바닐라,&emsp;헤이즐넛,&emsp;카라멜&emsp;&emsp;&emsp;
+                -<b>우유</b>: 일반,&emsp;저지방,&emsp;무지방,&emsp;두유&emsp;&emsp;&emsp;
+                -<b>휘핑크림</b>: 일반,&emsp;에스프레소&emsp;&emsp;&emsp;
+                -<b>드리즐</b>: 카라멜,&emsp;초콜릿</div>
+        </section>
+        <!--메뉴 추가/수정/삭제버튼-->
+        <div id="buttons" class="menu-button">
+            <button type="button" class="input_add_btn" onClick="location.href='manage-menu-addendum'">메뉴 추가</button>
+            <button type="button" class="input_update_btn">메뉴 수정</button>
+            <input type="submit" class="input_delete_btn" value="메뉴 삭제">
         </div>
-    </section>
-    <!--옵션 상세 설명-->
-    <section id="options" class="coffee-options">
-        <div>-<b>카페인</b>: 일반,&emsp;디카페인,&emsp;1/2 디카페인&emsp;&emsp;&emsp;
-            -<b>시럽</b>: 바닐라,&emsp;헤이즐넛,&emsp;카라멜&emsp;&emsp;&emsp;
-            -<b>우유</b>: 일반,&emsp;저지방,&emsp;무지방,&emsp;두유&emsp;&emsp;&emsp;
-            -<b>휘핑크림</b>: 일반,&emsp;에스프레소&emsp;&emsp;&emsp;
-            -<b>드리즐</b>: 카라멜,&emsp;초콜릿</div>
-    </section>
-    <!--메뉴 추가/수정/삭제버튼-->
-    <div id="buttons" class="menu-button">
-        <button type="button" class="input_add_btn" onClick="location.href='manage-menu-addendum'">메뉴 추가</button>
-        <button type="button" class="input_update_btn">메뉴 수정</button>
-        <button type="button" class="input_delete_btn">메뉴 삭제</button>
-    </div>
+    </form>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
