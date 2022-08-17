@@ -1,120 +1,183 @@
-/* 문구 */
-.h-25
-{
-    margin-top: 5%;
-}
-
-.h-50
-{
-    margin-top: -8%;
-}
-
-h1, h3, h4, h5{
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 500;
-}
-
-h1{
-    margin-top: 5%;
-    font-weight: 600;
-    color: #79a992;
-}
-
-h5
-{
-    font-weight: 500;
-    color:#d8d8d8;
-}
-
-h3{
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.87);
-    margin-top: -4%;
-}
-
-h4{
-  color: #ffa6a9;
-  font-size: 1.6em;
-  margin-top: 10%;
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
 
 body {
-    /* background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #caedc9 100%);*/
-    background-color: #232323;
-    overflow: hidden;
-    width:100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #232323;
+  overflow: hidden;
+}
+
+.parent {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+
+/* 테두리 */
+.container {
+  text-align: center;
+  animation: scale1 2s alternate forwards;
+  vertical-align: middle;
+}
+
+
+@keyframes scale1 {
+  0% {
+    transform: translateY(-10px);
+    visibility: hidden;
   }
 
-/* 영수증 */
+  100% {
+    transform: translateY(10px);
+    visibility: visible;
+  }
+}
 
-.receipt {
-  height: 130px;
-  width: 130px;
+.top_box {
+  border: 3px solid #d6d5d57a;
+  border-radius: 5%;
+  width: 53%;
+  display: inline-block;
+  padding-bottom: -8em;
+}
+
+
+/* 주문번호 */
+#order_num {
+  width: 96%;
+  margin: 0 auto;
+  margin-top: 2%;
+  border-bottom: 3px solid #d6d5d57a;
+}
+
+#order_num h3 {
+  font-weight: 600;
+  color: white;
+  font-size: 1.5em;
+  padding: 0.2em 0;
+}
+
+/* 영수증 */
+#receipt_img {
+  height: 7em;
+  width: 7em;
   display: flex;
   background-size: cover;
   background-image: url(../image/receipt.png);
-  margin: 0 auto;
-  margin-bottom: 7%;
-  margin-top: -20%;
+  margin: 2.3em auto;
+
 }
 
-@keyframes scale1 {
-  0%
-  {
-      transform: translateY(-20px);
-      visibility: hidden;
-  }
-  100%  
-  {  
-      transform: translateY(20px);
-      visibility: visible;
-  }
+
+/* 총합 */
+
+#price {
+  margin: 0.95em auto;
 }
 
-/* 테두리 */
-
-.top_box
-{
-  border: 3px solid #d6d5d57a;
-  border-radius: 5%;
-  margin-top: 4%;
-  width: 60%;
-  margin-top: 5%;
+#price h4 {
+  font-weight: 900;
+  color: rgb(167, 194, 175);
+  /* rgb(103, 159, 192) */
+  font-size: 3em;
+  letter-spacing: 0.15em;
   display: inline-block;
+  padding: 0.2em;
 }
 
-.container{
+#price h3 {
+  font-weight: 700;
+  color: rgb(0, 0, 0);
+  display: inline-block;
+  font-size: 2.5em;
+  letter-spacing: 0.15em;
+  padding: 0.12em;
+}
+
+#price #span_num {
+  background-color: #869b90 !important;
+  border: 2px solid rgb(255, 255, 255);
+}
+
+#price #span_title {
+  margin-right: 3em;
+}
+
+/* 고객님의 주문 접수 완료 문구 */
+.row h1 {
+  font-family: 'Black Han Sans', sans-serif;
+  font-weight: 400;
+  color: #7fc2a1;
+  font-size: 3.5em;
+  margin-bottom: 0.3em;
+}
+
+
+/* 메뉴 표 */
+table {
+  border-top: 3px solid #d6d5d57a;
+  border-bottom: 3px solid #d6d5d57a;
+  width: 100%;
   text-align: center;
-  
-  /* 추가된 부분 */
-  animation: scale1 2s alternate forwards;
+}
+
+table h5 {
+  font-size: 1.55em;
+}
+
+tr {
+  padding: 0.3em 0;
+}
+
+td {
+  padding: 0.48em 0;
+  border: 1px solid #d6d5d57a;
+}
+
+#name {
+  text-align: left;
+  padding-left: 2em;
+  color: rgba(255, 255, 255, 0.815);
+}
+
+#ea {
+  color: rgba(231, 244, 250, 0.692)
 }
 
 
- /* 차 */
-
- .car_contain{
-  height: 80px;
-  width: 80px;
+/* 차 */
+.car_contain {
+  height: 5em;
+  width: 5em;
   display: flex;
   background-size: cover;
   background-image: url(../image/car.png);
   margin: 0 auto;
-  margin-top: 2%;
-  
-  /* 추가된 부분 */
-  animation: scale2 2s alternate forwards;
- }
+  margin-top: 1em;
+
+  animation: scale2 2.5s alternate forwards;
+}
 
 @keyframes scale2 {
-  0%
-  {
-      transform: translateX(-125px);
-      visibility: hidden;
+  0% {
+    transform: translateX(-140px);
+    visibility: hidden;
   }
-  100%  
-  {  
-      transform: translateX(125px);
-      visibility: visible;
+
+  100% {
+    transform: translateX(140px);
+    visibility: visible;
   }
+}
+
+
+/* 픽업장소 이동 */
+.bottom_box {
+  color: rgb(214, 214, 214);
+  font-weight: 900;
+  margin: 0.7em 0;
 }

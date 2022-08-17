@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 html,
 body {
@@ -182,13 +182,6 @@ body {
 
 
 /* 우측- 영수증 */
-#title {
-    height: 3em;
-    background-color: #2e835b;
-    color: white;
-}
-
-
 #total_txt {
     color: white;
 }
@@ -207,52 +200,108 @@ body {
 
 #border2 {
 
-    background-color: rgb(226, 150, 150);
+    background-color: rgb(220 229 225);
     border-style: solid;
     border-color: #2e835b #2e835b #2e835b #2e835b;
-    border-width: 0px 2.5px 2.5px 0px;
+    border-width: 0px 0px 2.5px 0px;
+    margin-top: -1em;
+    padding: 0.35em 0;
 }
 
 #border3 {
-
     background-color: rgb(81, 104, 92);
     border-style: solid;
     border-color: #2e835b #2e835b #2e835b #2e835b;
     border-width: 0px 2.5px 2.5px 0px;
+    margin-top: -1em;
+    padding: 0.35em 0;
 }
+
+#menu_table_end {
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    font-size: 1em;
+}
+
 
 #menu_table {
     background-color: white;
-    color: #282828;
-    font-weight: 700;
+    border-left: 2px solid #2e835b;
+    border-right: 2px solid #2e835b;
+}
+
+#menu_table .col-md-8,
+#menu_table .col-md-2 {
+    margin: 0.65em 0;
+}
+
+
+#menu_table .col-md-8 h3 {
+    font-weight: 500;
+    color: #444a46;
+    text-align: left !important;
+    margin-left: 2em;
+}
+
+#menu_table h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: #455c47;
+}
+
+#title {
+    background-color: #2e835b;
+    color: white;
+    padding: 1em 0;
+    height: 4.5em;
+    margin-bottom: 1em;
+    border-bottom: 2.5px solid #2e835b;
+}
+
+#menu_table_end {
+    height: 3.5em;
+}
+
+#menu_table_end h3 {
+    margin-top: 0.35em;
 }
 
 ul {
-    margin-left: 3em;
-    color: rgb(82, 82, 82);
-    font-weight: 400;
-}
-
-
-/* 요기서부터 */
-
-/* 메뉴명 */
-/* #mid h3 {
-    text-align: center;
-    margin-top: 10px;
-}
-
-
-#list_txt {
-    color: rgb(82, 82, 82);
-    margin-top: 15px;
-}
-
-#op_txt {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    color: rgb(82, 82, 82);
     font-size: 1.2em;
-    text-align: left;
+    font-weight: 700;
+    color: rgb(83, 83, 83);
+    padding-left: 1.5em;
+    padding-bottom: 1.3em;
+    border-bottom: 2.5px solid #7fa392;
 }
-*/
+
+ul li {
+    margin-left: 4em;
+    margin-bottom: 0.3em;
+}
+
+ul li:nth-last-child {
+
+    margin-bottom: 0.3em;
+}
+
+/* 온도 아이콘 */
+
+/* 1. HOT */
+.fa-solid.fa-mug-hot {
+    font-size: 1.08em;
+    margin-left: 0.2em;
+    color: #d94b60;
+}
+
+/* 2. COLD */
+.fa-solid.fa-snowflake {
+    font-size: 1.08em;
+    margin-left: 0.2em;
+    color: #4c64c7;
+}
+
+.badge.bg-success {
+    font-size: 0.75em;
+    margin-right: 0.2em;
+}

@@ -3,6 +3,7 @@
 <head>
     <title> 키오스크 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/043bb5442c.js" crossorigin="anonymous"></script>
 </head>
 
 {% load static %}
@@ -128,7 +129,7 @@
                                             <h4 class="text-center mt-1">5</h4>
                                         </div>
                                         <h5 class="menu_name mt-2" id="new_5_id">곡물 빵
-                                            <span class="badge bg-info">Food</span>
+                                            <span class="badge bg-warning text-dark">Food</span>
                                         </h5>
                                         <h5 class="menu_price">
                                             <button type="none" class="btn-btn-outline-primary">$</button>
@@ -171,13 +172,13 @@
 
                         <tr>
                             <div class="row" id="title">
-                                <div class="col-md-8">
+                                <div class="col-xl-8">
                                     <h3 class="text-center">주문하신 메뉴</h3>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-xl-2">
                                     <h3 class="text-center">수량</h3>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-xl-2">
                                     <h3 class="text-center">가격</h3>
                                 </div>
                             </div>
@@ -188,7 +189,7 @@
                         <div id="content"></div>
 
                     </table>
-                    <div class="row">
+                    <div class="row" id="menu_table_end">
                         <div class="col-md-6 text-center" id="border3">
                             <h3 id="total_txt">주문 금액</h3>
                         </div>
@@ -207,25 +208,44 @@
     </div>
 
 
+
+
+
+
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
 
     <script>
 
 
         /* 메인 */
         var morpheme_list = new Array(); //형태소 리스트 저장
+        var morpheme_copy = new Array(); //담고 빼서 쓰기
         var before_list = new Array(); //주문 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
         var user_op_list = new Array();
         var after_list = new Array(); //실제 주문 완성 리스트 [메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
+        var category = "";
         var txt = document.getElementById("ai_say");
         var forms = document.getElementById("content");
         var forms_txt = '';
         var total_real = document.getElementById("total_real");
+        var modalContent = document.getElementById("modalContent");
 
         var price_list = new Array(); //상품 1개 가격*수량 + 옵션
         var morpheme_str = "";
+        var menu_cnt = 0;
         var menu_price = 0;
         var total_price = 0;
+
+        /* 정수인지 판별 */
+        function isInteger(value) {
+            return typeof value === 'number' &&
+                isFinite(value) &&
+                Math.floor(value) === value;
+        };
 
 
         txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
@@ -283,6 +303,7 @@
             var audio_once = false; //한번이라도 주문했는지
 
             try {
+
                 var audio1 = await tts("어서오세요. 스타벅스입니다!");
 
                 txt.innerHTML = "주문을 원하시는 메뉴나 번호를 말씀해주세요💚";
@@ -300,32 +321,81 @@
 
                         if (stt1.length > 1) //한 글자 이상 들어오면
                         {
-
-                            txt.innerHTML = "✅" + stt1;
-
                             /* 형태소 분석기 실행 */
                             var stt_morpheme = await stem_analyzer(stt1);
                             //console.log("return: ",stt_morpheme); -> 아메리카노,하나
                             console.log("전역 호출: ", morpheme_list); //-> [아메리카노,하나]
+
+
+                            // 없애고 싶은 문자열 지정
+                            for (var i = 0; i < morpheme_list.length; i++) {
+                                if (morpheme_list[i] == '번') {
+                                    morpheme_list.splice(i, 1);
+                                    i++;
+                                }
+                            }
+                            console.log('번 없앤 문자열: ', morpheme_list);
+                            morpheme_copy = morpheme_list.slice();
                             //console.log("전역 호출 문자: ", morpheme_str); -> 아메리카노,하나
 
 
-                            /* DB에 있는지 메뉴 조회 */
-                            for (var x = 0; x < morpheme_list.length; x++) {
-                                for (var y = 0; y < db_menu.length; y++) {
-                                    if (morpheme_list[x] == db_menu[y]) {
-                                        console.log('메뉴 인식 완료 : ');
-                                        //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
-                                        before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]])
 
-                                        break;
+                            /* DB에 있는지 메뉴 조회 */
+                            out: for (var x = 0; x < morpheme_list.length; x++) {
+                                inn: for (var y = 0; y < db_menu.length; y++) {
+                                    if (morpheme_list[x] == db_menu[y]) {
+                                        console.log('메뉴 인식 완료');
+                                        txt.innerHTML = "✅" + db_menu[y] + " 메뉴를 선택하셨습니다!";
+                                        //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
+                                        before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
+                                        category = db[y][1];
+                                        morpheme_copy.splice(x, 1);
+                                        break inn;
                                     }
-                                    else //메뉴 인식 못함
+                                }
+                                break out;
+                            }
+
+                            /* 메뉴 있는지 확인 */
+
+                            if (before_list.length < 1) {
+                                console.log('메뉴 인식 못함');
+                                while (before_list.length == 0) { //메뉴 인식되서 before_list에 뭐 들어올 때까지 계속 반복
+                                    txt.innerHTML = "메뉴를 인식하지 못했습니다. 다시 주문해주세요!";
+                                    var audio2 = await tts("메뉴를 인식하지 못했습니다. 다시 주문해주세요!");
+                                    txt.innerHTML = "인식 중 ...!";
+                                    var stt1 = await speech_to_text();
+
+                                    if (stt1.length > 1) //한 글자 이상 들어오면
                                     {
-                                        //...
+
+                                        /* 형태소 분석기 실행 */
+                                        var stt_morpheme = await stem_analyzer(stt1);
+                                        //console.log("return: ",stt_morpheme); -> 아메리카노,하나
+                                        console.log("전역 호출: ", morpheme_list); //-> [아메리카노,하나]
+                                        morpheme_copy = morpheme_list.slice();
+                                        //console.log("전역 호출 문자: ", morpheme_str); -> 아메리카노,하나
+
+                                        /* DB에 있는지 메뉴 조회 */
+                                        outer: for (var x = 0; x < morpheme_list.length; x++) {
+                                            inner: for (var y = 0; y < db_menu.length; y++) {
+                                                if (morpheme_list[x] == db_menu[y]) {
+                                                    console.log('메뉴 인식 완료');
+                                                    txt.innerHTML = "✅" + db_menu[y] + " 메뉴를 선택하셨습니다!";
+                                                    //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
+                                                    before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
+                                                    category = db[y][1];
+                                                    morpheme_copy.splice(x, 1);
+                                                    break inner;
+                                                }
+                                            }
+                                            break outer;
+                                        }
                                     }
                                 }
                             }
+
+
 
 
                             /* 사용자가 말한 옵션 */
@@ -341,27 +411,43 @@
                             var user_size = "";
 
 
-                            for (var z = 0; z < morpheme_list.length; z++) {
+                            for (var z = 0; z < morpheme_copy.length; z++) {
                                 /* 사용자가 말한 메뉴 옵션!! */
                                 //!!!!!!!!!!!!!!!!! 나중에 임베딩 연결하면 case 값 바꾸기
+                                console.log('========================================' + z + '번째==================================');
+                                console.log('단어: ' + morpheme_copy[z]);
+                                console.log('총리스트: ' + morpheme_copy);
+                                console.log('길이: ' + morpheme_copy.length);
 
                                 //1. 온도
-                                if (morpheme_list[z] == '핫') {
+                                if (morpheme_copy[z] == '핫') {
                                     user_hot_cold = "H";
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
-                                else if (morpheme_list[z] == '아이스') {
+                                else if (morpheme_copy[z] == '아이스') {
                                     user_hot_cold = "C";
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
 
                                 //예외처리
                                 if ((Number(before_list[before_list.length - 1][2]) == 1) && (user_hot_cold == "C")) //핫
                                 {
-                                    alert("Hot만 가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-primary' style='font-size:0.58em; margin-bottom: 1em !important;'>ICE</span>" + " 선택이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " <span class='badge bg-danger' style='font-size:0.58em; margin-bottom: 1em !important;'>HOT</span> 메뉴를 선택하셨습니다!";
+
                                     user_hot_cold = "H";
                                 }
                                 else if ((Number(before_list[before_list.length - 1][2]) == 2) && (user_hot_cold == "H")) //콜드
                                 {
-                                    alert("Cold만 가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-danger' style='font-size:0.58em; margin-bottom: 1em !important;'>HOT</span>" + " 선택이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " <span class='badge bg-primary' style='font-size:0.58em; margin-bottom: 1em !important;'>ICE</span> 메뉴를 선택하셨습니다!";
+
                                     user_hot_cold = "C";
                                 }
 
@@ -380,132 +466,566 @@
                                 }
 
                                 //2. 카페인 조절
-                                if (morpheme_list[z] == '카페인') {
+                                if (morpheme_copy[z] == '카페인') {
                                     user_caf_amount = 'CC';
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
-                                else if (morpheme_list[z] == '디카페인') {
+                                else if (morpheme_copy[z] == '디카페인') {
                                     user_caf_amount = 'CD';
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
-                                else if (morpheme_list[z] == '하프디카페인') {
+                                else if ((morpheme_copy[z].indexOf('하프') >= 0) || (morpheme_copy[z].indexOf('half') >= 0)) {
                                     user_caf_amount = 'CH';
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
 
                                 //예외처리
                                 if ((before_list[before_list.length - 1][3] == 'False') && (user_caf_amount != "")) //카페인 조절 불가능
                                 {
-                                    alert("카페인 조절이 불가능한 메뉴입니다");
+
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>카페인</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_caf_amount = "";
                                 }
 
+
                                 //3. 시럽 조절
-                                if ((morpheme_list[z] == '바닐라') || (morpheme_list[z] == '바닐라시럽')) {
-                                    if (Number(morpheme_list[z + 1] != NaN)) {
-                                        user_syrup = 'B' + Number(morpheme_list[z + 1])
+                                if (morpheme_copy[z].indexOf('시럽') >= 0) {
+
+                                    //3-1. 시럽 > 바닐라로 형태소 분석
+                                    if ((morpheme_copy[z + 1] == '바닐라') || (morpheme_copy[z + 1] == '바닐라시럽')) {
+
+                                        if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                            // 숫자 - 시럽 - 바닐라 
+                                            user_syrup = 'B' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 3);
+                                            z--;
+                                            console.log("n번 시럽 바닐라");
+                                            continue;
+                                        }
+                                        else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                            // 시럽 - 바닐라 - 숫자
+                                            user_syrup = 'B' + Number(morpheme_copy[z + 2]);
+                                            morpheme_copy.splice(z, 3);
+                                            z--;
+                                            console.log("시럽 바닐라 n번");
+                                            continue;
+                                        }
+                                        else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                            //시럽 - 바닐라 (숫자 없음)
+                                            user_syrup = 'B2';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("시럽 바닐라 숫자 없음");
+                                            continue;
+                                        }
                                     }
+
+                                    /* 형태소 (헤이즐넛 너무 불안정함) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (539~566번째 줄 다시) */
+                                    //3-2. 시럽 > 헤이즐넛으로 형태소 분석
+                                    else if ((morpheme_copy[z + 1] == '헤이즐넛') || (morpheme_copy[z + 1] == '헤이즐넛시럽')) {
+                                        if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                            // 숫자 - 시럽 - 헤이즐넛 
+                                            user_syrup = 'H' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 3);
+                                            z--;
+                                            console.log("n번 시럽 헤이즐넛");
+                                            continue;
+                                        }
+                                        else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                            // 시럽 - 헤이즐넛 - 숫자
+                                            user_syrup = 'H' + Number(morpheme_copy[z + 2]);
+                                            morpheme_copy.splice(z, 3);
+                                            z--;
+                                            console.log("시럽 헤이즐넛 n번");
+                                            continue;
+                                        }
+                                        else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                            //시럽 - 헤이즐넛 (숫자 없음)
+                                            user_syrup = 'H2';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("시럽 헤이즐넛 숫자 없음");
+                                            continue;
+                                        }
+                                    }
+
+                                    //3-3. 시럽 > 카라멜로 형태소 분석
+                                    else if ((morpheme_copy[z + 1] == '카라멜') || (morpheme_copy[z + 1] == '카라멜시럽')) {
+                                        if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                            // 숫자 - 시럽 - 카라멜
+                                            user_syrup = 'C' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 3);
+                                            z--;
+                                            console.log("n번 시럽 카라멜");
+                                            continue;
+                                        }
+                                        else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                            // 시럽 - 카라멜 - 숫자
+                                            user_syrup = 'C' + Number(morpheme_copy[z + 2]);
+                                            morpheme_copy.splice(z, 3);
+                                            z--;
+                                            console.log("시럽 카라멜 n번");
+                                            continue;
+                                        }
+                                        else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                            //시럽 - 카라멜 (숫자 없음)
+                                            user_syrup = 'C2';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("시럽 카라멜 숫자 없음");
+                                            continue;
+                                        }
+                                    }
+
+                                    //3-4. 바닐라 > 시럽으로 형태소 분석 (바닐라시럽)
+                                    else if (morpheme_copy[z] == '바닐라시럽') {
+
+                                        //숫자 - 바닐라 - 시럽
+                                        if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                            user_syrup = 'B' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log("n번 바닐라시럽");
+                                            continue;
+                                        }
+                                        //바닐라 - 시럽 - 숫자
+                                        else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                            user_syrup = 'B' + Number(morpheme_copy[z + 1]);
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("바닐라시럽 n번");
+                                            continue;
+                                        }
+                                        //아무것도 없을 때
+                                        else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                            user_syrup = 'B2';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("바닐라시럽 숫자 없음");
+                                            continue;
+                                        }
+                                    }
+
+                                    /* 형태소 (헤이즐넛 너무 불안정함) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (625~653번째 줄 다시) */
+                                    //3-5. 헤이즐넛 > 시럽으로 형태소 분석 (헤이즐넛시럽)
+                                    else if (morpheme_copy[z] == '헤이즐넛시럽') {
+
+                                        //숫자 - 헤이즐넛 - 시럽
+                                        if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                            user_syrup = 'H' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log("n번 헤이즐넛시럽");
+                                            continue;
+                                        }
+                                        //헤이즐넛 - 시럽 - 숫자
+                                        else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                            user_syrup = 'H' + Number(morpheme_copy[z + 1]);
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("헤이즐넛시럽 n번");
+                                            continue;
+                                        }
+                                        //아무것도 없을 때
+                                        else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                            user_syrup = 'H2';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("헤이즐넛시럽 숫자 없음");
+                                            continue;
+                                        }
+                                    }
+
+
+                                    //3-6. 카라멜 > 시럽으로 형태소 분석 (카라멜시럽)
+                                    else if (morpheme_copy[z] == '카라멜시럽') {
+
+                                        //숫자 - 카라멜 - 시럽
+                                        if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                            user_syrup = 'C' + Number(morpheme_copy[z - 1]);
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log("n번 카라멜시럽");
+                                            continue;
+                                        }
+                                        //카라멜 - 시럽 - 숫자
+                                        else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                            user_syrup = 'C' + Number(morpheme_copy[z + 1]);
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("카라멜시럽 n번");
+                                            continue;
+                                        }
+                                        //아무것도 없을 때
+                                        else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                            user_syrup = 'C2';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("카라멜시럽 숫자 없음");
+                                            continue;
+                                        }
+                                    }
+
+                                    //3-7. 시럽 종류 아무것도 선택 안했을 때
                                     else {
-                                        user_syrup = 'B2';
-                                    }
-                                }
-                                else if ((morpheme_list[z] == '헤이즐넛') || (morpheme_list[z] == '헤이즐넛시럽')) {
-                                    if (Number(morpheme_list[z + 1] != NaN)) {
-                                        user_syrup = 'H' + Number(morpheme_list[z + 1])
-                                    }
-                                    else {
-                                        user_syrup = 'H2';
-                                    }
-                                }
-                                else if ((morpheme_list[z] == '카라멜') || (morpheme_list[z] == '카라멜시럽')) {
-                                    if (Number(morpheme_list[z + 1] != NaN)) {
-                                        user_syrup = 'C' + Number(morpheme_list[z + 1])
-                                    }
-                                    else {
-                                        user_syrup = 'C2';
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>시럽</span>" + "이 적용되지 않습니다🥲 (종류 미선택)";
+                                        await delay(2000);
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("시럽 종류 선택 안함");
+                                        continue;
                                     }
                                 }
 
                                 //예외처리
                                 if (Number(before_list[before_list.length - 1][4] == 0) && (user_syrup != "")) //시럽 조절 불가능
                                 {
-                                    alert("시럽 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>시럽</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_syrup = "";
                                 }
 
 
-                                //4. 샷 조절 -> 쎄 없애기
-                                if ((morpheme_list[z] == '샷') || (morpheme_list[z] == '쎄')) {
-                                    if (Number(morpheme_list[z + 1] != NaN)) {
-                                        user_shot = 'S' + Number(morpheme_list[z + 1])
+                                /* 형태소 (샷 인식 불안정 / 주문 어떻게 하는지 다시 알아보고 하기) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (707~737번째 줄 다시) */
+                                //4. 샷 조절 -> 쎄, 겔 나중에 형태소 적용되면 없애기
+                                if ((morpheme_copy[z].indexOf('샷') >= 0) || (morpheme_copy[z].indexOf('쎄') >= 0) || (morpheme_copy[z].indexOf('겔') >= 0) || (morpheme_copy[z].indexOf('쉐') >= 0)) {
+
+                                    //숫자 - 샷
+                                    if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                        user_shot = 'S' + Number(morpheme_copy[z + 1]);
+                                        morpheme_copy.splice(z - 1, 2);
+                                        z--;
+                                        console.log("n번 샷");
+                                        continue;
                                     }
+
+                                    //샷 - 숫자
+                                    else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                        user_shot = 'S' + Number(morpheme_copy[z + 1]);
+                                        morpheme_copy.splice(z, 2);
+                                        z--;
+                                        console.log("샷 n번");
+                                        continue;
+                                    }
+
+                                    //숫자 말 안하면
                                     else {
                                         user_shot = 'S1';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("샷 선택 안함");
+                                        continue;
                                     }
                                 }
 
                                 //예외처리
                                 if ((before_list[before_list.length - 1][5] == 'False') && (user_shot != "")) //샷 조절 불가능
                                 {
-                                    alert("샷 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>샷</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_shot = "";
                                 }
 
 
                                 //5. 우유 조절
-                                if (morpheme_list[z].indexOf('저지방') >= 0) { //indexOf 포함 문자열 있으면 해당 인덱스, 없으면 -1 반환
-                                    user_milk = 'ML';
+
+                                if (morpheme_copy[z].indexOf('우유') >= 0) {
+
+                                    // 우유가 앞에 있을 때
+                                    if ((morpheme_copy[z + 1].indexOf('저지방') >= 0)) {
+                                        //1. 우유 - 저지방(우유)
+                                        user_milk = 'ML';
+                                        morpheme_copy.splice(z, 2);
+                                        z--;
+                                        console.log("저지방 우유 선택");
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z + 1].indexOf('무지방') >= 0)) { //indexOf 포함 문자열 있으면 해당 인덱스, 없으면 -1 반환
+                                        //2. 우유 - 무지방(우유)
+                                        user_milk = 'MN';
+                                        morpheme_copy.splice(z, 2);
+                                        z--;
+                                        console.log("무지방 우유 선택");
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z + 1].indexOf('두유') >= 0)) {
+                                        //3. 우유 - 두유
+                                        user_milk = 'MS';
+                                        morpheme_copy.splice(z, 2);
+                                        z--;
+                                        console.log("두유 우유 선택");
+                                        continue;
+                                    }
+                                    //우유가 뒤에 있을 때
+                                    else if ((morpheme_copy[z].indexOf('저지방') >= 0)) {
+                                        //5. 저지방 - 우유
+                                        user_milk = 'ML';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("저지방 우유 선택");
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z].indexOf('무지방') >= 0)) {
+                                        //6. 무지방 - 우유
+                                        user_milk = 'MN';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("무지방 우유 선택");
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z].indexOf('두유') >= 0)) {
+                                        //7. 두유 - 우유
+                                        user_milk = 'MS';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("두유 우유 선택");
+                                        continue;
+                                    }
+                                    //두유랑 오트는 메뉴랑도 겹치는 부분 있어서 뒤로 미룸
+                                    else if ((morpheme_copy[z + 1].indexOf('귀리') >= 0) || (morpheme_copy[z + 1].indexOf('오트') >= 0)) {
+                                        //4. 우유 - 귀리 / 오트 (우유)
+                                        user_milk = 'MO';
+                                        morpheme_copy.splice(z, 2);
+                                        console.log("귀리/오트 선택 - 우유가 먼저 나옴");
+                                        console.log(morpheme_copy[z + 1].indexOf('귀리'));
+                                        console.log(morpheme_copy[z + 1].indexOf('오트'));
+                                        z--;
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z].indexOf('귀리') >= 0) || (morpheme_copy[z].indexOf('오트') >= 0)) {
+                                        //8. 귀리 / 오트 - 우유
+                                        user_milk = 'MO';
+                                        morpheme_copy.splice(z, 1);
+                                        console.log("귀리/오트 선택 - 우유가 나중 나옴");
+                                        console.log(morpheme_copy[z + 1].indexOf('귀리'));
+                                        console.log(morpheme_copy[z + 1].indexOf('오트'));
+                                        z--;
+                                        continue;
+                                    }
+                                    else {
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>우유</span>" + "가 적용되지 않습니다🥲 (종류 미선택)";
+                                        await delay(2000);
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("우유 종류 선택 안함");
+                                        continue;
+                                    }
                                 }
-                                else if (morpheme_list[z].indexOf('무지방') >= 0) {
-                                    user_milk = 'MN';
-                                }
-                                else if (morpheme_list[z].indexOf('두유') >= 0) {
-                                    user_milk = 'MS';
-                                }
-                                else if ((morpheme_list[z].indexOf('귀리') >= 0) || (morpheme_list[z].indexOf('오트') > 0)) {
-                                    user_milk = 'MO';
+                                else {
+                                    //두유나 귀리/오트는 따로 우유 말 안하고 바꿀수도 있으니까 따로 빼줌
+                                    if (morpheme_copy[z].indexOf('두유') >= 0) {
+                                        user_milk = 'MS';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("두유 우유 선택");
+                                        continue;
+                                    }
+                                    else if ((morpheme_copy[z].indexOf('귀리') >= 0) || (morpheme_copy[z].indexOf('오트') >= 0)) {
+                                        user_milk = 'MO';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        console.log("귀리/오트 우유 선택");
+                                        continue;
+                                    }
                                 }
 
                                 //예외처리
                                 if ((before_list[before_list.length - 1][6] == 'False') && (user_milk != "")) //우유 조절 불가능
                                 {
-                                    alert("우유 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>우유</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_milk = "";
                                 }
 
 
                                 //6. 휘핑 조절
-                                if (morpheme_list[z].indexOf('휘핑') >= 0) {
+                                if (morpheme_copy[z].indexOf('휘핑') >= 0) {
 
                                     //에스프레소 휘핑인지 그냥 휘핑인지
-                                    if (morpheme_list[z - 1] == '에스프레소') {
+
+                                    //1. 에스프레소-휘핑
+                                    if (morpheme_copy[z].indexOf('에스프레소') >= 0) {
                                         user_whip = 'EW';
+
+                                        //2-1. 양-에스프레소휘핑
+                                        if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                            //많
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log('양-에스프레소휘핑');
+                                            continue;
+                                        }
+                                        else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log('양-에스프레소휘핑');
+                                            continue;
+                                        }
+                                        //2-2. 에스프레소휘핑-양
+                                        else if (morpheme_copy[z + 1].indexOf('많') >= 0) {
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log('에스프레소휘핑-양');
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z + 1].indexOf('적') >= 0) || (morpheme_copy[z + 1].indexOf('조금') >= 0) || (morpheme_copy[z + 1].indexOf('약간') >= 0)) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log('에스프레소휘핑-양');
+                                            continue;
+                                        }
+                                        //2-3. 에스프레소휘핑-양 없음
+                                        else {
+                                            user_whip += '2';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log('에스프레소휘핑 양 없음');
+                                            continue;
+                                        }
                                     }
-                                    else {
-                                        user_whip = 'W';
+                                    //3. 휘핑 - 에스프레소
+                                    else if (morpheme_copy[z + 1].indexOf('에스프레소') >= 0) {
+                                        user_whip = 'EW';
+
+                                        //2-1. 양-휘핑-에스프레소
+                                        if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                            //많
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z - 1, 3);
+                                            z--;
+                                            console.log('양-에스프레소휘핑');
+                                            continue;
+                                        }
+                                        else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z - 1, 3);
+                                            z--;
+                                            console.log('양-에스프레소휘핑');
+                                            continue;
+                                        }
+                                        //2-2. 휘핑-에스프레소-양
+                                        else if (morpheme_copy[z + 2].indexOf('많') >= 0) {
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z, 3);
+                                            z--;
+                                            console.log('에스프레소휘핑-양');
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z + 2].indexOf('적') >= 0) || (morpheme_copy[z + 2].indexOf('조금') >= 0) || (morpheme_copy[z + 2].indexOf('약간') >= 0)) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z, 3);
+                                            z--;
+                                            console.log('에스프레소휘핑-양');
+                                            continue;
+                                        }
+                                        //2-3. 휘핑-에스프레소-양 없음
+                                        else {
+                                            user_whip += '2';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log('에스프레소휘핑 양 없음');
+                                            continue;
+                                        }
                                     }
 
-                                    // 양은 얼마나 할건지
-                                    if (morpheme_list[z + 1].indexOf('많') >= 0) {
-                                        user_whip += '3';
+                                    //4. 일반 휘핑
+                                    else {
+                                        user_whip = 'W';
+
+                                        //1. 휘핑-양
+                                        if (morpheme_copy[z + 1].indexOf('많') >= 0) {
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log('일반휘핑-많');
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z + 1].indexOf('적') >= 0) || (morpheme_copy[z + 1].indexOf('조금') >= 0) || (morpheme_copy[z + 1].indexOf('약간') >= 0)) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log('일반휘핑-적');
+                                            continue;
+                                        }
+                                        //2. 양-휘핑
+                                        else if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                            user_whip += '3';
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log('많-일반휘핑');
+                                            continue;
+                                        }
+                                        else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                            //적
+                                            user_whip += '1';
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log('적-일반휘핑');
+                                            continue;
+                                        }
+                                        //3. 휘핑-양 없음
+                                        else {
+                                            user_whip += '2';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log('일반휘핑-양 없음');
+                                            continue;
+                                        }
                                     }
-                                    else if ((morpheme_list[z + 1] == '적게') || (morpheme_list[z + 1] == '조금') || (morpheme_list[z + 1] == '약간')) {
-                                        user_whip += '1';
-                                    }
-                                    else { //말 안하면 보통
-                                        user_whip += '2';
-                                    }
+
                                 }
 
                                 //예외처리
                                 if ((before_list[before_list.length - 1][7] == 'False') && (user_whip != "")) //휘핑 조절 불가능
                                 {
-                                    alert("휘핑 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>휘핑</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_whip = "";
                                 }
 
 
+
+                                /** 여기서부터!!!!!!!!!11 */
+
+
+
                                 //7. 자바칩 조절
                                 if (morpheme_list[z].indexOf('자바칩') >= 0) {
-                                    if ((morpheme_list[z - 1].indexOf('통') >= 0) || (morpheme_list[z].indexOf('통') >= 0) || (morpheme_list[z + 1].indexOf('통') >= 0)) {
+
+                                    if (morpheme_list[z - 1].indexOf('통') >= 0) {
                                         user_java_chip = 'JCA'; //통자바칩 토핑
+                                        morpheme_copy.splice(z, 1);
+                                        morpheme_copy.splice(z - 1, 1);
+                                    }
+                                    else if (morpheme_list[z].indexOf('통') >= 0) {
+                                        user_java_chip = 'JCA'; //통자바칩 토핑
+                                        morpheme_copy.splice(z, 1);
+                                    }
+                                    else if (morpheme_list[z + 1].indexOf('통') >= 0) {
+                                        user_java_chip = 'JCA'; //통자바칩 토핑
+                                        morpheme_copy.splice(z + 1, 1);
+                                        morpheme_copy.splice(z, 1);
                                     }
                                     else {
                                         user_java_chip = 'JC'; //일반 자바칩 토핑
@@ -515,7 +1035,9 @@
                                 //예외처리
                                 if ((before_list[before_list.length - 1][8] == 'False') && (user_java_chip != "")) //자바칩 조절 불가능
                                 {
-                                    alert("자바칩 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>자바칩</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_java_chip = "";
                                 }
 
@@ -533,43 +1055,56 @@
 
                                     // 양은 얼마나 할건지
                                     if (morpheme_list[z + 1].indexOf('많') >= 0) {
-                                        user_whip += '3';
+                                        user_driz += '3';
                                     }
                                     else if ((morpheme_list[z + 1] == '적게') || (morpheme_list[z + 1] == '조금') || (morpheme_list[z + 1] == '약간')) {
-                                        user_whip += '1';
+                                        user_driz += '1';
                                     }
                                     else if (morpheme_list[z + 1] == '보통') {
-                                        user_whip += '2';
+                                        user_driz += '2';
                                     }
                                     else { //말 안하면 보통
-                                        user_whip += '2';
+                                        user_driz += '2';
                                     }
                                 }
 
                                 //예외처리
                                 if ((before_list[before_list.length - 1][9] == 'False') && (user_driz != "")) //드리즐 조절 불가능
                                 {
-                                    alert("드리즐 조절이 불가능한 메뉴입니다");
+                                    txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>드리즐</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                    await delay(2000);
+                                    txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                     user_driz = "";
                                 }
 
 
                                 //9. 사이즈
-                                if (morpheme_list[z] == '숏') {
+                                if (morpheme_copy[z] == '숏') {
                                     user_size = "S";
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
-                                else if (morpheme_list[z] == '톨') {
+                                else if (morpheme_copy[z] == '톨') {
                                     user_size = "T";
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
-                                else if (morpheme_list[z] == '그란데') {
+                                else if (morpheme_copy[z] == '그란데') {
                                     user_size = "G";
+                                    morpheme_copy.splice(z, 1);
+                                    z--;
+                                    continue;
                                 }
 
                                 //아무 값도 없으면 기본값
                                 if (user_size == "") {
                                     user_size = "T";
                                 }
+
                             }
+
 
                             //user_op_list = (온도)H/C, (카페인)CC/CH/CD, (시럽)B숫자/H숫자/C숫자, 
                             //(샷)S숫자, (우유)ML/MN/MS/MO, (휘핑)EW1~3/W1~3, (자바칩)JCA/JC, (드리즐)DCR1~3/DCC1~3, (사이즈) S/T/G
@@ -625,26 +1160,24 @@
                             }
 
                             //4. 수량
-
                             /* 형태소 분석기 리스트 다 빼고 숫자만 남은 걸 수량으로 인식? - 일단 잠시 보류*/
-                            /* for (var x = 0; x < morpheme_list.length; x++) {
-                                for (var num = 1; num < 10; num++)
-                                    if (morpheme_list[x].indexOf(String(num)) == 0) //1~9가 속하는 문자열이 있으면 0
-                                    {
-                                        console.log("수량: ", Number(morpheme_list[x]));
-                                        var ea = Number(morpheme_list[x]);
-                                        //수량 인식 못했을 때 에러 처리
-                                        break;
-                                    }
-                            } */
-
+                            for (var k = 0; k < morpheme_copy.length; k++) {
+                                if (isInteger(Number(morpheme_copy[k])) == true) {
+                                    menu_ea = Number(morpheme_copy[k]);
+                                    console.log("수량 있음", menu_ea);
+                                    break;
+                                }
+                                else {
+                                    menu_ea = 1;
+                                }
+                            }
 
                             //3. hot_cold -> case 3: hot/cold 둘 다 다 될 땐 어떻게 할 건지 디폴트 값 정하기!!
                             hot_cold = user_op_list[user_op_list.length - 1][0];
                             var hot_cold_icon = "";
 
                             if (hot_cold == 'H') {
-                                hot_cold_icon = '<i class="fa-brands fa-hotjar"></i>';
+                                hot_cold_icon = '<i class="fa-solid fa-mug-hot"></i>';
                             }
                             else if (hot_cold == 'C') {
                                 hot_cold_icon = '<i class="fa-solid fa-snowflake"></i>';
@@ -690,7 +1223,7 @@
                             // 6. 샷
                             shot = user_op_list[user_op_list.length - 1][3];
                             if (shot != "") {
-                                ul += '<li>';
+                                ul += '<li>샷';
 
                                 if (shot[0] == 'S') {
                                     ul += ' +' + Number(shot[1]) + '</li>';
@@ -717,7 +1250,6 @@
                                     ul += '귀리';
                                 }
                                 ul += '</li>';
-
                                 op_price += 600;
                             }
 
@@ -753,7 +1285,8 @@
                                     }
                                 }
 
-                                ul += ' 추가 </li>';
+                                ul += ' </li>';
+                                op_price += 600;
                             }
 
                             // 9. 자바칩
@@ -804,28 +1337,57 @@
                             price_list.push(menu_price);
                             total_price += menu_price;
 
+                            //실제 주문 완성 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐, 사이즈, 옵션가격, 총가격]
+                            after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
 
-                            ul += '</ul>'
-                            forms_txt = '<tr>\
+
+                            if (category == "BAKERY") //음식이면 사이즈랑 온도 나오지 않도록
+                            {
+                                ul += '</ul>'
+                                forms_txt = '<tr>\
                                             <div class="row">\
                                                 <div class="col-md-8">\
                                                     <td>\
-                                                        <h4 class="text-center">'+ size + ')' + menu + hot_cold_icon + '</h4>\
+                                                        <h3>'+ menu + '</h3>\
                                                     </td>\
                                                 </div>\
                                                 <div class="col-md-2">\
                                                     <td>\
-                                                        <h5 class="text-center">'+ menu_ea + '</h5>\
+                                                        <h4 class="text-center">'+ menu_ea + '</h4>\
                                                     </td>\
                                                 </div>\
                                                 <div class="col-md-2">\
                                                     <td>\
-                                                        <h5 class="text-center">'+ menu_price + '</h5>\
+                                                        <h4 class="text-center">'+ menu_price + '</h4>\
                                                     </td>\
                                                 </div>\
                                             </div>\
                                             <div class="row">'+ ul + '</div>\
                                         </tr>';
+                            }
+                            else { //음료면 사이즈 나오도록
+                                ul += '</ul>'
+                                forms_txt = '<tr>\
+                                            <div class="row">\
+                                                <div class="col-md-8">\
+                                                    <td>\
+                                                        <h3><span style="color:#2c703e !important; font-weight: 700 !important;">'+ size + ')  </span>' + menu + '  ' + hot_cold_icon + '</h3>\
+                                                    </td>\
+                                                </div>\
+                                                <div class="col-md-2">\
+                                                    <td>\
+                                                        <h4 class="text-center">'+ menu_ea + '</h4>\
+                                                    </td>\
+                                                </div>\
+                                                <div class="col-md-2">\
+                                                    <td>\
+                                                        <h4 class="text-center">'+ menu_price + '</h4>\
+                                                    </td>\
+                                                </div>\
+                                            </div>\
+                                            <div class="row">'+ ul + '</div>\
+                                        </tr>';
+                            }
 
                             forms.innerHTML = forms_txt;
 
@@ -835,12 +1397,13 @@
                             var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요!");
 
                             audio_once = false;
+                            menu_cnt += 1; //주문 메뉴 1개 완료
 
                         }
                         else //한 글자도 안 들어오면
                         {
-                            txt.innerHTML = "✔️ 인식하지 못했습니다. 다시 한번 말씀해주세요!";
-                            var audio5 = await tts("인식하지 못했습니다. 다시 한번 말씀해주세요!");
+                            txt.innerHTML = "✔️ 인식하지 못했습니다. 다시 말씀해주세요!";
+                            var audio5 = await tts("인식하지 못했습니다. 다시 말씀해주세요!");
                         }
                     }
 
@@ -849,6 +1412,7 @@
                     {
                         console.log("한번 이상 주문");
                         txt.innerHTML = '📌 "결제"라고 말씀하시면 주문이 종료됩니다.';
+                        //txt.innerHTML = "인식 중 ...!";
 
                         var stt2 = await speech_to_text();
 
@@ -860,29 +1424,90 @@
                                 txt.innerHTML = "✔️ 결제 안내를 도와드리겠습니다";
                                 var audio5 = await tts("결제 안내를 도와드리겠습니다!");
                                 await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+
+                                var menu_param = "";
+                                var ea_param = "";
+                                for (var i = 0; i < after_list.length; i++) {
+                                    menu_param += after_list[i][0] + ",";
+                                    ea_param += after_list[i][13] + ",";
+                                }
+                                location.href = "/client/end?price=" + total_price + "&menu=" + menu_param.slice(0, -1) + "&ea=" + ea_param.slice(0, -1);
                                 break;
                             }
                             else //계속 메뉴 받고 싶으면
                             {
-                                txt.innerHTML = "✅" + stt2;
-
                                 /* 형태소 분석기 실행 */
                                 var stt_morpheme = await stem_analyzer(stt2);
+                                //console.log("return: ",stt_morpheme); -> 아메리카노,하나
                                 console.log("전역 호출: ", morpheme_list); //-> [아메리카노,하나]
 
-                                /* DB에 있는지 메뉴 조회 */
-                                for (var x = 0; x < morpheme_list.length; x++) {
-                                    for (var y = 0; y < db_menu.length; y++) {
-                                        if (morpheme_list[x] == db_menu[y]) {
-                                            console.log('메뉴 인식 완료 : ');
-                                            //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
-                                            before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]])
 
-                                            break;
+                                // 없애고 싶은 문자열 지정
+                                for (var i = 0; i < morpheme_list.length; i++) {
+                                    if (morpheme_list[i] == '번') {
+                                        morpheme_list.splice(i, 1);
+                                        i++;
+                                    }
+                                }
+                                console.log('번 없앤 문자열: ', morpheme_list);
+                                morpheme_copy = morpheme_list.slice();
+                                //console.log("전역 호출 문자: ", morpheme_str); -> 아메리카노,하나
+
+                                /* DB에 있는지 메뉴 조회 */
+                                out: for (var x = 0; x < morpheme_list.length; x++) {
+                                    inn: for (var y = 0; y < db_menu.length; y++) {
+                                        if (morpheme_list[x] == db_menu[y]) {
+                                            console.log('메뉴 인식 완료');
+                                            txt.innerHTML = "✅" + db_menu[y] + " 메뉴를 선택하셨습니다!";
+                                            //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
+                                            before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
+                                            category = db[y][1];
+                                            morpheme_copy.splice(x, 1);
+                                            break inn;
                                         }
-                                        else //메뉴 인식 못함
+                                    }
+                                    break out;
+                                }
+
+                                /* 메뉴 있는지 확인 */
+                                //이전에 주문 완료한 갯수와 이번에 새로 들어왔을 메뉴 갯수가 동일하면? 
+                                //= 인식이 안된 것. 원랜 주문 완료한 갯수+1(menu_cnt+1)과 이번에 새로 들어온 거까지 포함된 메뉴 갯수(before_list.length)가 동일해야함
+                                if (menu_cnt == before_list.length) {
+                                    console.log('메뉴 인식 못함');
+                                    while (before_list.length == menu_cnt) {
+                                        //메뉴 인식되서 before_list에 뭐 들어올 때까지 계속 반복 
+                                        //menu_cnt는 주문 완료 횟수 카운트(아직 추가 X). before_length는 추가 완료. 따라서, 정상적이면 menu_cnt+1과 before_length가 같아야하고,
+                                        //인식 안되면 둘이 횟수가 똑같음 -> 달라질 때까지 계속 실행하기
+                                        txt.innerHTML = "메뉴를 인식하지 못했습니다. 다시 주문해주세요!";
+                                        var audio2 = await tts("메뉴를 인식하지 못했습니다. 다시 주문해주세요!");
+                                        txt.innerHTML = "인식 중 ...!";
+                                        var stt1 = await speech_to_text();
+
+                                        if (stt1.length > 1) //한 글자 이상 들어오면
                                         {
-                                            //...
+
+                                            /* 형태소 분석기 실행 */
+                                            var stt_morpheme = await stem_analyzer(stt1);
+                                            //console.log("return: ",stt_morpheme); -> 아메리카노,하나
+                                            console.log("전역 호출: ", morpheme_list); //-> [아메리카노,하나]
+                                            morpheme_copy = morpheme_list.slice();
+                                            //console.log("전역 호출 문자: ", morpheme_str); -> 아메리카노,하나
+
+                                            /* DB에 있는지 메뉴 조회 */
+                                            outer: for (var x = 0; x < morpheme_list.length; x++) {
+                                                inner: for (var y = 0; y < db_menu.length; y++) {
+                                                    if (morpheme_list[x] == db_menu[y]) {
+                                                        console.log('메뉴 인식 완료');
+                                                        txt.innerHTML = "✅" + db_menu[y] + " 메뉴를 선택하셨습니다!";
+                                                        //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
+                                                        before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
+                                                        category = db[y][1];
+                                                        morpheme_copy.splice(x, 1);
+                                                        break inner;
+                                                    }
+                                                }
+                                                break outer;
+                                            }
                                         }
                                     }
                                 }
@@ -901,27 +1526,43 @@
                                 var user_size = "";
 
 
-                                for (var z = 0; z < morpheme_list.length; z++) {
+                                for (var z = 0; z < morpheme_copy.length; z++) {
                                     /* 사용자가 말한 메뉴 옵션!! */
                                     //!!!!!!!!!!!!!!!!! 나중에 임베딩 연결하면 case 값 바꾸기
+                                    console.log('========================================' + z + '번째==================================');
+                                    console.log('단어: ' + morpheme_copy[z]);
+                                    console.log('총리스트: ' + morpheme_copy);
+                                    console.log('길이: ' + morpheme_copy.length);
 
                                     //1. 온도
-                                    if (morpheme_list[z] == '핫') {
+                                    if (morpheme_copy[z] == '핫') {
                                         user_hot_cold = "H";
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
-                                    else if (morpheme_list[z] == '아이스') {
+                                    else if (morpheme_copy[z] == '아이스') {
                                         user_hot_cold = "C";
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
 
                                     //예외처리
                                     if ((Number(before_list[before_list.length - 1][2]) == 1) && (user_hot_cold == "C")) //핫
                                     {
-                                        alert("Hot만 가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-primary' style='font-size:0.58em; margin-bottom: 1em !important;'>ICE</span>" + " 선택이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " <span class='badge bg-danger' style='font-size:0.58em; margin-bottom: 1em !important;'>HOT</span> 메뉴를 선택하셨습니다!";
+
                                         user_hot_cold = "H";
                                     }
                                     else if ((Number(before_list[before_list.length - 1][2]) == 2) && (user_hot_cold == "H")) //콜드
                                     {
-                                        alert("Cold만 가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-danger' style='font-size:0.58em; margin-bottom: 1em !important;'>HOT</span>" + " 선택이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " <span class='badge bg-primary' style='font-size:0.58em; margin-bottom: 1em !important;'>ICE</span> 메뉴를 선택하셨습니다!";
+
                                         user_hot_cold = "C";
                                     }
 
@@ -940,132 +1581,566 @@
                                     }
 
                                     //2. 카페인 조절
-                                    if (morpheme_list[z] == '카페인') {
+                                    if (morpheme_copy[z] == '카페인') {
                                         user_caf_amount = 'CC';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
-                                    else if (morpheme_list[z] == '디카페인') {
+                                    else if (morpheme_copy[z] == '디카페인') {
                                         user_caf_amount = 'CD';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
-                                    else if (morpheme_list[z] == '하프디카페인') {
+                                    else if ((morpheme_copy[z].indexOf('하프') >= 0) || (morpheme_copy[z].indexOf('half') >= 0)) {
                                         user_caf_amount = 'CH';
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
 
                                     //예외처리
                                     if ((before_list[before_list.length - 1][3] == 'False') && (user_caf_amount != "")) //카페인 조절 불가능
                                     {
-                                        alert("카페인 조절이 불가능한 메뉴입니다");
+
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>카페인</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_caf_amount = "";
                                     }
 
+
                                     //3. 시럽 조절
-                                    if ((morpheme_list[z] == '바닐라') || (morpheme_list[z] == '바닐라시럽')) {
-                                        if (Number(morpheme_list[z + 1] != NaN)) {
-                                            user_syrup = 'B' + Number(morpheme_list[z + 1])
+                                    if (morpheme_copy[z].indexOf('시럽') >= 0) {
+
+                                        //3-1. 시럽 > 바닐라로 형태소 분석
+                                        if ((morpheme_copy[z + 1] == '바닐라') || (morpheme_copy[z + 1] == '바닐라시럽')) {
+
+                                            if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                                // 숫자 - 시럽 - 바닐라 
+                                                user_syrup = 'B' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 3);
+                                                z--;
+                                                console.log("n번 시럽 바닐라");
+                                                continue;
+                                            }
+                                            else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                                // 시럽 - 바닐라 - 숫자
+                                                user_syrup = 'B' + Number(morpheme_copy[z + 2]);
+                                                morpheme_copy.splice(z, 3);
+                                                z--;
+                                                console.log("시럽 바닐라 n번");
+                                                continue;
+                                            }
+                                            else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                                //시럽 - 바닐라 (숫자 없음)
+                                                user_syrup = 'B2';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("시럽 바닐라 숫자 없음");
+                                                continue;
+                                            }
                                         }
+
+                                        /* 형태소 (헤이즐넛 너무 불안정함) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (539~566번째 줄 다시) */
+                                        //3-2. 시럽 > 헤이즐넛으로 형태소 분석
+                                        else if ((morpheme_copy[z + 1] == '헤이즐넛') || (morpheme_copy[z + 1] == '헤이즐넛시럽')) {
+                                            if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                                // 숫자 - 시럽 - 헤이즐넛 
+                                                user_syrup = 'H' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 3);
+                                                z--;
+                                                console.log("n번 시럽 헤이즐넛");
+                                                continue;
+                                            }
+                                            else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                                // 시럽 - 헤이즐넛 - 숫자
+                                                user_syrup = 'H' + Number(morpheme_copy[z + 2]);
+                                                morpheme_copy.splice(z, 3);
+                                                z--;
+                                                console.log("시럽 헤이즐넛 n번");
+                                                continue;
+                                            }
+                                            else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                                //시럽 - 헤이즐넛 (숫자 없음)
+                                                user_syrup = 'H2';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("시럽 헤이즐넛 숫자 없음");
+                                                continue;
+                                            }
+                                        }
+
+                                        //3-3. 시럽 > 카라멜로 형태소 분석
+                                        else if ((morpheme_copy[z + 1] == '카라멜') || (morpheme_copy[z + 1] == '카라멜시럽')) {
+                                            if ((z != 0) && (isInteger(Number(morpheme_copy[z - 1])) == true)) {
+                                                // 숫자 - 시럽 - 카라멜
+                                                user_syrup = 'C' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 3);
+                                                z--;
+                                                console.log("n번 시럽 카라멜");
+                                                continue;
+                                            }
+                                            else if (isInteger(Number(morpheme_copy[z + 2])) == true) {
+                                                // 시럽 - 카라멜 - 숫자
+                                                user_syrup = 'C' + Number(morpheme_copy[z + 2]);
+                                                morpheme_copy.splice(z, 3);
+                                                z--;
+                                                console.log("시럽 카라멜 n번");
+                                                continue;
+                                            }
+                                            else if (((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 2])) == false)) || (z == 0)) {
+                                                //시럽 - 카라멜 (숫자 없음)
+                                                user_syrup = 'C2';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("시럽 카라멜 숫자 없음");
+                                                continue;
+                                            }
+                                        }
+
+                                        //3-4. 바닐라 > 시럽으로 형태소 분석 (바닐라시럽)
+                                        else if (morpheme_copy[z] == '바닐라시럽') {
+
+                                            //숫자 - 바닐라 - 시럽
+                                            if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                                user_syrup = 'B' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log("n번 바닐라시럽");
+                                                continue;
+                                            }
+                                            //바닐라 - 시럽 - 숫자
+                                            else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                                user_syrup = 'B' + Number(morpheme_copy[z + 1]);
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("바닐라시럽 n번");
+                                                continue;
+                                            }
+                                            //아무것도 없을 때
+                                            else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                                user_syrup = 'B2';
+                                                morpheme_copy.splice(z, 1);
+                                                z--;
+                                                console.log("바닐라시럽 숫자 없음");
+                                                continue;
+                                            }
+                                        }
+
+                                        /* 형태소 (헤이즐넛 너무 불안정함) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (625~653번째 줄 다시) */
+                                        //3-5. 헤이즐넛 > 시럽으로 형태소 분석 (헤이즐넛시럽)
+                                        else if (morpheme_copy[z] == '헤이즐넛시럽') {
+
+                                            //숫자 - 헤이즐넛 - 시럽
+                                            if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                                user_syrup = 'H' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log("n번 헤이즐넛시럽");
+                                                continue;
+                                            }
+                                            //헤이즐넛 - 시럽 - 숫자
+                                            else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                                user_syrup = 'H' + Number(morpheme_copy[z + 1]);
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("헤이즐넛시럽 n번");
+                                                continue;
+                                            }
+                                            //아무것도 없을 때
+                                            else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                                user_syrup = 'H2';
+                                                morpheme_copy.splice(z, 1);
+                                                z--;
+                                                console.log("헤이즐넛시럽 숫자 없음");
+                                                continue;
+                                            }
+                                        }
+
+
+                                        //3-6. 카라멜 > 시럽으로 형태소 분석 (카라멜시럽)
+                                        else if (morpheme_copy[z] == '카라멜시럽') {
+
+                                            //숫자 - 카라멜 - 시럽
+                                            if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                                user_syrup = 'C' + Number(morpheme_copy[z - 1]);
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log("n번 카라멜시럽");
+                                                continue;
+                                            }
+                                            //카라멜 - 시럽 - 숫자
+                                            else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                                user_syrup = 'C' + Number(morpheme_copy[z + 1]);
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log("카라멜시럽 n번");
+                                                continue;
+                                            }
+                                            //아무것도 없을 때
+                                            else if (((z == 0) && (isInteger(Number(morpheme_copy[z + 1])) == false)) || ((isInteger(Number(morpheme_copy[z - 1])) == false) && (isInteger(Number(morpheme_copy[z + 1])) == false))) {
+                                                user_syrup = 'C2';
+                                                morpheme_copy.splice(z, 1);
+                                                z--;
+                                                console.log("카라멜시럽 숫자 없음");
+                                                continue;
+                                            }
+                                        }
+
+                                        //3-7. 시럽 종류 아무것도 선택 안했을 때
                                         else {
-                                            user_syrup = 'B2';
-                                        }
-                                    }
-                                    else if ((morpheme_list[z] == '헤이즐넛') || (morpheme_list[z] == '헤이즐넛시럽')) {
-                                        if (Number(morpheme_list[z + 1] != NaN)) {
-                                            user_syrup = 'H' + Number(morpheme_list[z + 1])
-                                        }
-                                        else {
-                                            user_syrup = 'H2';
-                                        }
-                                    }
-                                    else if ((morpheme_list[z] == '카라멜') || (morpheme_list[z] == '카라멜시럽')) {
-                                        if (Number(morpheme_list[z + 1] != NaN)) {
-                                            user_syrup = 'C' + Number(morpheme_list[z + 1])
-                                        }
-                                        else {
-                                            user_syrup = 'C2';
+                                            txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>시럽</span>" + "이 적용되지 않습니다🥲 (종류 미선택)";
+                                            await delay(2000);
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("시럽 종류 선택 안함");
+                                            continue;
                                         }
                                     }
 
                                     //예외처리
                                     if (Number(before_list[before_list.length - 1][4] == 0) && (user_syrup != "")) //시럽 조절 불가능
                                     {
-                                        alert("시럽 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>시럽</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_syrup = "";
                                     }
 
 
-                                    //4. 샷 조절 -> 쎄 없애기
-                                    if ((morpheme_list[z] == '샷') || (morpheme_list[z] == '쎄')) {
-                                        if (Number(morpheme_list[z + 1] != NaN)) {
-                                            user_shot = 'S' + Number(morpheme_list[z + 1])
+                                    /* 형태소 (샷 인식 불안정 / 주문 어떻게 하는지 다시 알아보고 하기) 손보고 다시!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (707~737번째 줄 다시) */
+                                    //4. 샷 조절 -> 쎄, 겔 나중에 형태소 적용되면 없애기
+                                    if ((morpheme_copy[z].indexOf('샷') >= 0) || (morpheme_copy[z].indexOf('쎄') >= 0) || (morpheme_copy[z].indexOf('겔') >= 0) || (morpheme_copy[z].indexOf('쉐') >= 0)) {
+
+                                        //숫자 - 샷
+                                        if (isInteger(Number(morpheme_copy[z - 1])) == true) {
+                                            user_shot = 'S' + Number(morpheme_copy[z + 1]);
+                                            morpheme_copy.splice(z - 1, 2);
+                                            z--;
+                                            console.log("n번 샷");
+                                            continue;
                                         }
+
+                                        //샷 - 숫자
+                                        else if (isInteger(Number(morpheme_copy[z + 1])) == true) {
+                                            user_shot = 'S' + Number(morpheme_copy[z + 1]);
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("샷 n번");
+                                            continue;
+                                        }
+
+                                        //숫자 말 안하면
                                         else {
                                             user_shot = 'S1';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("샷 선택 안함");
+                                            continue;
                                         }
                                     }
 
                                     //예외처리
                                     if ((before_list[before_list.length - 1][5] == 'False') && (user_shot != "")) //샷 조절 불가능
                                     {
-                                        alert("샷 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>샷</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_shot = "";
                                     }
 
 
                                     //5. 우유 조절
-                                    if (morpheme_list[z].indexOf('저지방') >= 0) { //indexOf 포함 문자열 있으면 해당 인덱스, 없으면 -1 반환
-                                        user_milk = 'ML';
+
+                                    if (morpheme_copy[z].indexOf('우유') >= 0) {
+
+                                        // 우유가 앞에 있을 때
+                                        if ((morpheme_copy[z + 1].indexOf('저지방') >= 0)) {
+                                            //1. 우유 - 저지방(우유)
+                                            user_milk = 'ML';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("저지방 우유 선택");
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z + 1].indexOf('무지방') >= 0)) { //indexOf 포함 문자열 있으면 해당 인덱스, 없으면 -1 반환
+                                            //2. 우유 - 무지방(우유)
+                                            user_milk = 'MN';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("무지방 우유 선택");
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z + 1].indexOf('두유') >= 0)) {
+                                            //3. 우유 - 두유
+                                            user_milk = 'MS';
+                                            morpheme_copy.splice(z, 2);
+                                            z--;
+                                            console.log("두유 우유 선택");
+                                            continue;
+                                        }
+                                        //우유가 뒤에 있을 때
+                                        else if ((morpheme_copy[z].indexOf('저지방') >= 0)) {
+                                            //5. 저지방 - 우유
+                                            user_milk = 'ML';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("저지방 우유 선택");
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z].indexOf('무지방') >= 0)) {
+                                            //6. 무지방 - 우유
+                                            user_milk = 'MN';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("무지방 우유 선택");
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z].indexOf('두유') >= 0)) {
+                                            //7. 두유 - 우유
+                                            user_milk = 'MS';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("두유 우유 선택");
+                                            continue;
+                                        }
+                                        //두유랑 오트는 메뉴랑도 겹치는 부분 있어서 뒤로 미룸
+                                        else if ((morpheme_copy[z + 1].indexOf('귀리') >= 0) || (morpheme_copy[z + 1].indexOf('오트') >= 0)) {
+                                            //4. 우유 - 귀리 / 오트 (우유)
+                                            user_milk = 'MO';
+                                            morpheme_copy.splice(z, 2);
+                                            console.log("귀리/오트 선택 - 우유가 먼저 나옴");
+                                            console.log(morpheme_copy[z + 1].indexOf('귀리'));
+                                            console.log(morpheme_copy[z + 1].indexOf('오트'));
+                                            z--;
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z].indexOf('귀리') >= 0) || (morpheme_copy[z].indexOf('오트') >= 0)) {
+                                            //8. 귀리 / 오트 - 우유
+                                            user_milk = 'MO';
+                                            morpheme_copy.splice(z, 1);
+                                            console.log("귀리/오트 선택 - 우유가 나중 나옴");
+                                            console.log(morpheme_copy[z + 1].indexOf('귀리'));
+                                            console.log(morpheme_copy[z + 1].indexOf('오트'));
+                                            z--;
+                                            continue;
+                                        }
+                                        else {
+                                            txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>우유</span>" + "가 적용되지 않습니다🥲 (종류 미선택)";
+                                            await delay(2000);
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("우유 종류 선택 안함");
+                                            continue;
+                                        }
                                     }
-                                    else if (morpheme_list[z].indexOf('무지방') >= 0) {
-                                        user_milk = 'MN';
-                                    }
-                                    else if (morpheme_list[z].indexOf('두유') >= 0) {
-                                        user_milk = 'MS';
-                                    }
-                                    else if ((morpheme_list[z].indexOf('귀리') >= 0) || (morpheme_list[z].indexOf('오트') > 0)) {
-                                        user_milk = 'MO';
+                                    else {
+                                        //두유나 귀리/오트는 따로 우유 말 안하고 바꿀수도 있으니까 따로 빼줌
+                                        if (morpheme_copy[z].indexOf('두유') >= 0) {
+                                            user_milk = 'MS';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("두유 우유 선택");
+                                            continue;
+                                        }
+                                        else if ((morpheme_copy[z].indexOf('귀리') >= 0) || (morpheme_copy[z].indexOf('오트') >= 0)) {
+                                            user_milk = 'MO';
+                                            morpheme_copy.splice(z, 1);
+                                            z--;
+                                            console.log("귀리/오트 우유 선택");
+                                            continue;
+                                        }
                                     }
 
                                     //예외처리
                                     if ((before_list[before_list.length - 1][6] == 'False') && (user_milk != "")) //우유 조절 불가능
                                     {
-                                        alert("우유 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>우유</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_milk = "";
                                     }
 
 
                                     //6. 휘핑 조절
-                                    if (morpheme_list[z].indexOf('휘핑') >= 0) {
+                                    if (morpheme_copy[z].indexOf('휘핑') >= 0) {
 
                                         //에스프레소 휘핑인지 그냥 휘핑인지
-                                        if (morpheme_list[z - 1] == '에스프레소') {
+
+                                        //1. 에스프레소-휘핑
+                                        if (morpheme_copy[z].indexOf('에스프레소') >= 0) {
                                             user_whip = 'EW';
+
+                                            //2-1. 양-에스프레소휘핑
+                                            if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                                //많
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log('양-에스프레소휘핑');
+                                                continue;
+                                            }
+                                            else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log('양-에스프레소휘핑');
+                                                continue;
+                                            }
+                                            //2-2. 에스프레소휘핑-양
+                                            else if (morpheme_copy[z + 1].indexOf('많') >= 0) {
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log('에스프레소휘핑-양');
+                                                continue;
+                                            }
+                                            else if ((morpheme_copy[z + 1].indexOf('적') >= 0) || (morpheme_copy[z + 1].indexOf('조금') >= 0) || (morpheme_copy[z + 1].indexOf('약간') >= 0)) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log('에스프레소휘핑-양');
+                                                continue;
+                                            }
+                                            //2-3. 에스프레소휘핑-양 없음
+                                            else {
+                                                user_whip += '2';
+                                                morpheme_copy.splice(z, 1);
+                                                z--;
+                                                console.log('에스프레소휘핑 양 없음');
+                                                continue;
+                                            }
                                         }
-                                        else {
-                                            user_whip = 'W';
+                                        //3. 휘핑 - 에스프레소
+                                        else if (morpheme_copy[z + 1].indexOf('에스프레소') >= 0) {
+                                            user_whip = 'EW';
+
+                                            //2-1. 양-휘핑-에스프레소
+                                            if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                                //많
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z - 1, 3);
+                                                z--;
+                                                console.log('양-에스프레소휘핑');
+                                                continue;
+                                            }
+                                            else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z - 1, 3);
+                                                z--;
+                                                console.log('양-에스프레소휘핑');
+                                                continue;
+                                            }
+                                            //2-2. 휘핑-에스프레소-양
+                                            else if (morpheme_copy[z + 2].indexOf('많') >= 0) {
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z, 3);
+                                                z--;
+                                                console.log('에스프레소휘핑-양');
+                                                continue;
+                                            }
+                                            else if ((morpheme_copy[z + 2].indexOf('적') >= 0) || (morpheme_copy[z + 2].indexOf('조금') >= 0) || (morpheme_copy[z + 2].indexOf('약간') >= 0)) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z, 3);
+                                                z--;
+                                                console.log('에스프레소휘핑-양');
+                                                continue;
+                                            }
+                                            //2-3. 휘핑-에스프레소-양 없음
+                                            else {
+                                                user_whip += '2';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log('에스프레소휘핑 양 없음');
+                                                continue;
+                                            }
                                         }
 
-                                        // 양은 얼마나 할건지
-                                        if (morpheme_list[z + 1].indexOf('많') >= 0) {
-                                            user_whip += '3';
+                                        //4. 일반 휘핑
+                                        else {
+                                            user_whip = 'W';
+
+                                            //1. 휘핑-양
+                                            if (morpheme_copy[z + 1].indexOf('많') >= 0) {
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log('일반휘핑-많');
+                                                continue;
+                                            }
+                                            else if ((morpheme_copy[z + 1].indexOf('적') >= 0) || (morpheme_copy[z + 1].indexOf('조금') >= 0) || (morpheme_copy[z + 1].indexOf('약간') >= 0)) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z, 2);
+                                                z--;
+                                                console.log('일반휘핑-적');
+                                                continue;
+                                            }
+                                            //2. 양-휘핑
+                                            else if ((z != 0) && (morpheme_copy[z - 1].indexOf('많') >= 0)) {
+                                                user_whip += '3';
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log('많-일반휘핑');
+                                                continue;
+                                            }
+                                            else if ((z != 0) && ((morpheme_copy[z - 1].indexOf('적') >= 0) || (morpheme_copy[z - 1].indexOf('조금') >= 0) || (morpheme_copy[z - 1].indexOf('약간') >= 0))) {
+                                                //적
+                                                user_whip += '1';
+                                                morpheme_copy.splice(z - 1, 2);
+                                                z--;
+                                                console.log('적-일반휘핑');
+                                                continue;
+                                            }
+                                            //3. 휘핑-양 없음
+                                            else {
+                                                user_whip += '2';
+                                                morpheme_copy.splice(z, 1);
+                                                z--;
+                                                console.log('일반휘핑-양 없음');
+                                                continue;
+                                            }
                                         }
-                                        else if ((morpheme_list[z + 1] == '적게') || (morpheme_list[z + 1] == '조금') || (morpheme_list[z + 1] == '약간')) {
-                                            user_whip += '1';
-                                        }
-                                        else { //말 안하면 보통
-                                            user_whip += '2';
-                                        }
+
                                     }
 
                                     //예외처리
                                     if ((before_list[before_list.length - 1][7] == 'False') && (user_whip != "")) //휘핑 조절 불가능
                                     {
-                                        alert("휘핑 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>휘핑</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_whip = "";
                                     }
 
 
+
+                                    /** 여기서부터!!!!!!!!!11 */
+
+
+
                                     //7. 자바칩 조절
                                     if (morpheme_list[z].indexOf('자바칩') >= 0) {
-                                        if ((morpheme_list[z - 1].indexOf('통') >= 0) || (morpheme_list[z].indexOf('통') >= 0) || (morpheme_list[z + 1].indexOf('통') >= 0)) {
+
+                                        if (morpheme_list[z - 1].indexOf('통') >= 0) {
                                             user_java_chip = 'JCA'; //통자바칩 토핑
+                                            morpheme_copy.splice(z, 1);
+                                            morpheme_copy.splice(z - 1, 1);
+                                        }
+                                        else if (morpheme_list[z].indexOf('통') >= 0) {
+                                            user_java_chip = 'JCA'; //통자바칩 토핑
+                                            morpheme_copy.splice(z, 1);
+                                        }
+                                        else if (morpheme_list[z + 1].indexOf('통') >= 0) {
+                                            user_java_chip = 'JCA'; //통자바칩 토핑
+                                            morpheme_copy.splice(z + 1, 1);
+                                            morpheme_copy.splice(z, 1);
                                         }
                                         else {
                                             user_java_chip = 'JC'; //일반 자바칩 토핑
@@ -1075,7 +2150,9 @@
                                     //예외처리
                                     if ((before_list[before_list.length - 1][8] == 'False') && (user_java_chip != "")) //자바칩 조절 불가능
                                     {
-                                        alert("자바칩 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>자바칩</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_java_chip = "";
                                     }
 
@@ -1093,42 +2170,54 @@
 
                                         // 양은 얼마나 할건지
                                         if (morpheme_list[z + 1].indexOf('많') >= 0) {
-                                            user_whip += '3';
+                                            user_driz += '3';
                                         }
                                         else if ((morpheme_list[z + 1] == '적게') || (morpheme_list[z + 1] == '조금') || (morpheme_list[z + 1] == '약간')) {
-                                            user_whip += '1';
+                                            user_driz += '1';
                                         }
                                         else if (morpheme_list[z + 1] == '보통') {
-                                            user_whip += '2';
+                                            user_driz += '2';
                                         }
                                         else { //말 안하면 보통
-                                            user_whip += '2';
+                                            user_driz += '2';
                                         }
                                     }
 
                                     //예외처리
                                     if ((before_list[before_list.length - 1][9] == 'False') && (user_driz != "")) //드리즐 조절 불가능
                                     {
-                                        alert("드리즐 조절이 불가능한 메뉴입니다");
+                                        txt.innerHTML = "🚫 옵션 " + "<span class='badge bg-warning text-dark' style='font-size:0.58em; margin-bottom: 1em !important;'>드리즐</span>" + " 조절이 불가능한 메뉴입니다🥲";
+                                        await delay(2000);
+                                        txt.innerHTML = "✅ " + before_list[before_list.length - 1][0] + " 메뉴를 선택하셨습니다!";
                                         user_driz = "";
                                     }
 
 
                                     //9. 사이즈
-                                    if (morpheme_list[z] == '숏') {
+                                    if (morpheme_copy[z] == '숏') {
                                         user_size = "S";
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
-                                    else if (morpheme_list[z] == '톨') {
+                                    else if (morpheme_copy[z] == '톨') {
                                         user_size = "T";
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
-                                    else if (morpheme_list[z] == '그란데') {
+                                    else if (morpheme_copy[z] == '그란데') {
                                         user_size = "G";
+                                        morpheme_copy.splice(z, 1);
+                                        z--;
+                                        continue;
                                     }
 
                                     //아무 값도 없으면 기본값
                                     if (user_size == "") {
                                         user_size = "T";
                                     }
+
                                 }
 
                                 //user_op_list = (온도)H/C, (카페인)CC/CH/CD, (시럽)B숫자/H숫자/C숫자, 
@@ -1140,7 +2229,6 @@
                                 console.log("사용자가 추가한 옵션 : ", user_op_list);
 
 
-
                                 var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
                                 console.log('추가된 메뉴', before_list[before_list.length - 1][0]);
@@ -1149,7 +2237,7 @@
 
                                 /* 실제 옵션 */
                                 var menu = "";
-                                var price = "";
+                                var price = 0;
                                 var menu_ea = 1;
 
                                 var hot_cold = "";
@@ -1184,19 +2272,19 @@
                                     op_price += 1000;
                                 }
 
-                                //4. 수량
 
+                                //4. 수량
                                 /* 형태소 분석기 리스트 다 빼고 숫자만 남은 걸 수량으로 인식? - 일단 잠시 보류*/
-                                /* for (var x = 0; x < morpheme_list.length; x++) {
-                                    for (var num = 1; num < 10; num++)
-                                        if (morpheme_list[x].indexOf(String(num)) == 0) //1~9가 속하는 문자열이 있으면 0
-                                        {
-                                            console.log("수량: ", Number(morpheme_list[x]));
-                                            var ea = Number(morpheme_list[x]);
-                                            //수량 인식 못했을 때 에러 처리
-                                            break;
-                                        }
-                                } */
+                                for (var k = 0; k < morpheme_copy.length; k++) {
+                                    if (isInteger(Number(morpheme_copy[k])) == true) {
+                                        menu_ea = Number(morpheme_copy[k]);
+                                        console.log("수량 있음", menu_ea);
+                                        break;
+                                    }
+                                    else {
+                                        menu_ea = 1;
+                                    }
+                                }
 
 
                                 //3. hot_cold -> case 3: hot/cold 둘 다 다 될 땐 어떻게 할 건지 디폴트 값 정하기!!
@@ -1204,7 +2292,7 @@
                                 var hot_cold_icon = "";
 
                                 if (hot_cold == 'H') {
-                                    hot_cold_icon = '<i class="fa-brands fa-hotjar"></i>';
+                                    hot_cold_icon = '<i class="fa-solid fa-mug-hot"></i>';
                                 }
                                 else if (hot_cold == 'C') {
                                     hot_cold_icon = '<i class="fa-solid fa-snowflake"></i>';
@@ -1235,24 +2323,22 @@
 
                                     if (syrup[0] == 'B') {
                                         ul += '바닐라시럽';
-                                        op_price += 600;
                                     }
                                     else if (syrup[0] == 'H') {
                                         ul += '헤이즐넛시럽';
-                                        op_price += 600;
                                     }
                                     else if (syrup[0] == 'C') {
                                         ul += '카라멜시럽';
-                                        op_price += 600;
                                     }
 
                                     ul += ' +' + Number(syrup[1]) + '회</li>';
+                                    op_price += 600;
                                 }
 
                                 // 6. 샷
                                 shot = user_op_list[user_op_list.length - 1][3];
                                 if (shot != "") {
-                                    ul += '<li>';
+                                    ul += '<li>샷';
 
                                     if (shot[0] == 'S') {
                                         ul += ' +' + Number(shot[1]) + '</li>';
@@ -1279,7 +2365,6 @@
                                         ul += '귀리';
                                     }
                                     ul += '</li>';
-
                                     op_price += 600;
                                 }
 
@@ -1315,7 +2400,8 @@
                                         }
                                     }
 
-                                    ul += ' 추가 </li>';
+                                    ul += ' </li>';
+                                    op_price += 600;
                                 }
 
                                 // 9. 자바칩
@@ -1341,11 +2427,9 @@
 
                                     if (driz[2] == 'R') {
                                         ul += '카라멜드리즐';
-                                        op_price += 600;
                                     }
                                     else if (driz[2] == 'C') {
                                         ul += '초코드리즐';
-                                        op_price += 600;
                                     }
 
 
@@ -1360,7 +2444,9 @@
                                     }
 
                                     ul += '</li>';
+                                    op_price += 600;
                                 }
+
 
                                 //가격 계산
                                 menu_price = (price + op_price) * menu_ea;
@@ -1368,34 +2454,67 @@
                                 total_price += menu_price;
 
 
-                                ul += '</ul>'
-                                forms_txt += '<tr>\
+                                //실제 주문 완성 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐, 사이즈, 옵션가격, 총가격]
+                                after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+
+
+                                if (category == "BAKERY") //음식이면 사이즈랑 온도 나오지 않도록
+                                {
+                                    ul += '</ul>'
+                                    forms_txt += '<tr>\
                                             <div class="row">\
                                                 <div class="col-md-8">\
                                                     <td>\
-                                                        <h4 class="text-center">'+ size + ')' + menu + hot_cold_icon + '</h4>\
+                                                        <h3>'+ menu + '</h3>\
                                                     </td>\
                                                 </div>\
                                                 <div class="col-md-2">\
                                                     <td>\
-                                                        <h5 class="text-center">'+ menu_ea + '</h5>\
+                                                        <h4 class="text-center">'+ menu_ea + '</h4>\
                                                     </td>\
                                                 </div>\
                                                 <div class="col-md-2">\
                                                     <td>\
-                                                        <h5 class="text-center">'+ menu_price + '</h5>\
+                                                        <h4 class="text-center">'+ menu_price + '</h4>\
                                                     </td>\
                                                 </div>\
                                             </div>\
                                             <div class="row">'+ ul + '</div>\
                                         </tr>';
+                                }
+                                else { //음료면 사이즈 나오도록
+                                    ul += '</ul>'
+                                    forms_txt += '<tr>\
+                                            <div class="row">\
+                                                <div class="col-md-8">\
+                                                    <td>\
+                                                        <h3><span style="color:#2c703e !important; font-weight: 700 !important;">'+ size + ')  </span>' + menu + '  ' + hot_cold_icon + '</h3>\
+                                                    </td>\
+                                                </div>\
+                                                <div class="col-md-2">\
+                                                    <td>\
+                                                        <h4 class="text-center">'+ menu_ea + '</h4>\
+                                                    </td>\
+                                                </div>\
+                                                <div class="col-md-2">\
+                                                    <td>\
+                                                        <h4 class="text-center">'+ menu_price + '</h4>\
+                                                    </td>\
+                                                </div>\
+                                            </div>\
+                                            <div class="row">'+ ul + '</div>\
+                                        </tr>';
+                                }
 
                                 forms.innerHTML = forms_txt;
 
                                 total_real.innerHTML = total_price + ' 원';
 
+
                                 txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
                                 var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요~");
+
+                                menu_cnt += 1 //주문 한개 완료
                             }
                         }
                         else //한 글자도 안 들어오면
@@ -1403,10 +2522,6 @@
                             txt.innerHTML = "✔️ 인식하지 못했습니다. 다시 한번 말씀해주세요!";
                             var audio5 = await tts("인식하지 못했습니다. 다시 한번 말씀해주세요!");
                         }
-
-
-
-                        //location.href="/client/end"; -> 풀기!!!!!!!!!!!!!!!
                     }
                 }
             }
@@ -1444,7 +2559,7 @@
 
             recognition.onresult = function (event) {
                 resText = event.results[0][0].transcript;
-                txt.innerHTML = resText;
+                //txt.innerHTML = resText;
 
                 if (resText == "결제" | resText == "결제.") {
                     console.log("결제라고 말함");
@@ -1520,6 +2635,11 @@
                 utterThis.onend = resolve;
                 window.speechSynthesis.speak(utterThis);
             });
+        }
+
+        /* DELAY - 프로미스 객체 반환하는 SetTimeout */
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
 
     </script>
