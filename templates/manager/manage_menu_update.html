@@ -1,0 +1,128 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'manager/style/manage_menu_add_style.css' %}">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+<div class="bg_all">
+    <!--페이지 제목-->
+    <section id="title" class="web-title">
+        <button type="button" class="home_btn" onClick="location.href ='/manager/menu'"><img src="/static/manager/image/back.png"></button>
+        <p>00카페 메뉴 수정</p> 
+    </section>
+    <!--이미지-->
+    {% if update_prod %}
+    <section id="picture" class="menu-picture">
+        <img src ="{{ update_prod.prod_image.url }}" id="img_section" alt = "{{ update_prod.prod_image }}"/>
+    </section>
+    <!--메뉴 옵션 작성과 추가 버튼-->
+    <section id="input" class="menu-input">
+        <form method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <select name="prod_category" class="menu-category" value="{{ prod_category }}" required>
+                <option value="">카테고리</option>
+                <option value="COFFEE">COFFEE</option>
+                <option value="LATTE">LATTE</option>
+                <option value="ADE">ADE</option>
+                <option value="TEA">TEA</option>
+                <option value="SMOOTHIE">SMOOTHIE</option>
+                <option value="SHAKE">SHAKE</option>
+                <option value="BAKERY">BAKERY</option>
+            </select><br/>
+            <script>
+                $(".menu-category").val("{{ update_prod.prod_category }}").prop("selected", true);
+            </script>
+            <input type="text" name="prod_name" id="menuname" value="{{ prod_name }}" placeholder="메뉴명"><br/>
+            <script>
+                $("#menuname").val("{{ update_prod.prod_name }}");
+            </script>
+            <input type="text" name="prod_price" id="menuprice"  value="{{ prod_price }}" placeholder="가격"><br/>
+            <script>
+                $("#menuprice").val("{{ update_prod.prod_price }}");
+            </script>
+            <div class="file-upload-wrapper" data-text="이미지">
+                <input name="prod_image" type="file" accept="image/*" class="file-upload-field" value="{{ prod_image }}">
+            </div><br/>
+            <div class="check-title">음료 옵션</div>
+            <div class="check-options">
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="HOT"> HOT&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="ICED"> ICED&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="얼음"> 얼음&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="카페인"> 카페인&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="시럽"> 시럽<br/><br/>
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="샷"> 샷&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="우유"> 우유&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="휘핑크림"> 휘핑 크림&emsp;&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="자바칩"> 자바칩&emsp;
+                <input type="checkbox" class="checkbox" name="prod_option[]" value="드리즐"> 드리즐
+            </div>
+            <script>
+                if("{{ update_prod.prod_hot_cold }}" == 0){
+                    $("input[value=HOT]").prop("checked",false);
+                    $("input[value=ICED]").prop("checked",false);
+                    $("input[value=얼음]").prop("checked",false);
+                }else if("{{ update_prod.prod_hot_cold }}" == 1){
+                    $("input[value=HOT]").prop("checked",true);
+                    $("input[value=ICED]").prop("checked",false);
+                    $("input[value=얼음]").prop("checked",false);
+                }else if("{{ update_prod.prod_hot_cold }}" == 2){
+                    $("input[value=HOT]").prop("checked",false);
+                    $("input[value=ICED]").prop("checked",true);
+                    $("input[value=얼음]").prop("checked",true);
+                }else{
+                    $("input[value=HOT]").prop("checked",true);
+                    $("input[value=ICED]").prop("checked",true);
+                    $("input[value=얼음]").prop("checked",true);
+                }
+
+                if("{{ update_prod.prod_caf_amount }}" == True){
+                    $("input[value=카페인]").prop("checked",true);
+                }else{
+                    $("input[value=카페인]").prop("checked",false);
+                }
+                
+                if("{{ update_prod.prod_syrup }}" == 0){
+                    $("input[value=시럽]").prop("checked",false);
+                }else{
+                    $("input[value=시럽]").prop("checked",true);
+                }
+
+                if("{{ update_prod.prod_shot }}" == True){
+                    $("input[value=샷]").prop("checked",true);
+                }else{
+                    $("input[value=샷]").prop("checked",false);
+                }
+                
+                if("{{ update_prod.prod_milk }}" == True){
+                    $("input[value=우유]").prop("checked",true);
+                }else{
+                    $("input[value=우유]").prop("checked",false);
+                }
+                
+                if("{{ update_prod.prod_whip }}" == True){
+                    $("input[value=휘핑크림]").prop("checked",true);
+                }else{
+                    $("input[value=휘핑크림]").prop("checked",false);
+                }
+                
+                if("{{ update_prod.prod_java_chip }}" == True){
+                    $("input[value=자바칩]").prop("checked",true);
+                }else{
+                    $("input[value=자바칩]").prop("checked",false);
+                }
+
+                if("{{ update_prod.prod_java_chip }}" == True){
+                    $("input[value=드리즐]").prop("checked",true);
+                }else{
+                    $("input[value=드리즐]").prop("checked",false);
+                }
+                
+            </script>
+            <input type="submit" name="abc" class="submit" value="메뉴 수정">
+        </form>
+    {% endif %}
+    </section>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/manager/js/menu_update.js"></script>
+</div>
