@@ -97,9 +97,41 @@ def manage_menuadd(request):
     return render(request, 'manager/manage_menu_add.html', context)
 
 def manage_recommendation_menu(request):
+    class_prods = prod.objects.all()
+
+    category = request.POST.get('prod_category')
+    prod_list = prod.objects.filter(prod_category=category)
     context = {
-        'a':''
+            'class_prods':class_prods,
+            'prod_list': prod_list,
     }
+
+    if request.method == "POST":
+        if 'update' in request.POST:#추천 설정
+            checked_prod_id  = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                print(pk)
+                try:
+                    delete_prod_id = prod.objects.get(prod_id = pk)
+                    delete_prod_id.prod_recommend = True
+                    delete_prod_id.save()
+                    print("Record prod_recommend = True successfully!")
+                except:
+                    print("Record doesn't exists")
+
+        elif 'delete' in request.POST:#추천 취소
+            checked_prod_id  = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                print(pk)
+                try:
+                    delete_prod_id = prod.objects.get(prod_id = pk)
+                    delete_prod_id.prod_recommend = False
+                    delete_prod_id.save()
+                    print("Record prod_recommend = False successfully!")
+                except:
+                    print("Record doesn't exists")
+
+        
     return render(request, 'manager/manage_recommendation_menu.html', context)
     
 

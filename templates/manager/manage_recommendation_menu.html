@@ -1,4 +1,5 @@
 {% load static %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'manager/style/manage_recommendation_menu_style.css' %}">
 
@@ -6,63 +7,89 @@
 <div class="bg_all">
     <!--페이지 제목-->
     <section id="title" class="web-title">
+        <button type="button" class="home_btn" onClick="location.href ='/manager/menu'"><img src="/static/manager/image/back.png"></button>
         <p>00카페 메뉴 추천</p>
     </section>
-    <!--카페 메뉴 db 조회-->
-    <section id="input" class="menu-lookup">
-        <form action="/">
-            <select class="menu-category" required>
+    <form method="POST" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--카페 메뉴 db 조회-->
+        <section id="input" class="menu-lookup">
+            <select id ="prod_category" name="prod_category" class="menu-category" value="{{ prod_category }}" required>
                 <option value="">카테고리</option>
-                <option>COFFEE</option>
-                <option>LATTE</option>
-                <option>ADE</option>
-                <option>TEA</option>
-                <option>SMOTHIE</option>
-                <option>SHAKE</option>
-                <option>BAKERY</option>
+                <option value="COFFEE"> COFFEE</option>
+                <option value="LATTE">LATTE</option>
+                <option value="ADE">ADE</option>
+                <option value="TEA">TEA</option>
+                <option value="SMOOTHIE">SMOOTHIE</option>
+                <option value="SHAKE">SHAKE</option>
+                <option value="BAKERY">BAKERY</option>
             </select><br/>
-        </form>
-        <div class="menu-catecory-output">
-            <table class="table" cellspacing="0">
-                <thead>
-                    <tr>
-                    <th></th>
-                    <th></th>
-                    <th>이름</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
-                        <td>자바칩 프라프치노</td>
-                    </tr>
-                </tbody>
-            </table>
+            <script>
+                $(document).ready(function() {
+                    $( "select[name=prod_category]" ).val( "{{ prod_category }}" );
+                    $('select[name=prod_category]').change(function () {
+                        console.log($('select[name=prod_category]').val());
+                        prod_category = $('select[name=prod_category]').val();
+                        $('.form').submit();
+                    });
+                });
+            </script>
+            <div class="menu-catecory-output">
+                <table class="table" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th>메뉴명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for class in prod_list %}
+                        <tr>
+                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                            {% if class.prod_image %}
+                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image }}"></td>
+                            {% else %}
+                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                            {% endif %}
+                            <td>{{class.prod_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!--메뉴 추가/삭제버튼-->
+        <div id="buttons" class="menu-button">
+            <button type="submit" name="update" class="input_recommended_add_btn" value="update"></button>
+            <button type="submit" name="delete" class="input_recommended_delete_btn" value="delete"></button>
         </div>
-    </section>
-    <!--메뉴 추가/삭제버튼-->
-    <div id="buttons" class="menu-button">
-        <button type="button" class="input_recommended_add_btn"></button>
-        <button type="button" class="input_recommended_delete_btn"></button>
-    </div>
-    <!--추천하는 메뉴 설정 db-->
-    <section id="recommended_menu" class="menu-enter">
-        <p>등록된 메뉴</p>
-        <div class="menu-recommended-menu">
-            <table class="table" cellspacing="0">
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox" name="chk_box" class="checkSelect"/></td>
-                        <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
-                        <td>자바칩 프라프치노</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <button type="button" class="input_recommend_btn">✅추천 메뉴 등록</button>
-    </section>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+        <!--추천하는 메뉴 설정 db-->
+        <section id="recommended_menu" class="menu-enter">
+            <p>등록된 메뉴</p>
+            <div class="menu-recommended-menu">
+                <table class="table" cellspacing="0">
+                    <tbody>
+                        {% for class in class_prods %}
+                        {% if class.prod_recommend %}<!--그냥 bool형 변수 명을 작성하면 true값이 나와서 if문 만족-->
+                        <tr>
+                            <td><input type="checkbox" name="chk_box[]" class="checkSelect" value="{{ class.prod_id }}"/></td>
+                            {% if class.prod_image %}
+                            <td><img src ="{{ class.prod_image.url }}" alt = "{{ class.prod_image }}"></td>
+                            {% else %}
+                            <td><img src="/static/manager/image/starbuck.png" alt="My Image"/></td>
+                            {% endif %}
+                            <td>{{class.prod_name}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </div>

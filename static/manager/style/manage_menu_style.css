@@ -2,7 +2,7 @@
 
 
 html, body {
-    width:100%;
+    width: 100%;
     height:100%;
 }
 .bg_all
@@ -35,7 +35,7 @@ html, body {
     font-weight: 500;
     font-size: xx-large;
     margin-top: 50px;
-    margin-left: 800px;
+    margin-left: 660px;
     color: #eee;
     
 }
@@ -66,7 +66,7 @@ html, body {
     font-family: 'Noto Sans KR', sans-serif;
     background-color: #f3f3f3;
     width: 100%;
-    height: 65%;
+    height: 70%;
 }
 .project-tab #tabs{
     background: #007b5e;
@@ -186,7 +186,7 @@ input[type="checkbox"]:checked::before {
 .menu-button{
     position: relative;
     height: auto;
-    padding: 40px;
+    padding: 20px;
 }
 .input_add_btn {
     font-family: 'Noto Sans KR', sans-serif;
