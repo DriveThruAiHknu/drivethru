@@ -44,7 +44,7 @@ def manage_menu(request):
                     except:
                         print("데이터 전달 에러")
             return render(request, 'manager/manage_menu_update.html', {'update_prod':update_prod})
-        elif 'abc' in request.POST: #메뉴 수정
+        elif 'one_prod_update' in request.POST: #메뉴 수정
             try:
                 prod_category = request.POST.get('prod_category')
                 prod_name = request.POST.get('prod_name')

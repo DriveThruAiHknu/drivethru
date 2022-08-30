@@ -15,8 +15,8 @@
         <!--카페 메뉴 db 조회-->
         <section id="input" class="menu-lookup">
             <select id ="prod_category" name="prod_category" class="menu-category" value="{{ prod_category }}" required>
-                <option value="">카테고리</option>
-                <option value="COFFEE"> COFFEE</option>
+                <option value="NO" selected="selected">카테고리</option>
+                <option value="COFFEE">COFFEE</option>
                 <option value="LATTE">LATTE</option>
                 <option value="ADE">ADE</option>
                 <option value="TEA">TEA</option>
@@ -25,14 +25,14 @@
                 <option value="BAKERY">BAKERY</option>
             </select><br/>
             <script>
+                
                 $(document).ready(function() {
-                    $( "select[name=prod_category]" ).val( "{{ prod_category }}" );
                     $('select[name=prod_category]').change(function () {
-                        console.log($('select[name=prod_category]').val());
                         prod_category = $('select[name=prod_category]').val();
                         $('.form').submit();
                     });
                 });
+
             </script>
             <div class="menu-catecory-output">
                 <table class="table" cellspacing="0">
