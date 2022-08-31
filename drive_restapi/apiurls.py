@@ -38,6 +38,11 @@ urlpatterns = [
     path('prods/prodrecommend', views.orderView.as_view()), #점장 추천 메뉴
     path('prods/prosalesrate', views.orderView.as_view()), #인기 메뉴
     path('orders', views.orderView.as_view()), #고객 주문 세부 정보 입력
+
+    path('receipt', views.receiptView.as_view(), name='receipt'), #영수증
+    path('receipt/<int:receiptID>', views.receiptView.as_view()), #영수증 일부 조회
+    path('item', views.itemView.as_view(), name='item'), #아이템
+    path('item/<int:itemID>', views.itemView.as_view()), #아이템 일부 조회
     
     #관리자
     # 1) 메뉴

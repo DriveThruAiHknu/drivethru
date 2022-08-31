@@ -46,6 +46,17 @@ body {
     margin-top: 2%;
 }
 
+.record {
+    font-size: 0.8em;
+    animation: blink 1.5s step-end 4;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
 .ai_txt {
     width: 100%;
     max-width: 150%;
@@ -127,17 +138,6 @@ body {
 
 .image6 {
     background-image: url(../image/many_4.png);
-}
-
-#item1,
-#item2,
-#item3,
-#item4,
-#item5,
-#item6 {
-    /* background-color: palevioletred;
-    border: 2px solid blue; */
-
 }
 
 .image_num {

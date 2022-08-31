@@ -8,6 +8,8 @@
 
 {% load static %}
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{% static 'client/style/member_order_style.css' %}">
@@ -20,7 +22,7 @@
         <div class="row justify-content-center mb-4" id="bot">
             <div class="ai_img col-sm-3"></div>
             <div class="ai_txt col-sm-9">
-                <h2 id="ai_say">🌿어서오세요! 스타벅스입니다🌿</h2>
+                <h2 id="ai_say">🌿어서오세요~ 스타벅스입니다!🌿</h2>
             </div>
         </div>
 
@@ -233,6 +235,8 @@
         var forms_txt = '';
         var total_real = document.getElementById("total_real");
         var modalContent = document.getElementById("modalContent");
+        var left = document.getElementById("left");
+        var right = document.getElementById("right");
 
         var price_list = new Array(); //상품 1개 가격*수량 + 옵션
         var morpheme_str = "";
@@ -248,7 +252,7 @@
         };
 
 
-        txt.innerHTML = "🌿어서오세요! 스타벅스입니다🌿";
+        txt.innerHTML = "🌿어서오세요~ 스타벅스입니다!🌿";
 
         window.onload = function () {
             setTimeout(() => {
@@ -306,10 +310,12 @@
 
                 var audio1 = await tts("어서오세요. 스타벅스입니다!");
 
-                txt.innerHTML = "주문을 원하시는 메뉴나 번호를 말씀해주세요💚";
-                var audio2 = await tts("주문을 원하시는 메뉴나 번호를 말씀해주세요!");
+                txt.innerHTML = "<p style='margin-top: -0.2em;'>주문을 원하시는 번호나 <span style='text-decoration: underline;'>메뉴</span>를 말씀해주세요💚\
+                <h5 style='color:#eb5050 !important; margin-top: -0.35em; font-weight: 700;'>💡TIP💡 메뉴명 ▶️ 옵션 ▶️ 수량 순서로 한 문장을 또박또박 말해주세요!</h5></p>";
+                var audio2 = await tts("주문을 원하시는 메뉴를 번호나, 메뉴명, 옵션, 수량 순서로 말씀해주세요!");
 
-                txt.innerHTML = "인식 중 ...!"; //로딩 애니메이션 들어가면 좋을 거 같음
+                txt.innerHTML = '<p style="margin-top: -0.2em;"><span class="record">🔴</span><span class="circle"> 인식 중</span></p>\
+                <h5 style="color: #545454 !important; margin-top: -0.3em; font-weight: 700;">(예) 카푸치노 바닐라 시럽 2번, 디카페인으로 한잔 주세요.</p>'; //로딩 애니메이션 들어가면 좋을 거 같음
 
                 var audio_once = true;
 
@@ -363,7 +369,10 @@
                                 while (before_list.length == 0) { //메뉴 인식되서 before_list에 뭐 들어올 때까지 계속 반복
                                     txt.innerHTML = "메뉴를 인식하지 못했습니다. 다시 주문해주세요!";
                                     var audio2 = await tts("메뉴를 인식하지 못했습니다. 다시 주문해주세요!");
-                                    txt.innerHTML = "인식 중 ...!";
+
+                                    txt.innerHTML = '<p style="margin-top: -0.2em;"><span class="record">🔴</span><span class="circle"> 녹음 중</span></p>\
+                <h5 style="color: #545454 !important; margin-top: -0.3em; font-weight: 700;">(예) 카푸치노 바닐라 시럽 2번, 디카페인으로 한잔 주세요.</p>'; //로딩 애니메이션 들어가면 좋을 거 같음
+
                                     var stt1 = await speech_to_text();
 
                                     if (stt1.length > 1) //한 글자 이상 들어오면
@@ -1423,16 +1432,54 @@
                                 console.log("주문 종료");
                                 txt.innerHTML = "✔️ 결제 안내를 도와드리겠습니다";
                                 var audio5 = await tts("결제 안내를 도와드리겠습니다!");
-                                await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+                                var menu_last = '';
+                                var menu_name = '';
 
-                                var menu_param = "";
-                                var ea_param = "";
                                 for (var i = 0; i < after_list.length; i++) {
-                                    menu_param += after_list[i][0] + ",";
-                                    ea_param += after_list[i][13] + ",";
+                                    menu_last += after_list[i][0] + " " + after_list[i][2] + "잔,";
+                                    menu_name += " " + after_list[i][0] + ",";
                                 }
-                                location.href = "/client/end?price=" + total_price + "&menu=" + menu_param.slice(0, -1) + "&ea=" + ea_param.slice(0, -1);
-                                break;
+
+
+                                txt.innerHTML = '주문하신 메뉴가 맞으신가요?';
+                                //txt.innerHTML = '주문하신 메뉴 :' + menu_name.slice(0, -1);
+                                left.style.display = 'none';
+                                right.className = 'col-xxl-10'; // 기존 클래스명은 사라지니 주의!
+                                right.style.float = 'none';
+                                right.style.margin = '0 auto';
+
+                                var audio6 = await tts("주문하신 메뉴가 " + menu_last + " 맞으신가요?");
+                                txt.innerHTML = '맞으시다면 "네", 잘못되었다면 "아니오"로 말씀해주세요!';
+                                var stt_last = await speech_to_text();
+
+                                //정상적으로 주문 끝남
+                                if (stt_last == "네") {
+                                    await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+
+                                    var menu_param = "";
+                                    var ea_param = "";
+                                    for (var i = 0; i < after_list.length; i++) {
+                                        menu_param += after_list[i][0] + ",";
+                                        ea_param += after_list[i][13] + ",";
+                                    }
+                                    location.href = "/client/end?price=" + total_price + "&menu=" + menu_param.slice(0, -1) + "&ea=" + ea_param.slice(0, -1);
+                                    break;
+                                }
+                                //비정상적으로 주문되었을 때 >> 수정기능 나중에 시간 남으면!!!!!!!!!!!!!!!!!!
+                                else {
+                                    txt.innerHTML = "추후에 수정 기능 추가할 예정입니다!";
+
+                                    await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+
+                                    var menu_param = "";
+                                    var ea_param = "";
+                                    for (var i = 0; i < after_list.length; i++) {
+                                        menu_param += after_list[i][0] + ",";
+                                        ea_param += after_list[i][13] + ",";
+                                    }
+                                    location.href = "/client/end?price=" + total_price + "&menu=" + menu_param.slice(0, -1) + "&ea=" + ea_param.slice(0, -1);
+                                    break;
+                                }
                             }
                             else //계속 메뉴 받고 싶으면
                             {
@@ -1481,9 +1528,9 @@
                                         txt.innerHTML = "메뉴를 인식하지 못했습니다. 다시 주문해주세요!";
                                         var audio2 = await tts("메뉴를 인식하지 못했습니다. 다시 주문해주세요!");
                                         txt.innerHTML = "인식 중 ...!";
-                                        var stt1 = await speech_to_text();
+                                        var stt2 = await speech_to_text();
 
-                                        if (stt1.length > 1) //한 글자 이상 들어오면
+                                        if (stt2.length > 1) //한 글자 이상 들어오면
                                         {
 
                                             /* 형태소 분석기 실행 */

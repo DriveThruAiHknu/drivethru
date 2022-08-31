@@ -20,8 +20,12 @@ memberView : 고객 멤버십
 # import DB models
 from .models import today_user
 from .models import member
+from .models import receipt
+from .models import item
 from .serializers import todayUsersSerializer
 from .serializers import membersSerializer
+from .serializers import receiptSerializer
+from .serializers import itemSerializer
 
 
 # 1. 현재 들어온 차량 뷰
@@ -212,4 +216,130 @@ class prodView(APIView):
             prod_id = kwargs.get('prodID')
             prod_object = prod.objects.get(prodID=prod_id)
             prod_object.delete()
+            return Response("해당 데이터 삭제", status=200)
+
+# b. 영수증
+class receiptView(APIView):
+    """
+    POST /receipt -> 메뉴 입력
+    """
+    def post(self, request):
+        receipt_serializer = receiptSerializer(data=request.data) #Request의 data를 prodsSerializer로 변환
+
+        if receipt_serializer.is_valid(): #유효하면
+            receipt_serializer.save() #receiptSerialize 유효성 검사 후 DB에 저장
+            return Response(receipt_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
+        else:
+            return Response(receipt_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    """
+    GET /receipt -> 메뉴 전부 조회
+        /receipt/{receiptID} -> 해당 메뉴 ID만 조회
+    """
+    def get(self, request, **kwargs):
+        if kwargs.get('receiptID') is None: #api 뒤에 receiptID가 없으면 전부 조회
+            receipt_queryset = receipt.objects.all()
+            receipt_queryset_serializer = receiptSerializer(receipt_queryset, many=True)
+            return Response(receipt_queryset_serializer.data, status=status.HTTP_200_OK)
+
+        else: #receiptID가 있으면 해당 아이디만 조회
+            receipt_id = kwargs.get('receiptID') #url에 있는 id 가져오기
+            receipt_serializer = receiptSerializer(receipt.objects.get(receiptID=receipt_id)) #id에 해당하는 정보 불러오기
+            return Response(receipt_serializer.data, status=status.HTTP_200_OK)
+
+        #멤버 아이디로도 조회할 수 있게 추가하기!!!!!!!!!!!!!!!!!!
+        #GET /receipt/{memberID}
+ 
+    """
+    PUT /receipt/{receiptID} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
+    """
+    def put(self, request, **kwargs):
+        if kwargs.get('receiptID') is None: #url에 receiptID 없으면 실패
+            return Response("URL에 receiptID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
+        
+        else: #url에 ID 있으면
+            receipt_id = kwargs.get('receiptID') #receipt_id 변수에 넣기
+            receipt_object = receipt.objects.get(receiptID=receipt_id) #id에 해당하는 객체 인스턴스 가져오기
+
+            update_receipt_serailizer = receiptSerializer(receipt_object, data=request.data) #새로 요청한 데이터로 직렬화
+            if update_receipt_serailizer.is_valid(): #유효성 검사
+                update_receipt_serailizer.save() #유효하면 DB 저장
+                return Response(update_receipt_serailizer.data, status=status.HTTP_200_OK)
+            else: #유효하지 않으면 실패
+                return Response("모든 컬럼의 값을 입력해야 합니다!", status=status.HTTP_400_BAD_REQUEST)
+
+    """
+    DELETE /receipt/{receiptID} -> 현재 들어온 메뉴 삭제
+    """
+    def delete(self, request, **kwargs ):
+        if kwargs.get('receiptID') is None: #receiptID 값이 URL에 없으면
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            receipt_id = kwargs.get('receiptID')
+            receipt_object = receipt.objects.get(receiptID=receipt_id)
+            receipt_object.delete()
+            return Response("해당 데이터 삭제", status=200)
+
+
+# c. 아이템
+class itemView(APIView):
+    """
+    POST /item -> 메뉴 입력
+    """
+    def post(self, request):
+        item_serializer = itemSerializer(data=request.data) #Request의 data를 prodsSerializer로 변환
+
+        if item_serializer.is_valid(): #유효하면
+            item_serializer.save() #itemSerialize 유효성 검사 후 DB에 저장
+            return Response(item_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
+        else:
+            return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    """
+    GET /item -> 메뉴 전부 조회
+        /item/{itemID} -> 해당 메뉴 ID만 조회
+
+    """
+    def get(self, request, **kwargs):
+        if kwargs.get('itemID') is None: #api 뒤에 itemID가 없으면 전부 조회
+            item_queryset = item.objects.all()
+            item_queryset_serializer = itemSerializer(item_queryset, many=True)
+            return Response(item_queryset_serializer.data, status=status.HTTP_200_OK)
+
+        else: #itemID가 있으면 해당 아이디만 조회
+            item_id = kwargs.get('itemID') #url에 있는 id 가져오기
+            item_serializer = itemSerializer(item.objects.get(itemID=item_id)) #id에 해당하는 정보 불러오기
+            return Response(item_serializer.data, status=status.HTTP_200_OK)
+
+        #영수증 아이디로도 조회할 수 있게 추가하기!!!!!!!!!!!!!!!!!!
+        #GET /item/{orderID}
+ 
+    """
+    PUT /item/{itemID} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
+    """
+    def put(self, request, **kwargs):
+        if kwargs.get('itemID') is None: #url에 itemID 없으면 실패
+            return Response("URL에 itemID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
+        
+        else: #url에 ID 있으면
+            item_id = kwargs.get('itemID') #item_id 변수에 넣기
+            item_object = item.objects.get(itemID=item_id) #id에 해당하는 객체 인스턴스 가져오기
+
+            update_item_serailizer = itemSerializer(item_object, data=request.data) #새로 요청한 데이터로 직렬화
+            if update_item_serailizer.is_valid(): #유효성 검사
+                update_item_serailizer.save() #유효하면 DB 저장
+                return Response(update_item_serailizer.data, status=status.HTTP_200_OK)
+            else: #유효하지 않으면 실패
+                return Response("모든 컬럼의 값을 입력해야 합니다!", status=status.HTTP_400_BAD_REQUEST)
+
+    """
+    DELETE /item/{itemID} -> 현재 들어온 메뉴 삭제
+    """
+    def delete(self, request, **kwargs ):
+        if kwargs.get('itemID') is None: #itemID 값이 URL에 없으면
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            item_id = kwargs.get('itemID')
+            item_object = item.objects.get(itemID=item_id)
+            item_object.delete()
             return Response("해당 데이터 삭제", status=200)
