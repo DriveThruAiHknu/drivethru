@@ -2444,6 +2444,21 @@
                                 var op_price = 0;
 
 
+                                /* DB에 넣을 실제 리스트 - after db list*/
+                                var db_item_receipt = "";
+                                var db_item_prod = 0;
+                                var db_item_quan = 0;
+                                var db_item_size = 0;
+                                var db_item_price = 0;
+                                var db_item_hot_cold = 0;
+                                var db_item_caf = 0;
+                                var db_item_syrup = 0;
+                                var db_item_shot = 0;
+                                var db_item_milk = 0;
+                                var db_item_whip = 0;
+                                var db_item_java_chip = 0;
+                                var db_item_driz = 0;
+
                                 //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
                                 /* before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]) */
 
@@ -2452,29 +2467,36 @@
 
                                 //1,2,3. 메뉴이름, 가격, 사이즈
                                 menu = before_list[before_list.length - 1][0];
+                                db_item_prod = menu;
                                 price = Number(before_list[before_list.length - 1][1]);
+                                db_item_price = price;
                                 size = user_op_list[user_op_list.length - 1][8];
 
                                 if (size == 'T') {
                                     op_price += 500;
+                                    db_item_size = 1;
                                 }
                                 else if (size == 'G') {
                                     op_price += 1000;
+                                    db_item_size = 2;
                                 }
 
 
                                 //4. 수량
-                                /* 형태소 분석기 리스트 다 빼고 숫자만 남은 걸 수량으로 인식? - 일단 잠시 보류*/
+                                /* 형태소 분석기 리스트 다 빼고 숫자만 남은 걸 수량으로 인식 */
                                 for (var k = 0; k < morpheme_copy.length; k++) {
                                     if (isInteger(Number(morpheme_copy[k])) == true) {
                                         menu_ea = Number(morpheme_copy[k]);
+                                        db_item_quan = menu_ea;
                                         console.log("수량 있음", menu_ea);
                                         break;
                                     }
                                     else {
                                         menu_ea = 1;
+                                        db_item_quan = 1;
                                     }
                                 }
+
 
 
                                 //3. hot_cold -> case 3: hot/cold 둘 다 다 될 땐 어떻게 할 건지 디폴트 값 정하기!!
@@ -2483,11 +2505,12 @@
 
                                 if (hot_cold == 'H') {
                                     hot_cold_icon = '<i class="fa-solid fa-mug-hot"></i>';
+                                    db_item_hot_cold = 1;
                                 }
                                 else if (hot_cold == 'C') {
                                     hot_cold_icon = '<i class="fa-solid fa-snowflake"></i>';
+                                    db_item_hot_cold = 2;
                                 }
-
 
                                 //4. caf_amount
                                 caf_amount = user_op_list[user_op_list.length - 1][1];
@@ -2495,12 +2518,14 @@
                                     ul += '<li>';
 
                                     if (caf_amount == 'CC') {
+                                        db_item_caf = 1;
                                         ul += '카페인';
                                     }
                                     else if (caf_amount == 'CD') {
                                         ul += '디카페인';
                                     }
                                     else if (caf_amount == 'CH') {
+                                        db_item_caf = 2;
                                         ul += '하프디카페인';
                                     }
                                     ul += '</li>';
@@ -2513,12 +2538,15 @@
 
                                     if (syrup[0] == 'B') {
                                         ul += '바닐라시럽';
+                                        db_item_syrup = Number(syrup[1]);
                                     }
                                     else if (syrup[0] == 'H') {
                                         ul += '헤이즐넛시럽';
+                                        db_item_syrup = Number(syrup[1] + "0");
                                     }
                                     else if (syrup[0] == 'C') {
                                         ul += '카라멜시럽';
+                                        db_item_syrup = Number(syrup[1] + "00");
                                     }
 
                                     ul += ' +' + Number(syrup[1]) + '회</li>';
@@ -2531,6 +2559,7 @@
                                     ul += '<li>샷';
 
                                     if (shot[0] == 'S') {
+                                        db_item_shot = Number(shot[1]);
                                         ul += ' +' + Number(shot[1]) + '</li>';
                                     }
                                     op_price += Number(shot[1]) * 600;
@@ -2540,19 +2569,25 @@
                                 // 7. 우유
                                 milk = user_op_list[user_op_list.length - 1][4];
                                 if (milk != "") {
+                                    db_item_milk = 1;
+
                                     ul += '<li>';
 
                                     if (milk == 'ML') {
+                                        db_item_milk = 2;
                                         ul += '저지방';
                                     }
                                     else if (milk == 'MN') {
+                                        db_item_milk = 3;
                                         ul += '무지방';
                                     }
                                     else if (milk == 'MS') {
+                                        db_item_milk = 4;
                                         ul += '두유';
                                     }
                                     else if (milk == 'MO') {
-                                        ul += '귀리';
+                                        db_item_milk = 5;
+                                        ul += '귀리(오트)';
                                     }
                                     ul += '</li>';
                                     op_price += 600;
@@ -2567,12 +2602,15 @@
                                         ul += '에스프레소 휘핑크림';
 
                                         if (whip[2] == '3') {
+                                            db_item_whip = 13;
                                             ul += '<span>많이</span>'
                                         }
                                         else if (whip[2] == '2') {
+                                            db_item_whip = 11;
                                             ul += '<span>보통</span>'
                                         }
                                         else if (whip[2] == '1') {
+                                            db_item_whip = 12;
                                             ul += '<span>적게</span>'
                                         }
                                     }
@@ -2580,12 +2618,15 @@
                                         ul += '휘핑크림';
 
                                         if (whip[1] == '3') {
+                                            db_item_whip = 3;
                                             ul += '<span>많이</span>'
                                         }
                                         else if (whip[1] == '2') {
+                                            db_item_whip = 1;
                                             ul += '<span>보통</span>'
                                         }
                                         else if (whip[1] == '1') {
+                                            db_item_whip = 2;
                                             ul += '<span>적게</span>'
                                         }
                                     }
@@ -2600,9 +2641,11 @@
                                     ul += '<li>';
 
                                     if (java_chip == 'JAC') {
+                                        db_item_java_chip = 2;
                                         ul += '통자바칩 토핑';
                                     }
                                     else if (java_chip == 'JC') {
+                                        db_item_java_chip = 1;
                                         ul += '자바칩 토핑';
                                     }
                                     ul += '</li>';
@@ -2615,8 +2658,11 @@
                                 if (driz != "") {
                                     ul += '<li>';
 
+                                    db_item_driz_txt = "";
+
                                     if (driz[2] == 'R') {
                                         ul += '카라멜드리즐';
+                                        db_item_driz_txt = "1";
                                     }
                                     else if (driz[2] == 'C') {
                                         ul += '초코드리즐';
@@ -2625,14 +2671,18 @@
 
                                     if (driz[3] == '3') {
                                         ul += '<span>많이</span>'
+                                        db_item_driz_txt += "3";
                                     }
                                     else if (driz[3] == '2') {
                                         ul += '<span>보통</span>'
+                                        db_item_driz_txt += "1";
                                     }
                                     else if (driz[3] == '1') {
                                         ul += '<span>적게</span>'
+                                        db_item_driz_txt += "2";
                                     }
 
+                                    db_item_driz = Number(db_item_driz_txt);
                                     ul += '</li>';
                                     op_price += 600;
                                 }
@@ -2647,6 +2697,8 @@
                                 //실제 주문 완성 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐, 사이즈, 옵션가격, 총가격]
                                 after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
 
+                                // 실제 DB 추가 완성 리스트 [영수증 번호, 메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
+                                after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
 
                                 if (category == "BAKERY") //음식이면 사이즈랑 온도 나오지 않도록
                                 {
