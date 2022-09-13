@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
-from drive_restapi.models import prod
+from drive_restapi.models import prod, receipt
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
@@ -310,15 +310,25 @@ def staff_orders(request):
 2) 고객
 """
 
+# 전역 변수
+today_user_id = ''
+member_id = ''
+
 
 # 1. 차 조회
 from drive_restapi.models import member, today_user
 members = member.objects.all() #member 데이터 db에서 가져오기
+today_users = today_user.objects.all() #today_user 데이터 db에서 가져오기
 
 def user_car(request):
+    
     context = {
-        'a':''
+        'today_user_id':'',
+        'member_id':''
     }
+
+    global today_user_id
+    global member_id
 
     #POST 전송이 들어오면
     if request.method == 'POST':
@@ -335,13 +345,19 @@ def user_car(request):
         #MEMBER 데이터와 동일하면 MEMBER-ORDER 페이지로 이동
         if todayuserCar:
             member = members.filter(member_car__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
+            today = today_users.filter(today_user_car__icontains=todayuserCar)
             messages.info(request,member.exists())
 
             if (member.exists() == True): #member에 존재하는 게 True라면
+                #전역변수 사용
+                member_id = member.values()[0]['member_id']
+                today_user_id = today.values().last()['today_user_id']
                 return redirect('/client/menu/member-orders')
             else:
+                #전역변수 사용
+                today_user_id = today.values().last()['today_user_id']
+                member_id = ''
                 return redirect('/client/menu/non-member-orders')
-        #return redirect('/client/menu/member-orders') #같은 앱 내 주소로 이동
         
     return render(request, 'client/user_car.html', context)
 
@@ -355,8 +371,54 @@ print(prod_list)
 
 
 def member_order(request):
-    #context = { 'a':''}
-    return render(request, 'client/member_order.html', {'prods':prod_list})
+    #전역변수 사용
+    global today_user_id
+    global member_id
+
+    
+    context = {
+        'today_user_id':today_user_id,
+        'member_id':member_id
+    }
+    print(context)
+    
+
+    #POST 전송이 들어오면 영수증 등록
+    if request.method == 'POST':
+
+        #POST 전송 데이터에 있는 'todayUserCar' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
+        todayUserId = request.POST['todayUserId']  #ㅅㅂ 이거 차번호 말고 차 아이디가 들어가야함
+        memberId = request.POST['memberId']
+        receiptPrice = request.POST['receiptPrice']
+        receiptTodayId = request.POST['receiptTodayId']
+
+        url = 'http://localhost:8000/api/receipt'
+        #url = 'http://3.37.186.91:8000/api/receipt'
+        data = {"today_user_id" : todayUserId, "member_id": memberId, "receipt_price": receiptPrice, "receipt_today_id": receiptTodayId}
+        response = requests.post(url, data=data)
+        #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
+
+
+        #MEMBER 데이터와 동일하면 MEMBER-ORDER 페이지로 이동
+        """ if receiptTodayId:
+            member = members.filter(member_car__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
+            messages.info(request,member.exists())
+
+            if (member.exists() == True): #member에 존재하는 게 True라면
+                #전역변수 사용
+                today_user_id = todayuserCar
+                member_id = member.values()[0]['member_id']
+                return redirect('/client/menu/member-orders')
+            else:
+                #전역변수 사용
+                today_user_id = todayuserCar
+                member_id = ''
+                return redirect('/client/menu/non-member-orders') """
+
+
+
+
+    return render(request, 'client/member_order.html', {'prods':prod_list, 'today_user_id':today_user_id, 'member_id':member_id})
 
 
 def non_member_order(request):
