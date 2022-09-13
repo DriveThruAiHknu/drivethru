@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
-
+global checked_prod_id
 """
 1) 관리자
 """ 
@@ -22,16 +22,96 @@ def manage_menu(request):
     class_prods = prod.objects.all()
 
     if request.method == "POST":
-        checked_prod_id  = request.POST.getlist('chk_box[]')
-        for pk in checked_prod_id:
-            print(pk)
-            try:
-                delete_prod_id = prod.objects.get(prod_id = pk)
-                delete_prod_id.delete()
-                print("Record deleted successfully!")
-            except:
-                print("Record doesn't exists")
+        if 'delete' in request.POST:#메뉴 삭제
+            checked_prod_id  = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                print(pk)
+                try:
+                    delete_prod_id = prod.objects.get(prod_id = pk)
+                    delete_prod_id.delete()
+                    print("Record deleted successfully!")
+                except:
+                    print("Record doesn't exists")
 
+        elif 'update' in request.POST:#메뉴 수정
+            checked_prod_id = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                    print(pk)
+                    try:
+                        global update_prod
+                        update_prod = prod.objects.get(prod_id = pk)
+                        print("데이터 전달 완료")
+                    except:
+                        print("데이터 전달 에러")
+            return render(request, 'manager/manage_menu_update.html', {'update_prod':update_prod})
+        elif 'one_prod_update' in request.POST: #메뉴 수정
+            try:
+                prod_category = request.POST.get('prod_category')
+                prod_name = request.POST.get('prod_name')
+                prod_price = request.POST.get('prod_price')
+                prod_image = request.FILES['prod_image']
+                prod_option = request.POST.getlist('prod_option[]')
+
+                if 'HOT' in prod_option and "ICED" in prod_option:
+                    prod_hot_cold = 3
+                elif 'HOT' not in prod_option and "ICED" in prod_option:
+                    prod_hot_cold = 2
+                elif 'HOT' in prod_option and "ICED" not in prod_option:
+                    prod_hot_cold = 1
+                else:
+                    prod_hot_cold = 0
+                
+                if "카페인" in prod_option:
+                    prod_caf_amount = True
+                else:
+                    prod_caf_amount = False
+
+                if "시럽" in prod_option:
+                    prod_syrup = 1
+                else:
+                    prod_syrup = 0
+
+                if "샷" in prod_option:
+                    prod_shot = True
+                else:
+                    prod_shot = False
+
+                if "우유" in prod_option:
+                    prod_milk = True
+                else:
+                    prod_milk = False
+
+                if "휘핑크림" in prod_option:
+                    prod_whip = True
+                else:
+                    prod_whip = False
+
+                if "자바칩" in prod_option:
+                    prod_java_chip = True
+                else:
+                    prod_java_chip = False
+
+                if "드리즐" in prod_option:
+                    prod_driz = True
+                else:
+                    prod_driz = False
+
+                update_prod.prod_category=prod_category
+                update_prod.prod_name=prod_name
+                update_prod.prod_price=int(prod_price)
+                update_prod.prod_image=prod_image
+                update_prod.prod_hot_cold=prod_hot_cold
+                update_prod.prod_caf_amount=prod_caf_amount
+                update_prod.prod_syrup=prod_syrup
+                update_prod.prod_shot=prod_shot
+                update_prod.prod_milk=prod_milk
+                update_prod.prod_whip=prod_whip
+                update_prod.prod_java_chip=prod_java_chip
+                update_prod.prod_driz=prod_driz
+                update_prod.save()
+                print("수정 완료")
+            except:
+                print("수정 에러")
     return render(request, 'manager/manage_menu.html', {'class_prods':class_prods})
 
 
@@ -96,10 +176,118 @@ def manage_menuadd(request):
 
     return render(request, 'manager/manage_menu_add.html', context)
 
-def manage_recommendation_menu(request):
+def manage_menuupdate(request):
     context = {
         'a':''
     }
+    print("이 함수 돌아가요")
+    if request.method == "POST":
+        try:
+            global update_prod
+            prod_category = request.POST.get('prod_category')
+            prod_name = request.POST.get('prod_name')
+            prod_price = request.POST.get('prod_price')
+            prod_image = request.FILES['prod_image']
+            prod_option = request.POST.getlist('prod_option[]')
+
+            if 'HOT' in prod_option and "ICED" in prod_option:
+                prod_hot_cold = 3
+            elif 'HOT' not in prod_option and "ICED" in prod_option:
+                prod_hot_cold = 2
+            elif 'HOT' in prod_option and "ICED" not in prod_option:
+                prod_hot_cold = 1
+            else:
+                prod_hot_cold = 0
+            
+            if "카페인" in prod_option:
+                prod_caf_amount = True
+            else:
+                prod_caf_amount = False
+
+            if "시럽" in prod_option:
+                prod_syrup = 1
+            else:
+                prod_syrup = 0
+
+            if "샷" in prod_option:
+                prod_shot = True
+            else:
+                prod_shot = False
+
+            if "우유" in prod_option:
+                prod_milk = True
+            else:
+                prod_milk = False
+
+            if "휘핑크림" in prod_option:
+                prod_whip = True
+            else:
+                prod_whip = False
+
+            if "자바칩" in prod_option:
+                prod_java_chip = True
+            else:
+                prod_java_chip = False
+
+            if "드리즐" in prod_option:
+                prod_driz = True
+            else:
+                prod_driz = False
+
+            update_prod.prod_category=prod_category
+            update_prod.prod_name=prod_name
+            update_prod.prod_price=int(prod_price)
+            update_prod.prod_image=prod_image
+            update_prod.prod_hot_cold=prod_hot_cold
+            update_prod.prod_caf_amount=prod_caf_amount
+            update_prod.prod_syrup=prod_syrup
+            update_prod.prod_shot=prod_shot
+            update_prod.prod_milk=prod_milk
+            update_prod.prod_whip=prod_whip
+            update_prod.prod_java_chip=prod_java_chip
+            update_prod.prod_driz=prod_driz
+            update_prod.save(force_insert=True)
+            print("수정 완료")
+        except:
+            print("수정 에러")
+    return render(request, 'manager/manage_menu_update.html', context)
+
+def manage_recommendation_menu(request):
+    class_prods = prod.objects.all()
+
+    category = request.POST.get('prod_category')
+    prod_list = prod.objects.filter(prod_category=category)
+    context = {
+            'class_prods':class_prods,
+            'prod_list': prod_list,
+    }
+
+    if request.method == "POST":
+        if 'update' in request.POST:#추천 설정
+            checked_prod_id  = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                print(pk)
+                try:
+                    delete_prod_id = prod.objects.get(prod_id = pk)
+                    delete_prod_id.prod_recommend = True
+                    delete_prod_id.save()
+                    print("Record prod_recommend = True successfully!")
+                except:
+                    print("Record doesn't exists")
+
+        elif 'delete' in request.POST:#추천 취소
+            checked_prod_id  = request.POST.getlist('chk_box[]')
+            for pk in checked_prod_id:
+                print(pk)
+                try:
+                    delete_prod_id = prod.objects.get(prod_id = pk)
+                    delete_prod_id.prod_recommend = False
+                    delete_prod_id.save()
+                    print("Record prod_recommend = False successfully!")
+                except:
+                    print("Record doesn't exists")
+
+        
     return render(request, 'manager/manage_recommendation_menu.html', context)
     
 

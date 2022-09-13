@@ -24,12 +24,26 @@
     margin-bottom: 100px;
     color: #eee;
 }
+.home_btn{
+    margin-top: 50px;
+    margin-left: 10px;
+    background: none;
+    border: none;
+    outline: none;
+    float: left;
+}
+.home_btn img{
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: contain;
+}
+
 .menu-lookup{
     max-width: 600px;
     max-height: 600px;
     object-fit: contain;
     float:left;
-    margin-left: 200px;
+    margin-left: 100px;
     text-align: left;
 }
 select{
@@ -90,15 +104,17 @@ input[type="checkbox"]:checked::before {
 }
 .menu-catecory-output{
     font-family: 'Noto Sans KR', sans-serif;
-    height: 65%;
+    height: 630px;
     width: 500px;
     background-color: #eee;
     border-radius: 5px;
-    padding-top: 10px;
+    padding-top: 5px;
+    overflow: auto;
 }
 .menu-catecory-output thead{
     background: #f3f3f3;
     color: #15654A;
+    border-radius: 5px;
     font-size: 15px;
     text-align: center;
 }
@@ -118,6 +134,7 @@ input[type="checkbox"]:checked::before {
     height: 500px;
     width: 300px;
     float:left;
+    margin-left: 100px;
 }
 .input_recommended_add_btn{
     width: 100px;
@@ -151,6 +168,7 @@ input[type="checkbox"]:checked::before {
     border-radius: 5px;
     float:left;
     margin-top: 100px;
+    margin-left: 100px;
 }
 .menu-enter p{
     font-family: 'Noto Sans KR', sans-serif;
@@ -174,19 +192,4 @@ input[type="checkbox"]:checked::before {
     max-width: 40px;
     max-height: 40px;
     object-fit: contain;
-}
-.input_recommend_btn{
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 17px;
-    margin-top: 50px;
-    background: none;
-    color: #15654A;
-    width: 200px;
-    height: 50px;
-    border: 3px;
-    border-radius: 10px;
-    border-style: solid;
-    border-color: #15654A;
-    outline: none;
-    text-align: center;
 }
