@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
-from drive_restapi.models import prod
+from drive_restapi.models import prod, login
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
@@ -11,10 +11,33 @@ global checked_prod_id
 """
 1) 관리자
 """ 
+stffLogin = login.objects.all()
 def manage_login(request):
     context = {
         'a':''
     }
+
+    #POST 전송이 들어오면
+    if request.method == 'POST':
+
+        #POST 전송 데이터에 있는 'StaffLogin' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
+        StaffLogin = request.POST['StaffLogin']
+        url = 'http://localhost:8000/api/login' #이부분 수정하기
+        data = {"password" : StaffLogin}
+        response = requests.post(url, data=data)
+        print(response.text) #-> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
+
+
+        #로그인 패스워드 데이터와 동일하면 menu 페이지로 이동
+        if StaffLogin:
+            loginCheck = login.objects.filter(password=StaffLogin) #StaffLogin 동일한 비밀번호 있는지 확인
+            messages.info(request,loginCheck.exists())
+
+            if (loginCheck.exists() == True): #login에 존재하는 게 True라면
+                return redirect('/manager/menu')
+            else:
+                return JsonResponse("login failed", safe=False)
+
     return render(request, 'manager/manage_login.html', context)
 
 

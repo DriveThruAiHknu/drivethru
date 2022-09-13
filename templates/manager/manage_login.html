@@ -12,12 +12,20 @@
         <h1>DT 관리자 로그인</h1>
         
         <div class="bg_login">
-            <form action="/manager/menu/" method="get">
-                <input id="input_login_text" name= car size=10 type="text" placeholder="비밀 번호를 입력해주세요." />
-                <input id="input_login_btn" type="submit" value="확인"/>
+            <form method="post" id="login">
+                {% csrf_token %} 
+                <input id="input_login_text" name= StaffLogin size=10 type="text" placeholder="비밀 번호를 입력해주세요." />
+                <input id="input_login_btn" type="submit" onclick="send();" value="확인"/>
             </form>
         </div>
-
+        <script language="javascript">
+            function send() 
+            { 
+                //alert("send"); 
+                document.getElementById("login").submit();
+            }
+            
+        </script>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
