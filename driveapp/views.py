@@ -35,8 +35,6 @@ def manage_login(request):
 
             if (loginCheck.exists() == True): #login에 존재하는 게 True라면
                 return redirect('/manager/menu')
-            else:
-                return JsonResponse("login failed", safe=False)
 
     return render(request, 'manager/manage_login.html', context)
 

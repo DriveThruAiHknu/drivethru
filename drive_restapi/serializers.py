@@ -4,6 +4,8 @@ from rest_framework import serializers
 from .models import today_user
 from .models import member
 from .models import prod
+from .models import receipt
+from .models import item
 
 # 1. 현재 들어오는 차량
 class todayUsersSerializer(serializers.ModelSerializer):
@@ -21,4 +23,16 @@ class membersSerializer(serializers.ModelSerializer):
 class prodsSerializer(serializers.ModelSerializer):
     class Meta:
         model = prod
+        fields = '__all__'
+
+#4. 영수증
+class receiptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = receipt
+        fields = '__all__'
+
+#5. 영수증 아이템
+class itemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = item
         fields = '__all__'
