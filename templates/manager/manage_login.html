@@ -21,10 +21,11 @@
         <script language="javascript">
             function send() 
             { 
-                input_login_text = document.getElementById("input_login_text").value;
-                /*하드 코딩한 부분 수정하기*/
-                if (input_login_text == "555"){
-                    window.alert("❗비밀번호를 잘못 입력하셨습니다.❗ ");
+                //alert("send"); 
+                loginError = document.getElementById("input_login_text").value;
+
+                if(loginError=="555"){
+                    window.alert("❗비밀번호를 잘못 입력하셨습니다.❗");
                 }
                 document.getElementById("login").submit();
             }
