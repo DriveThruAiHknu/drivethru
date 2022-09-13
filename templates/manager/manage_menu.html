@@ -813,13 +813,12 @@
         <!--메뉴 추가/수정/삭제버튼-->
         <div id="buttons" class="menu-button">
             <button type="button" class="input_add_btn" onClick="location.href='manage-menu-addendum'">메뉴 추가</button>
-            <button type="button" class="input_update_btn">메뉴 수정</button>
-            <input type="submit" class="input_delete_btn" value="메뉴 삭제">
+            <input type="submit" name="update" class="input_update_btn" value="메뉴 수정" onsubmit="location.href ='/manager/manage-menu-update'">
+            <input type="submit" name="delete" class="input_delete_btn" value="메뉴 삭제">
         </div>
     </form>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/manager/js/menu_update.js"></script>
     <script type="text/javascript" src="/static/manager/js/menu_delete.js"></script>
 </div>
