@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
+<<<<<<< HEAD
 from drive_restapi.models import prod, receipt, login
+=======
+from drive_restapi.models import prod, login
+>>>>>>> ba59f07234adf895e433a21f0efb3877bd9cceba
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
