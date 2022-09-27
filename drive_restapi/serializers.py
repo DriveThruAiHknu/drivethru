@@ -6,6 +6,7 @@ from .models import member
 from .models import prod
 from .models import receipt
 from .models import item
+from .models import login
 
 # 1. 현재 들어오는 차량
 class todayUsersSerializer(serializers.ModelSerializer):
@@ -19,12 +20,6 @@ class membersSerializer(serializers.ModelSerializer):
         model = member
         fields = '__all__'
 
-# a. 현재 메뉴 목록
-class prodsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = prod
-        fields = '__all__'
-
 #4. 영수증
 class receiptSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +31,16 @@ class itemSerializer(serializers.ModelSerializer):
     class Meta:
         model = item
         fields = '__all__'
+
+# a. 현재 메뉴 목록
+class prodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = prod
+        fields = '__all__'
+
+# b. 로그인
+class loginsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = login
+        fields = '__all__'
+

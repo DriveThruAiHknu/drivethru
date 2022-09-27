@@ -45,7 +45,10 @@ urlpatterns = [
     path('item/<int:itemID>', views.itemView.as_view()), #아이템 일부 조회
     
     #관리자
-    # 1) 메뉴
-    path('prods', views.prodView.as_view(), name='prod'), #현재 모든 자동차 고객 입력
-    path('prods/<int:prodID>', views.prodView.as_view()), #일부 삭제
+    # 1) 로그인
+    path('logins', views.loginView.as_view(), name='login'), #현재 로그인 기록 입력
+
+    # 2) 메뉴
+    path('prods', views.prodView.as_view(), name='prod'), #현재 모든 메뉴
+    path('prods/<int:prodID>', views.prodView.as_view()), #일부 조회
 ]   

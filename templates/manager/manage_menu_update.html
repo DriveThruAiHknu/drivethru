@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'manager/style/manage_menu_add_style.css' %}">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
+
 <div class="bg_all">
     <!--페이지 제목-->
     <section id="title" class="web-title">
@@ -40,7 +41,7 @@
                 $("#menuprice").val("{{ update_prod.prod_price }}");
             </script>
             <div class="file-upload-wrapper" data-text="이미지">
-                <input name="prod_image" type="file" accept="image/*" class="file-upload-field" value="{{ prod_image }}">
+                <input name="prod_image" type="file" id="menuimage" accept="image/*" class="file-upload-field" value="{{ prod_image }}">
             </div><br/>
             <div class="check-title">음료 옵션</div>
             <div class="check-options">
@@ -74,7 +75,7 @@
                     $("input[value=얼음]").prop("checked",true);
                 }
 
-                if("{{ update_prod.prod_caf_amount }}" == True){
+                if("{{ update_prod.prod_caf_amount }}" == "True"){
                     $("input[value=카페인]").prop("checked",true);
                 }else{
                     $("input[value=카페인]").prop("checked",false);
@@ -86,31 +87,31 @@
                     $("input[value=시럽]").prop("checked",true);
                 }
 
-                if("{{ update_prod.prod_shot }}" == True){
+                if("{{ update_prod.prod_shot }}" == "True"){
                     $("input[value=샷]").prop("checked",true);
                 }else{
                     $("input[value=샷]").prop("checked",false);
                 }
                 
-                if("{{ update_prod.prod_milk }}" == True){
+                if("{{ update_prod.prod_milk }}" == "True"){
                     $("input[value=우유]").prop("checked",true);
                 }else{
                     $("input[value=우유]").prop("checked",false);
                 }
                 
-                if("{{ update_prod.prod_whip }}" == True){
+                if("{{ update_prod.prod_whip }}" == "True"){
                     $("input[value=휘핑크림]").prop("checked",true);
                 }else{
                     $("input[value=휘핑크림]").prop("checked",false);
                 }
                 
-                if("{{ update_prod.prod_java_chip }}" == True){
+                if("{{ update_prod.prod_java_chip }}" == "True"){
                     $("input[value=자바칩]").prop("checked",true);
                 }else{
                     $("input[value=자바칩]").prop("checked",false);
                 }
 
-                if("{{ update_prod.prod_java_chip }}" == True){
+                if("{{ update_prod.prod_driz }}" == "True"){
                     $("input[value=드리즐]").prop("checked",true);
                 }else{
                     $("input[value=드리즐]").prop("checked",false);
