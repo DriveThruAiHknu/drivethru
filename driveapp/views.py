@@ -337,7 +337,7 @@ member_id = ''
 
 
 # 1. 차 조회
-from drive_restapi.models import member, today_user
+from drive_restapi.models import member, today_user, receipt
 members = member.objects.all() #member 데이터 db에서 가져오기
 today_users = today_user.objects.all() #today_user 데이터 db에서 가져오기
 
@@ -385,61 +385,131 @@ def user_car(request):
 
 # 2. 고객 주문
 from drive_restapi.models import prod
+from drive_restapi.models import item
 prods = prod.objects.all() #prod 데이터 db에서 가져오기
 prods_val = prod.objects.values_list()
 prod_list = list(prods_val)
-print(prod_list)
+print(prod_list[0])
+
+receipts = receipt.objects.all() #receipt 데이터 가져오기
+items = item.objects.all()
 
 
 def member_order(request):
     #전역변수 사용
     global today_user_id
     global member_id
-
+    global receipts
+    global items
     
     context = {
         'today_user_id':today_user_id,
         'member_id':member_id
     }
     print(context)
+
+    # 최근 주문 내역 2개 뽑아오기
+    receipt_reverse = receipts.filter(member_id__exact=member_id) #거꾸로
+    receipt_last = receipt_reverse[:2] #2개만 가져옴
     
+    if (receipt_last):
+
+        #마지막 영수증 아이디 두개 가져오기
+        receipt_id_1 = receipt_last[0].receipt_id
+        receipt_id_2 = receipt_last[1].receipt_id
+
+        #아이템 중에 영수증 아이디 해당되는 거 가져오기
+        item_reverse_1 = items.filter(receipt_id__exact=receipt_id_1)[::-1]
+        item_reverse_2 = items.filter(receipt_id__exact=receipt_id_2)[::-1]
+
+        item_last_1 = item_reverse_1[:2] #2개만 가져옴
+        item_last_2 = item_reverse_2[:2]
+
+        #마지막 아이템 아이디 두개 가져오기
+        prod_id_1 = item_last_1[0].prod_id
+        prod_id_2 = item_last_1[1].prod_id
+        prod_id_3 = item_last_2[0].prod_id
+        prod_id_4 = item_last_2[1].prod_id
+
+        #거기에 있는 실제 상품 쿼리셋 가져오기
+        prod_1 = prods.filter(prod_name__exact=prod_id_1)
+        prod_2 = prods.filter(prod_name__exact=prod_id_2)
+        prod_3 = prods.filter(prod_name__exact=prod_id_3)
+        prod_4 = prods.filter(prod_name__exact=prod_id_4)
+        
+        #잘 왔나 확인하기
+        print(prod_1,prod_2, prod_3, prod_4)
+
+
+        #최다 주문 내역 확인하기
+        receipt_list = []
+        item_list = []
+        receipt_reverse = receipts.filter(member_id__exact=member_id)[::-1] #거꾸로
+
+        for i in receipt_reverse: 
+            receipt_list.append(i.receipt_id) #id 리스트 가지고 넣어주기
+
+        for i in receipt_list:
+            item_list.append(items.filter(receipt_id__exact=i))
+        
+
+        
+
 
     #POST 전송이 들어오면 영수증 등록
     if request.method == 'POST':
+        print("\n*************************************POST들어옴****************************************\n", request.POST)
+        
+        #1. receipt 영수증 form의 post인 경우
+        if 'receiptPrice' in request.POST:
+            print("\n1. receipt 요청\n", request.POST)
+            #form에서 name에 해당하는 값 가져오기
+            todayUserId = request.POST['todayUserId']  #ㅅㅂ 이거 차번호 말고 차 아이디가 들어가고 있는거지?
+            memberId = request.POST['memberId']
+            receiptPrice = request.POST['receiptPrice']
+            receiptTodayId = request.POST['receiptTodayId']
 
-        #POST 전송 데이터에 있는 'todayUserCar' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
-        todayUserId = request.POST['todayUserId']  #ㅅㅂ 이거 차번호 말고 차 아이디가 들어가야함
-        memberId = request.POST['memberId']
-        receiptPrice = request.POST['receiptPrice']
-        receiptTodayId = request.POST['receiptTodayId']
+            url = 'http://localhost:8000/api/receipt'
+            #url = 'http://3.37.186.91:8000/api/receipt'
+            data = {"today_user_id" : todayUserId, "member_id": memberId, "receipt_price": receiptPrice, "receipt_today_id": receiptTodayId}
+            response = requests.post(url, data=data)
+            #messages.info(request, response.text) #-> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
+            print(response.text);
 
-        url = 'http://localhost:8000/api/receipt'
-        #url = 'http://3.37.186.91:8000/api/receipt'
-        data = {"today_user_id" : todayUserId, "member_id": memberId, "receipt_price": receiptPrice, "receipt_today_id": receiptTodayId}
-        response = requests.post(url, data=data)
-        #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
+        #2. item 아이템 form의 post인 경우
+        elif 'itemPrice' in request.POST: #!!!!!!!elif로 변경
+            print("\n2. item 요청\n", request.POST)
+            receipts = receipt.objects.all() #receipt 영수증 데이터 db에서
+            itemQuantity = request.POST['itemQuantity']
+            itemSize = request.POST['itemSize']
+            itemPrice = request.POST['itemPrice']
+            itemHotCold = request.POST['itemHotCold']
+            itemCafAmount = request.POST['itemCafAmount']
+            itemSyrup = request.POST['itemSyrup']
+            itemShot = request.POST['itemShot']
+            itemMilk = request.POST['itemMilk']
+            itemWhip = request.POST['itemWhip']
+            itemJavaChip = request.POST['itemJavaChip']
+            itemDriz = request.POST['itemDriz']
+            prodId = request.POST['prodId']
+            receiptId = receipts.values().last()['receipt_id']
 
+            """ 
+            #prodName = request.POST['prodId']
+            #prodId = prods.filter(prod_name__icontains=prodName) 
+            """
 
-        #MEMBER 데이터와 동일하면 MEMBER-ORDER 페이지로 이동
-        """ if receiptTodayId:
-            member = members.filter(member_car__icontains=todayuserCar) #memberCar와 동일한 차 번호 있는지 확인
-            messages.info(request,member.exists())
+            url2 = 'http://localhost:8000/api/item'
+            #url = 'http://3.37.186.91:8000/api/item'
+            data2 = {"item_quantity":itemQuantity, "item_size":itemSize, "item_price":itemPrice,
+            "item_hot_cold":itemHotCold, "item_caf_amount": itemCafAmount, "item_syrup": itemSyrup,
+            "item_shot":itemShot, "item_milk":itemMilk, "item_whip": itemWhip, "item_java_chip": itemJavaChip,
+            "item_driz":itemDriz,"receipt_id": receiptId, "prod_id": prodId}
+            response = requests.post(url2, data=data2)
+            #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
+            print(response.text);
 
-            if (member.exists() == True): #member에 존재하는 게 True라면
-                #전역변수 사용
-                today_user_id = todayuserCar
-                member_id = member.values()[0]['member_id']
-                return redirect('/client/menu/member-orders')
-            else:
-                #전역변수 사용
-                today_user_id = todayuserCar
-                member_id = ''
-                return redirect('/client/menu/non-member-orders') """
-
-
-
-
-    return render(request, 'client/member_order.html', {'prods':prod_list, 'today_user_id':today_user_id, 'member_id':member_id})
+    return render(request, 'client/member_order.html', {'prods':prod_list, 'today_user_id':today_user_id, 'member_id':member_id, 'prod_1':prod_1, 'prod_2':prod_2, 'prod_3':prod_3, 'prod_4':prod_4})
 
 
 def non_member_order(request):

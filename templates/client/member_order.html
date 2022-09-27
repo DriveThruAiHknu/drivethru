@@ -42,36 +42,71 @@
                                 <!-- 상품 1, 2-->
 
                                 <!-- 상품1 -->
+                                {% for prod_1 in prod_1 %}
                                 <div class="col-md-6" id="item1">
-                                    <div class="image1"></div>
+                                    <div class="image1">
+                                        {% if prod_1.prod_image %}
+                                        <img src="{{ prod_1.prod_image.url }}" alt="{{ prod_1.prod_image }}">
+                                        {% else %}
+                                        <img src="/static/manager/image/starbuck.png" alt="My Image" />
+                                        {% endif %}
+                                    </div>
+
                                     <div class="menu_item">
                                         <div class="image_num text-center">
                                             <h4 class="text-center mt-1">1</h4>
                                         </div>
-                                        <h5 class="menu_name mt-2" id="new_1_id">카페 아메리카노
-                                            <span class="badge bg-primary">Ice</span>
+                                        <h5 class="menu_name mt-2" id="new_1_id">{{prod_1.prod_name}}
+                                            {% if prod_1.prod_hot_cold is 0 %}
+                                            <span class="badge bg-warning">FOOD</span>
+                                            {% elif prod_1.prod_hot_cold is 1 %}
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% elif prod_1.prod_hot_cold is 2 %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% endif %}
                                         </h5>
                                     </div>
                                     <h5 class="menu_price">
                                         <button type="none" class="btn-btn-outline-primary">$</button>
-                                        4.3
+                                        {{prod_1.prod_price}}
                                     </h5>
                                 </div>
+                                {% endfor %}
 
                                 <!-- 상품2 -->
+                                {% for prod_2 in prod_2 %}
                                 <div class="col-md-6" id="item2">
-                                    <div class="image2"></div>
+                                    <div class="image2">
+                                        {% if prod_2.prod_image %}
+                                        <img src="{{ prod_2.prod_image.url }}" alt="{{ prod_2.prod_image }}">
+                                        {% else %}
+                                        <img src="/static/manager/image/starbuck.png" alt="My Image" />
+                                        {% endif %}
+                                    </div>
+
                                     <div class="menu_item">
 
                                         <div class="image_num text-center">
                                             <h4 class="text-center mt-1">2</h4>
                                         </div>
-                                        <h5 class="menu_name mt-2" id="new_2_id">카푸치노
-                                            <span class="badge bg-danger">Hot</span>
+                                        <h5 class="menu_name mt-2" id="new_2_id">{{prod_2.prod_name}}
+                                            {% if prod_2.prod_hot_cold is 0 %}
+                                            <span class="badge bg-warning">FOOD</span>
+                                            {% elif prod_2.prod_hot_cold is 1 %}
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% elif prod_2.prod_hot_cold is 2 %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
                                             <button type="none" class="btn-btn-outline-primary">$</button>
-                                            5.4
+                                            {{prod_2.prod_price}}
                                         </h5>
                                     </div>
 
@@ -80,6 +115,7 @@
 
                         </div>
                     </div>
+                    {% endfor %}
 
 
                     <!-- 최다 주문 메뉴-->
@@ -90,44 +126,80 @@
                                 <!-- 상품 3, 4, 5, 6-->
 
                                 <!-- 상품3 -->
+                                {% for prod_3 in prod_3 %}
                                 <div class="col" id="item3">
-                                    <div class="image3"></div>
+                                    <div class="image3">
+                                        {% if prod_3.prod_image %}
+                                        <img src="{{ prod_3.prod_image.url }}" alt="{{ prod_3.prod_image }}">
+                                        {% else %}
+                                        <img src="/static/manager/image/starbuck.png" alt="My Image" />
+                                        {% endif %}
+                                    </div>
+
                                     <div class="menu_item">
-                                        <div class="image_num text-center">
+                                        <div class="image_num2 text-center">
                                             <h4 class="text-center mt-1">3</h4>
                                         </div>
-                                        <h5 class="menu_name mt-2" id="new_3_id">카페라떼
-                                            <span class="badge bg-primary">Ice</span>
+                                        <h5 class="menu_name mt-2" id="new_3_id">{{prod_3.prod_name}}
+                                            {% if prod_3.prod_hot_cold is 0 %}
+                                            <span class="badge bg-warning">FOOD</span>
+                                            {% elif prod_3.prod_hot_cold is 1 %}
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% elif prod_3.prod_hot_cold is 2 %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% endif %}
                                         </h5>
                                     </div>
                                     <h5 class="menu_price">
                                         <button type="none" class="btn-btn-outline-primary">$</button>
-                                        4.4
+                                        {{prod_3.prod_price}}
                                     </h5>
                                 </div>
+                                {% endfor %}
 
                                 <!-- 상품4 -->
+                                {% for prod_4 in prod_4 %}
                                 <div class="col" id="item4">
-                                    <div class="image4"></div>
+                                    <div class="image4">
+                                        {% if prod_4.prod_image %}
+                                        <img src="{{ prod_4.prod_image.url }}" alt="{{ prod_4.prod_image }}">
+                                        {% else %}
+                                        <img src="/static/manager/image/starbuck.png" alt="My Image" />
+                                        {% endif %}
+                                    </div>
+
                                     <div class="menu_item">
-                                        <div class="image_num text-center">
+                                        <div class="image_num2 text-center">
                                             <h4 class="text-center mt-1">4</h4>
                                         </div>
-                                        <h5 class="menu_name mt-2" id="new_4_id">코코아
-                                            <span class="badge bg-danger">Hot</span>
+                                        <h5 class="menu_name mt-2" id="new_4_id">{{prod_4.prod_name}}
+                                            {% if prod_4.prod_hot_cold is 0 %}
+                                            <span class="badge bg-warning">FOOD</span>
+                                            {% elif prod_4.prod_hot_cold is 1 %}
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% elif prod_4.prod_hot_cold is 2 %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">ICE</span>
+                                            <span class="badge bg-danger">HOT</span>
+                                            {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
                                             <button type="none" class="btn-btn-outline-primary">$</button>
-                                            3.5
+                                            {{prod_4.prod_price}}
                                         </h5>
                                     </div>
                                 </div>
+                                {% endfor %}
 
                                 <!-- 상품5 -->
                                 <div class="col" id="item5">
                                     <div class="image5"></div>
                                     <div class="menu_item">
-                                        <div class="image_num text-center">
+                                        <div class="image_num2 text-center">
                                             <h4 class="text-center mt-1">5</h4>
                                         </div>
                                         <h5 class="menu_name mt-2" id="new_5_id">곡물 빵
@@ -144,7 +216,7 @@
                                 <div class="col" id="item6">
                                     <div class="image6"></div>
                                     <div class="menu_item">
-                                        <div class="image_num text-center">
+                                        <div class="image_num2 text-center">
                                             <h4 class="text-center mt-1">6</h4>
                                         </div>
                                         <h5 class="menu_name mt-2" id="new_6_id">복숭아 티
@@ -161,35 +233,42 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- form 숨기기-->
-                <!-- <form method="post" id="receipt">
-                    {% csrf_token %}
-                    <input id="input_receipt_tui" name="todayUserId" size=10 type="text"
-                        placeholder="{{ today_user_id }}" />
-                    <input id="input_receipt_mi" name="memberId" size=10 type="number" placeholder="{{ member_id }}" />
-                    <input id="input_receipt_rp" name="receiptPrice" type="number" placeholder="0" />
-                    <input id="input_receipt_rti" name="receiptTodayId" size=10 type="number" placeholder="0" />
-                    <input id="input_receipt_btn" type="submit" onclick="send();" value="확인" />
-                </form> -->
             </div>
 
 
             <!-- 오른쪽 영수증-->
             <div class="col-xxl-6" id="right">
-                <!-- receipt form 숨기기-->
-                <form method="post" id="receipt" style="display: none;">
+
+                <!-- 뷰에서 지워라 메시지 / 이동도 풀고 -->
+                <!-- {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center"
+                    role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %} -->
+
+
+                <!-- receipt form -->
+                <iframe name="blankifr" style='display:none;'></iframe>
+
+                <!-- style="display: none;" -->
+                <form method="post" id="receipt" target="blankifr" style="display: none;">
                     {% csrf_token %}
                     <input id="input_receipt" name="todayUserId" size=10 type="text"
                         placeholder="{{ today_user_id }}" />
                     <input id="input_receipt" name="memberId" size=10 type="number" placeholder="{{ member_id }}" />
                     <input id="input_receipt" name="receiptPrice" type="number" placeholder="0" />
                     <input id="input_receipt" name="receiptTodayId" size=10 type="number" placeholder="0" />
-                    <input id="input_receipt_btn" type="submit" value="확인" />
+                    <input id="input_receipt_btn" name="input_receipt_btn" type="submit" value="확인" />
                 </form>
 
                 <!-- item form-->
-                <form method="post" id="item" style="display: none;">
+                <form method="post" id="item" target="blankifr" style="display: none; ">
                     {% csrf_token %}
                     <input id="input_item" name="receiptId" type="number" placeholder="0" />
                     <input id="input_item" name="prodId" type="number" placeholder="0" />
@@ -204,9 +283,10 @@
                     <input id="input_item" name="itemWhip" type="number" placeholder="0" />
                     <input id="input_item" name="itemJavaChip" type="number" placeholder="0" />
                     <input id="input_item" name="itemDriz" type="number" placeholder="0" />
-                    <input id="input_item_btn" type="submit" value="확인" />
+                    <input id="input_item_btn" name="input_item_btn" type="submit" value="확인" />
                 </form>
 
+                <!-- 실제 영수증 내용-->
                 <h4 id="menu_txt" class="mb-3">주문 목록</h4>
                 <div class="container-fluid" id="menu_table">
                     <table>
@@ -269,6 +349,10 @@
         var user_op_list = new Array();
         var after_list = new Array(); //실제 주문 완성 리스트 [메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
         var after_db_list = new Array(); //실제 DB 주문 완성 리스트 [영수증 번호, 메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
+        var id_list = new Array(); //상품 id만 담은 리스트
+        var category_list = new Array(); //카테고리만 담은 리스트
+        var submit_list = new Array(); //아이템 제출시 리스트
+
 
         var category = "";
         var txt = document.getElementById("ai_say");
@@ -396,6 +480,16 @@
                                         //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
                                         before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
                                         category = db[y][1];
+                                        category_list.push(db[y][1]);
+
+                                        //상품 id 리스트에 추가 -> 38이 없어서 38 이상은 2개 추가
+                                        if (y > 36) {
+                                            id_list.push(y + 2);
+                                        }
+                                        else {
+                                            id_list.push(y + 1);
+                                        }
+
                                         morpheme_copy.splice(x, 1);
                                         break inn;
                                     }
@@ -435,6 +529,17 @@
                                                     //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
                                                     before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
                                                     category = db[y][1];
+                                                    category_list.push(db[y][1]);
+
+
+                                                    //상품 id 리스트에 추가 -> 38이 없어서 38 이상은 2개 추가
+                                                    if (y > 36) {
+                                                        id_list.push(y + 2);
+                                                    }
+                                                    else {
+                                                        id_list.push(y + 1);
+                                                    }
+
                                                     morpheme_copy.splice(x, 1);
                                                     break inner;
                                                 }
@@ -1145,7 +1250,7 @@
 
                                 //아무 값도 없으면 기본값
                                 if (user_size == "") {
-                                    user_size = "T";
+                                    user_size = "S";
                                 }
 
                             }
@@ -1432,10 +1537,21 @@
                             total_price += menu_price;
 
                             //실제 주문 완성 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐, 사이즈, 옵션가격, 총가격]
-                            after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+                            //after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+
 
                             // 실제 DB 추가 완성 리스트 [영수증 번호, 메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
-                            after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+                            //after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+
+                            //음식이면
+                            if (category == "BAKERY") {
+                                after_list.push([menu, price, menu_ea, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, menu_price]);
+                                after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, 0, db_item_price, 0, 0, 0, 0, 0, 0, 0, 0]);
+                            }
+                            else {
+                                after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+                                after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+                            }
 
                             if (category == "BAKERY") //음식이면 사이즈랑 온도 나오지 않도록
                             {
@@ -1523,8 +1639,16 @@
                                 var menu_name = '';
 
                                 for (var i = 0; i < after_list.length; i++) {
-                                    menu_last += after_list[i][0] + " " + after_list[i][2] + "잔,";
-                                    menu_name += " " + after_list[i][0] + ",";
+                                    if (category_list[i] == "BAKERY") {
+                                        //음식이면
+                                        menu_last += after_list[i][0] + " " + after_list[i][2] + "개,";
+                                        menu_name += " " + after_list[i][0] + ",";
+                                    }
+                                    else {
+                                        //음료면
+                                        menu_last += after_list[i][0] + " " + after_list[i][2] + "잔,";
+                                        menu_name += " " + after_list[i][0] + ",";
+                                    }
                                 }
 
 
@@ -1566,39 +1690,71 @@
                                     console.log(rcp_today.value);
 
                                     //receipt 폼 제출
-                                    document.getElementById("receipt").submit();
-
-
+                                    console.log("영수증 폼 제출");
+                                    var submit = await document.getElementById("receipt").submit();
+                                    //2000까지 
+                                    await new Promise((resolve, reject) => setTimeout(resolve, 1800));
 
 
                                     // DB에 아이템 추가
-                                    /*  for (var i=0; i< after_db_list.length; i++) {
-                                         var item_receiptId = document.querySelector('input[name="receiptId"]');
-                                         item_receiptId.value = after_db_list[i][0];
- 
-                                         var item_prodId = document.querySelector('input[name="prodId"]');
-                                         item_prodId.value = after_db_list[i][1];
- 
-                                         var item_quantity = document.querySelector('input[name="itemQuantity"]');
-                                         item_quantity.value = after_db_list[i][2];
- 
-                                         var item_size = document.querySelector('input[name="itemSize"]');
-                                         item_size.value = after_db_list[i][3];
-                                         
-                                         var item_price = document.querySelector('input[name="itemPrice"]');
-                                         item_price.value = after_db_list[i][4];
- 
-                                         var item_hot_cold = document.querySelector('input[name="itemHotCold"]');
-                                         item_hot_cold.value = after_db_list[i][5];
-                                         
-                                         //온도까지 함
-                                     } */
+                                    for (var i = 0; i < after_db_list.length; i++) {
 
+                                        // 전체 한 메뉴 리스트 마다
+                                        // after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, 
+                                        //db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, 
+                                        //db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
 
+                                        var item_receiptId = document.querySelector('input[name="receiptId"]');
+                                        item_receiptId.value = after_db_list[i][0];
 
-                                    // 이동
-                                    await new Promise((resolve, reject) => setTimeout(resolve, 1300));
+                                        var item_prodId = document.querySelector('input[name="prodId"]');
+                                        item_prodId.value = id_list[i]; //id_list[i][0]?
 
+                                        var item_quantity = document.querySelector('input[name="itemQuantity"]');
+                                        item_quantity.value = after_db_list[i][2];
+
+                                        var item_size = document.querySelector('input[name="itemSize"]');
+                                        item_size.value = after_db_list[i][3];
+
+                                        var item_price = document.querySelector('input[name="itemPrice"]');
+                                        item_price.value = after_db_list[i][4];
+
+                                        var item_hot_cold = document.querySelector('input[name="itemHotCold"]');
+                                        item_hot_cold.value = after_db_list[i][5];
+
+                                        var item_caf = document.querySelector('input[name="itemCafAmount"]');
+                                        item_caf.value = after_db_list[i][6];
+
+                                        var item_syrup = document.querySelector('input[name="itemSyrup"]');
+                                        item_syrup.value = after_db_list[i][7];
+
+                                        var item_shot = document.querySelector('input[name="itemShot"]');
+                                        item_shot.value = after_db_list[i][8];
+
+                                        var item_milk = document.querySelector('input[name="itemMilk"]');
+                                        item_milk.value = after_db_list[i][9];
+
+                                        var item_whip = document.querySelector('input[name="itemWhip"]');
+                                        item_whip.value = after_db_list[i][10];
+
+                                        var item_java_chip = document.querySelector('input[name="itemJavaChip"]');
+                                        item_java_chip.value = after_db_list[i][11];
+
+                                        var item_driz = document.querySelector('input[name="itemDriz"]');
+                                        item_driz.value = after_db_list[i][12];
+
+                                        // item 폼 제출
+                                        /* alert("아이템" + i + " 폼 제출"); //alert 말고 console로 바꾸기
+                                        submit_list.push(await document.getElementById("item").submit());
+                                        await new Promise((resolve, reject) => setTimeout(resolve, 500)); */
+
+                                        //동기 없애라길래 함 해봄
+                                        console.log("아이템" + i + " 폼 제출"); //alert 말고 console로 바꾸기
+                                        submit_list.push(await document.getElementById("item").submit());
+                                        await new Promise((resolve, reject) => setTimeout(resolve, 400));
+                                    }
+
+                                    //이동
                                     var menu_param = "";
                                     var ea_param = "";
                                     for (var i = 0; i < after_list.length; i++) {
@@ -1652,6 +1808,16 @@
                                             //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
                                             before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
                                             category = db[y][1];
+                                            category_list.push(db[y][1]);
+
+                                            //상품 id 리스트에 추가 -> 38이 없어서 38 이상은 2개 추가
+                                            if (y > 36) {
+                                                id_list.push(y + 2);
+                                            }
+                                            else {
+                                                id_list.push(y + 1);
+                                            }
+
                                             morpheme_copy.splice(x, 1);
                                             break inn;
                                         }
@@ -1692,6 +1858,16 @@
                                                         //6 hot_cold, 7 caf_amount, 8 syrup, 9 shot, 10 milk, 11 whip, 12 java_chip, 13 driz,
                                                         before_list.push([db_menu[y], db_price[y], db[y][6], db[y][7], db[y][8], db[y][9], db[y][10], db[y][11], db[y][12], db[y][13]]);
                                                         category = db[y][1];
+                                                        category_list.push(db[y][1]);
+
+                                                        //상품 id 리스트에 추가 -> 38이 없어서 38 이상은 2개 추가
+                                                        if (y > 36) {
+                                                            id_list.push(y + 2);
+                                                        }
+                                                        else {
+                                                            id_list.push(y + 1);
+                                                        }
+
                                                         morpheme_copy.splice(x, 1);
                                                         break inner;
                                                     }
@@ -2405,7 +2581,7 @@
 
                                     //아무 값도 없으면 기본값
                                     if (user_size == "") {
-                                        user_size = "T";
+                                        user_size = "S";
                                     }
 
                                 }
@@ -2695,10 +2871,21 @@
 
 
                                 //실제 주문 완성 리스트 [메뉴이름, 가격, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐, 사이즈, 옵션가격, 총가격]
-                                after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+                                //after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+
 
                                 // 실제 DB 추가 완성 리스트 [영수증 번호, 메뉴이름, 가격, 사이즈, 수량, 온도, 카페인, 시럽, 샷, 우유, 휘핑, 자바칩, 드리즐]
-                                after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+                                //after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+
+                                //음식이면
+                                if (category == "BAKERY") {
+                                    after_list.push([menu, price, menu_ea, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, menu_price]);
+                                    after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, 0, db_item_price, 0, 0, 0, 0, 0, 0, 0, 0]);
+                                }
+                                else {
+                                    after_list.push([menu, price, menu_ea, hot_cold, caf_amount, syrup, shot, milk, whip, java_chip, driz, size, op_price, menu_price]);
+                                    after_db_list.push([db_item_receipt, db_item_prod, db_item_quan, db_item_size, db_item_price, db_item_hot_cold, db_item_caf, db_item_syrup, db_item_shot, db_item_milk, db_item_whip, db_item_java_chip, db_item_driz]);
+                                }
 
                                 if (category == "BAKERY") //음식이면 사이즈랑 온도 나오지 않도록
                                 {
