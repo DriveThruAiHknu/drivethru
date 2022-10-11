@@ -153,6 +153,67 @@ class orderView(APIView):
     """
     POST /todayusers -> 현재 들어온 차량 입력
     """
+# DB - login
+from .serializers import loginsSerializer
+from .models import login
+
+class loginView(APIView):
+    """
+    POST /logins -> 메뉴 입력
+    """
+    def post(self, request):
+        login_serializer = loginsSerializer(data=request.data) #Request의 data를 prodsSerializer로 변환
+
+        if login_serializer.is_valid(): #유효하면
+            login_serializer.save() #prodsSerialize 유효성 검사 후 DB에 저장
+            return Response(login_serializer.data, status=status.HTTP_201_CREATED) #클라이언트에 JSON response 전달
+        else:
+            return Response(login_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    """
+    GET /logins -> 메뉴 전부 조회
+        /logins/{loginID} -> 해당 메뉴 ID만 조회
+    """
+    def get(self, request, **kwargs):
+        if kwargs.get('loginID') is None: #api 뒤에 loginID가 없으면 전부 조회
+            login_queryset = login.objects.all()
+            login_queryset_serializer = loginsSerializer(login_queryset, many=True)
+            return Response(login_queryset_serializer.data, status=status.HTTP_200_OK)
+
+        else: #prodID가 있으면 해당 아이디만 조회
+            login_id = kwargs.get('loginID') #url에 있는 id 가져오기
+            login_serializer = loginsSerializer(login.objects.get(loginID=login_id)) #id에 해당하는 정보 불러오기
+            return Response(login_serializer.data, status=status.HTTP_200_OK)
+ 
+    """
+    PUT /logins/{loginID} -> 모든 컬럼에 데이터 입력해 넘겨줘야 수정 가능함!
+    """
+    def put(self, request, **kwargs):
+        if kwargs.get('loginID') is None: #url에 prodID 없으면 실패
+            return Response("URL에 loginID를 추가해야합니다!", status=status.HTTP_400_BAD_REQUEST)
+        
+        else: #url에 ID 있으면
+            login_id = kwargs.get('loginID') #login_id 변수에 넣기
+            login_object = login.objects.get(loginID=login_id) #id에 해당하는 객체 인스턴스 가져오기
+
+            update_login_serailizer = loginsSerializer(login_object, data=request.data) #새로 요청한 데이터로 직렬화
+            if update_login_serailizer.is_valid(): #유효성 검사
+                update_login_serailizer.save() #유효하면 DB 저장
+                return Response(update_login_serailizer.data, status=status.HTTP_200_OK)
+            else: #유효하지 않으면 실패
+                return Response("모든 컬럼의 값을 입력해야 합니다!", status=status.HTTP_400_BAD_REQUEST)
+
+    """
+    DELETE /logins/{loginID} -> 현재 들어온 메뉴 삭제
+    """
+    def delete(self, request, **kwargs ):
+        if kwargs.get('loginID') is None: #loginID 값이 URL에 없으면
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            login_id = kwargs.get('loginID')
+            login_object = login.objects.get(loginID=login_id)
+            login_object.delete()
+            return Response("해당 데이터 삭제", status=200)
 
 
 # DB - prods

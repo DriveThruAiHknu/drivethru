@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
-from drive_restapi.models import prod, receipt, login
+from drive_restapi.models import prod, receipt, login, cafe
 from django.shortcuts import redirect
 import requests, json
 from django.contrib import messages
@@ -12,6 +12,7 @@ global checked_prod_id
 1) 관리자
 """ 
 stffLogin = login.objects.all()
+
 def manage_login(request):
     context = {
         'a':''
@@ -22,19 +23,25 @@ def manage_login(request):
 
         #POST 전송 데이터에 있는 'StaffLogin' 가져와서 restapi에 post로 전송 -> 데이터 집어넣기
         StaffLogin = request.POST['StaffLogin']
-        url = 'http://localhost:8000/api/login' #이부분 수정하기
-        data = {"password" : StaffLogin}
+        url = 'http://localhost:8000/api/logins' #이부분 수정하기
+        data = {"login_id":2,"password" : StaffLogin} #model에서 login_id 자동 증가하게 바꾸기
         response = requests.post(url, data=data)
         print(response.text) #-> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
 
 
         #로그인 패스워드 데이터와 동일하면 menu 페이지로 이동
         if StaffLogin:
-            loginCheck = login.objects.filter(password=StaffLogin) #StaffLogin 동일한 비밀번호 있는지 확인
-            messages.info(request,loginCheck.exists())
+            managerLoginCheck = cafe.objects.filter(manager_password=StaffLogin) #매니저 비밀번호라면
+            messages.info(request,managerLoginCheck.exists())
 
-            if (loginCheck.exists() == True): #login에 존재하는 게 True라면
+            if (managerLoginCheck.exists() == True): #login에 존재하는 게 True라면
                 return redirect('/manager/menu')
+
+            staffLoginCheck = cafe.objects.filter(staff_password=StaffLogin) #일반 직원 비밀번호라면
+            messages.info(request,staffLoginCheck.exists())
+
+            if (staffLoginCheck.exists() == True): #login에 존재하는 게 True라면
+                return redirect('/manager/staff-orders')
 
     return render(request, 'manager/manage_login.html', context)
 
@@ -67,6 +74,7 @@ def manage_menu(request):
             return render(request, 'manager/manage_menu_update.html', {'update_prod':update_prod})
         elif 'one_prod_update' in request.POST: #메뉴 수정
             try:
+                print("try success")
                 prod_category = request.POST.get('prod_category')
                 prod_name = request.POST.get('prod_name')
                 prod_price = request.POST.get('prod_price')
@@ -81,7 +89,7 @@ def manage_menu(request):
                     prod_hot_cold = 1
                 else:
                     prod_hot_cold = 0
-                
+                    
                 if "카페인" in prod_option:
                     prod_caf_amount = True
                 else:
@@ -116,23 +124,24 @@ def manage_menu(request):
                     prod_driz = True
                 else:
                     prod_driz = False
-
-                update_prod.prod_category=prod_category
-                update_prod.prod_name=prod_name
-                update_prod.prod_price=int(prod_price)
-                update_prod.prod_image=prod_image
-                update_prod.prod_hot_cold=prod_hot_cold
-                update_prod.prod_caf_amount=prod_caf_amount
-                update_prod.prod_syrup=prod_syrup
-                update_prod.prod_shot=prod_shot
-                update_prod.prod_milk=prod_milk
-                update_prod.prod_whip=prod_whip
-                update_prod.prod_java_chip=prod_java_chip
-                update_prod.prod_driz=prod_driz
-                update_prod.save()
-                print("수정 완료")
+                    
+                    update_prod.prod_category=prod_category
+                    update_prod.prod_name=prod_name
+                    update_prod.prod_price=int(prod_price)
+                    update_prod.prod_image=prod_image
+                    update_prod.prod_hot_cold=prod_hot_cold
+                    update_prod.prod_caf_amount=prod_caf_amount
+                    update_prod.prod_syrup=prod_syrup
+                    update_prod.prod_shot=prod_shot
+                    update_prod.prod_milk=prod_milk
+                    update_prod.prod_whip=prod_whip
+                    update_prod.prod_java_chip=prod_java_chip
+                    update_prod.prod_driz=prod_driz
+                    update_prod.save()
+                
+                print("manage_menu 수정 완료")
             except:
-                print("수정 에러")
+                print("manage_menu 수정 에러")
     return render(request, 'manager/manage_menu.html', {'class_prods':class_prods})
 
 
@@ -194,7 +203,7 @@ def manage_menuadd(request):
 
         prod_add = prod(prod_category=prod_category, prod_name=prod_name, prod_price=int(prod_price), prod_image=prod_image, prod_recommend = False, prod_hot_cold=prod_hot_cold ,prod_caf_amount=prod_caf_amount, prod_syrup=prod_syrup, prod_shot=prod_shot, prod_milk=prod_milk, prod_whip=prod_whip, prod_java_chip=prod_java_chip, prod_driz=prod_driz, prod_sales_rate=0)
         prod_add.save(force_insert=True)
-
+        print("Record add successfully!")
     return render(request, 'manager/manage_menu_add.html', context)
 
 def manage_menuupdate(request):
@@ -268,9 +277,9 @@ def manage_menuupdate(request):
             update_prod.prod_java_chip=prod_java_chip
             update_prod.prod_driz=prod_driz
             update_prod.save(force_insert=True)
-            print("수정 완료")
+            print("manage_menuupdate 수정 완료")
         except:
-            print("수정 에러")
+            print("manage_menuupdate 수정 에러")
     return render(request, 'manager/manage_menu_update.html', context)
 
 def manage_recommendation_menu(request):
