@@ -408,9 +408,7 @@ def member_order(request):
     #전역변수 사용
     global today_user_id
     global member_id
-    global receipts
-    global items
-    
+
     context = {
         'today_user_id':today_user_id,
         'member_id':member_id
@@ -418,50 +416,76 @@ def member_order(request):
     print(context)
 
     # 최근 주문 내역 2개 뽑아오기
-    receipt_reverse = receipts.filter(member_id__exact=member_id) #거꾸로
-    receipt_last = receipt_reverse[:2] #2개만 가져옴
+    receipt_id = []
+    item_ob = []
+    prod_id = []
+    prod_name = []
+
+    receipt_ = receipt.objects.all() #receipt 데이터 가져오기
+    item_ = item.objects.all()
+
+    receipt_reverse = receipt_.filter(member_id__exact=member_id)[::-1] #거꾸로
     
-    if (receipt_last):
+    for i in receipt_reverse: 
+        receipt_id.append(i.receipt_id)
 
-        #마지막 영수증 아이디 두개 가져오기
-        receipt_id_1 = receipt_last[0].receipt_id
-        receipt_id_2 = receipt_last[1].receipt_id
+    for i in receipt_id:        
+        item_ob.append(item_.filter(receipt_id__exact=i)[::-1])
 
-        #아이템 중에 영수증 아이디 해당되는 거 가져오기
-        item_reverse_1 = items.filter(receipt_id__exact=receipt_id_1)[::-1]
-        item_reverse_2 = items.filter(receipt_id__exact=receipt_id_2)[::-1]
+    for i in range(0, len(item_ob)):
+        for j in range(0, len(item_ob[i])):
+            prod_id.append(item_ob[i][j].prod_id)
 
-        item_last_1 = item_reverse_1[:2] #2개만 가져옴
-        item_last_2 = item_reverse_2[:2]
+    for i in range(0, len(prod_id)):
+        prod_name.append(prods.filter(prod_name__exact = prod_id[i]))
 
-        #마지막 아이템 아이디 두개 가져오기
-        prod_id_1 = item_last_1[0].prod_id
-        prod_id_2 = item_last_1[1].prod_id
-        prod_id_3 = item_last_2[0].prod_id
-        prod_id_4 = item_last_2[1].prod_id
+    """ for i in range(0, len(prod_name)):
+            locals()['prod_'+str(i+1)] = prod_name[i]
+            print(locals()['prod_'+str(i+1)]) """
 
-        #거기에 있는 실제 상품 쿼리셋 가져오기
-        prod_1 = prods.filter(prod_name__exact=prod_id_1)
-        prod_2 = prods.filter(prod_name__exact=prod_id_2)
-        prod_3 = prods.filter(prod_name__exact=prod_id_3)
-        prod_4 = prods.filter(prod_name__exact=prod_id_4)
+    if (len(prod_id) >= 4):
+        print("인덱스 에러 X")
+        prod_1 = prod_name[0]
+        prod_2 = prod_name[1]
+        prod_3 = prod_name[2]
+        prod_4 = prod_name[3]
+    else:
+        print("인덱스 에러 O")
+        if(len(prod_id) == 3):
+            prod_1 = prod_name[0]
+            prod_2 = prod_name[1]
+            prod_3 = prod_name[2]
+            prod_4 = prod_name[0]
+        elif(len(prod_id) == 2):
+            prod_1 = prod_name[0]
+            prod_2 = prod_name[1]
+            prod_3 = prod_name[0]
+            prod_4 = prod_name[1]
+        elif(len(prod_id) == 1):
+            prod_1 = prod_name[0]
+            prod_2 = prod_name[0]
+            prod_3 = prod_name[0]
+            prod_4 = prod_name[0]
+        else:
+            prod_1 = ""
+            prod_2 = ""
+            prod_3 = ""
+            prod_4 = ""
         
-        #잘 왔나 확인하기
-        print(prod_1,prod_2, prod_3, prod_4)
+    #잘 왔나 확인하기
+    print(prod_1,prod_2, prod_3, prod_4)
 
 
-        #최다 주문 내역 확인하기
-        receipt_list = []
-        item_list = []
-        receipt_reverse = receipts.filter(member_id__exact=member_id)[::-1] #거꾸로
+    #최다 주문 내역 확인하기
+    receipt_list = []
+    item_list = []
+    receipt_reverse = receipt_.filter(member_id__exact=member_id)[::-1] #거꾸로
 
-        for i in receipt_reverse: 
-            receipt_list.append(i.receipt_id) #id 리스트 가지고 넣어주기
+    for i in receipt_reverse: 
+        receipt_list.append(i.receipt_id) #id 리스트 가지고 넣어주기
 
-        for i in receipt_list:
-            item_list.append(items.filter(receipt_id__exact=i))
-        
-
+    for i in receipt_list:
+        item_list.append(item_.filter(receipt_id__exact=i))
         
 
 
