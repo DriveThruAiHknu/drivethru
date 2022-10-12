@@ -322,16 +322,17 @@ def manage_recommendation_menu(request):
     
 
 def manage_orders(request):
-    context = {
-        'a':''
-    }
-    return render(request, 'manager/manage_orders.html', context)
+    class_receipts = receipt.objects.all()
+    class_items = item.objects.all()
+
+    return render(request, 'manager/manage_orders.html', {'class_receipts':class_receipts, 'class_items':class_items})
 
 
 def staff_orders(request):
     context = {
         'a':''
     }
+
     return render(request, 'manager/staff_orders.html', context)
 
 

@@ -79,14 +79,16 @@ html, body {
     border: none;
 }
 .row{
-    width: 100%;
+    width: auto;
 }
 /*탭 안에 있는 테이블 커스텀*/
 .tab-content{
     font-family: 'Noto Sans KR', sans-serif;
     float: left;
-    width: 65%;  
-    padding-top: 3%;  
+    width: 75%;  
+    height: 750px;
+    padding-top: 3%;
+    overflow: scroll;  
 }
 .ordertime{
     font-family: 'Noto Sans KR', sans-serif;
@@ -100,6 +102,7 @@ html, body {
     width: 1000px;
     margin-left: 5%;
 }
+
 /*주문목록 앞에 체크네모*/
 .order img{
     max-width: 40px;
@@ -116,29 +119,30 @@ ul li {
 .fl {float:left; }
 .tc {text-align:left; }
 
+
 /* 주문 목록 목록 */
 .w500 {
     font-weight: 100;
     font-size: xx-large;
     color: #15654A;
-    width: 300px; 
+    width: auto; 
     margin-bottom: 10px;
 }
 .w120 {
     font-size: x-large;
-    color: #252525;
-    width:120px; 
+    color: #15654A;
+    width:120px;
 }
 .w100 {
     font-size: large;
-    color: #15654A;
-    width:100px; 
+    color: #252525;
+    width:100px;
 }
 .w70{
     font-size: medium;
-    color: #252525;
-    width:100px;
-    margin-left: 70px;
+    color: #cc5017;
+    width:120px;
+    vertical-align: top;
 }
 .w700{
     font-size: medium;
@@ -148,15 +152,30 @@ ul li {
     margin-left: 140px;
     margin-top: 10px;
 }
+.w70s{
+    width:auto;
+    height: auto;
+    text-align: left;
+    margin: 0px;
+    font-size: medium;
+    color: #252525;
+    float: left;
+    margin-top: 20px;
+    margin-left: 70px;
+}
+.badge{
+    margin-left: 5px;
+}
 hr{
     width: "100%"; 
     color: #707070; 
     size: 1;
 }
-.list {
+.list :not(span){
 	height: 40px;
 	line-height: 40px;
 }
+
 /*주문 처리 완료 버튼*/
 .delete_order_btn {
     font-family: 'Noto Sans KR', sans-serif;
