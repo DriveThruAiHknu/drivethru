@@ -66,14 +66,23 @@ html, body {
 }
 .nav-tabs{
     float: left;
-    width: 25%;
+    flex-wrap: nowrap;
+    height: 720px;
+    overflow: auto;
+    -ms-overflow-style:none;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 .project-tab .nav-link {
     border: 1px solid transparent;
     color: #707070;
     background-color: #343434;
     font-size: 30px;
     font-weight: 600;
+    
 }
 .project-tab .nav-link:hover {
     border: none;
@@ -86,7 +95,7 @@ html, body {
     font-family: 'Noto Sans KR', sans-serif;
     float: left;
     width: 75%;  
-    height: 750px;
+    height: 690px;
     padding-top: 3%;
     overflow: scroll;  
 }
@@ -160,7 +169,7 @@ ul li {
     font-size: medium;
     color: #252525;
     float: left;
-    margin-top: 20px;
+    margin-top: 5px;
     margin-left: 70px;
 }
 .badge{
