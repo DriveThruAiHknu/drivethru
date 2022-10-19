@@ -394,12 +394,11 @@ def user_car(request):
 
 # 2. 고객 주문
 from drive_restapi.models import prod
-from drive_restapi.models import item
 prods = prod.objects.all() #prod 데이터 db에서 가져오기
 prods_val = prod.objects.values_list()
 prod_list = list(prods_val)
 print(prod_list[0])
-
+from drive_restapi.models import receipt, item
 receipts = receipt.objects.all() #receipt 데이터 가져오기
 items = item.objects.all()
 
@@ -421,6 +420,7 @@ def member_order(request):
     prod_id = []
     prod_name = []
 
+    from drive_restapi.models import receipt, item
     receipt_ = receipt.objects.all() #receipt 데이터 가져오기
     item_ = item.objects.all()
 
@@ -473,7 +473,7 @@ def member_order(request):
             prod_4 = ""
         
     #잘 왔나 확인하기
-    print(prod_1,prod_2, prod_3, prod_4)
+    print("최근 주문 내역 4개: ", prod_1,prod_2, prod_3, prod_4)
 
 
     #최다 주문 내역 확인하기
@@ -487,6 +487,56 @@ def member_order(request):
     for i in receipt_list:
         item_list.append(item_.filter(receipt_id__exact=i))
         
+
+
+
+    """ 최다 주문 내역 코드 짜기 """
+    from django.db.models import Count
+    from drive_restapi.models import receipt, item, prod
+    receipt_ = receipt.objects.all()
+    item_ = item.objects.all()
+
+    receipt_list = []
+    item_id_list = []
+    item_list = []
+    receipt_reverse = receipt_.filter(member_id__exact=member_id)[::-1] #거꾸로
+
+    for i in receipt_reverse: 
+            receipt_list.append(i.receipt_id) #id 리스트 가지고 넣어주기
+
+    for i in receipt_list:
+            item_list.append(item_.filter(receipt_id__exact=i))
+
+    for i in item_list:
+        for j in range(0, len(i)):
+            item_id_list.append(i[j].item_id)
+
+    item_list_new = item.objects.filter(item_id__in=item_id_list)
+    theanswer = item_list_new.values('prod_id').annotate(Count('prod_id'))
+
+    sort_list = theanswer.order_by('prod_id__count')[::-1]
+    print("\ncount, sort한 각 아이템 상품 개수: ", sort_list, "\n")
+    max_list = []
+
+    for i in range(0,4):
+        max_list.append(sort_list[i]['prod_id'])
+
+    print(max_list)
+
+
+    max_prod_name = []
+    for i in range(0, len(max_list)):
+        max_prod_name.append(prods.filter(prod_id__exact = max_list[i]))
+    
+
+    max_prod_1 = max_prod_name[0]
+    max_prod_2 = max_prod_name[1]
+    max_prod_3 = max_prod_name[2]
+    max_prod_4 = max_prod_name[3]
+
+    print("최다 주문 내역:", max_prod_1, max_prod_2, max_prod_3, max_prod_4)
+    "나온 거 없으면 에러 어떻게 해결할 지도 생각하기"
+
 
 
     #POST 전송이 들어오면 영수증 등록
@@ -542,14 +592,75 @@ def member_order(request):
             #messages.info(request, response.text) -> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
             print(response.text);
 
-    return render(request, 'client/member_order.html', {'prods':prod_list, 'today_user_id':today_user_id, 'member_id':member_id, 'prod_1':prod_1, 'prod_2':prod_2, 'prod_3':prod_3, 'prod_4':prod_4})
+    return render(request, 'client/member_order.html', {'prods':prod_list, 'today_user_id':today_user_id, 'member_id':member_id, 'prod_1':prod_1, 'prod_2':prod_2, 'prod_3':prod_3, 'prod_4':prod_4, 'max_prod_1':max_prod_1, 'max_prod_2':max_prod_2, 'max_prod_3':max_prod_3, 'max_prod_4':max_prod_4})
 
 
 def non_member_order(request):
+
     context = {
         'a':''
     }
-    return render(request, 'client/non_member_order.html', context) 
+
+    # 점장 추천 메뉴 4개 뽑아오기
+    from drive_restapi.models import prod
+
+    prod_ = prod.objects.all()
+    prod_recommend = prod_.filter(prod_recommend__exact = True)
+
+    print("나와", prod_recommend)
+    recommend_list = []
+    
+    for i in range(0,4):
+        recommend_list.append(prod_recommend[i].prod_id)
+    print(recommend_list)
+
+    
+    rcd_prod_name = []
+    for i in range(0, len(recommend_list)):
+        rcd_prod_name.append(prod_.filter(prod_id__exact = recommend_list[i]))
+    
+
+    rcd_prod_1 = rcd_prod_name[0]
+    rcd_prod_2 = rcd_prod_name[1]
+    rcd_prod_3 = rcd_prod_name[2]
+    rcd_prod_4 = rcd_prod_name[3]
+
+    print("점장 추천 내역:", rcd_prod_1, rcd_prod_2, rcd_prod_3, rcd_prod_4)
+    "나온 거 없으면 에러 어떻게 해결할 지도 생각하기"
+
+
+
+    #인기 메뉴 4개
+    from django.db.models import Count
+    from drive_restapi.models import receipt, item
+    receipt_ = receipt.objects.all()
+
+    item_list_new = item.objects.all()
+    theanswer = item_list_new.values('prod_id').annotate(Count('prod_id'))
+    sort_list = theanswer.order_by('prod_id__count')[::-1]
+    print("\ncount, sort한 각 아이템 상품 개수: ", sort_list, "\n")
+    max_list = []
+
+    for i in range(0,4):
+        max_list.append(sort_list[i]['prod_id'])
+
+    print("모든 고객의 최다 주문 메뉴 4개 상품 ID : ",max_list)
+
+
+    max_prod_name = []
+    for i in range(0, len(max_list)):
+        max_prod_name.append(prods.filter(prod_id__exact = max_list[i]))
+    
+
+    max_prod_1 = max_prod_name[0]
+    max_prod_2 = max_prod_name[1]
+    max_prod_3 = max_prod_name[2]
+    max_prod_4 = max_prod_name[3]
+
+    print("최다 주문 내역:", max_prod_1, max_prod_2, max_prod_3, max_prod_4)
+    "나온 거 없으면 에러 어떻게 해결할 지도 생각하기"
+
+    return render(request, 'client/non_member_order.html', {'prods':prod_list, 'rcd_prod_1':rcd_prod_1, 'rcd_prod_2':rcd_prod_2, 'rcd_prod_3':rcd_prod_3, 'rcd_prod_4':rcd_prod_4, 'max_prod_1':max_prod_1, 'max_prod_2':max_prod_2, 'max_prod_3':max_prod_3, 'max_prod_4':max_prod_4}) 
 
 
 def user_end(request):
@@ -575,8 +686,7 @@ from django.http import JsonResponse
 import os
 
 def stem_analyzer(requests):
-    print("stt로 받은 문자열")
-    print(requests.GET['resText'])
+    print("\n 고객 음성 -> 텍스트 변환 결과 : ",requests.GET['resText'],"\n")
     sent = requests.GET['resText']
 
 
@@ -660,7 +770,6 @@ def stem_analyzer(requests):
         for j in delete_word:
             i=i.replace(j, '')
         order.append(i)
-    print("\n")
-    print("결과:", order)
+    print("형태소 사용자사전 정제 결과 :", order)
 
     return JsonResponse(order, safe=False)
