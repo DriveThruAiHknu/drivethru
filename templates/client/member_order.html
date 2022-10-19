@@ -1645,6 +1645,10 @@
                             real_forms = forms_list[0];
                             forms.innerHTML = real_forms;
 
+                            total_price = 0;
+                            for (var i = 0; i < price_list.length; i++) {
+                                total_price += price_list[i];
+                            }
                             total_real.innerHTML = total_price + ' 원';
 
                             txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
@@ -1852,6 +1856,8 @@
                                                                     user_op_list.splice(z, 1); //옵션 리스트에서 삭제
                                                                     id_list.splice(z, 1); //상품 아이디 리스트에서 삭제
                                                                     category_list.splice(z, 1); //카테고리 리스트에서 삭제
+                                                                    price_list.splice(z, 1); //가격 리스트에서 삭제
+                                                                    console.log("삭제된 price_list: ", price_list);
                                                                     console.log('메뉴 삭제');
 
                                                                     menu_recog = true; //메뉴 이름 잘 인식됨
@@ -1882,6 +1888,12 @@
 
                                                 forms.innerHTML = real_forms;
                                                 menu_cnt -= 1 //주문 개수 -1
+
+                                                total_price = 0;
+                                                for (var i = 0; i < price_list.length; i++) {
+                                                    total_price += price_list[i];
+                                                }
+                                                total_real.innerHTML = total_price + ' 원';
 
                                                 console.log("수정할 메뉴 이름 잘 말했어요");
 
@@ -3245,6 +3257,10 @@
 
                                 forms.innerHTML = real_forms;
 
+                                total_price = 0;
+                                for (var i = 0; i < price_list.length; i++) {
+                                    total_price += price_list[i];
+                                }
                                 total_real.innerHTML = total_price + ' 원';
 
 
@@ -4584,9 +4600,13 @@
 
             forms.innerHTML = real_forms;
 
+            total_price = 0;
+            for (var i = 0; i < price_list.length; i++) {
+                total_price += price_list[i];
+            }
             total_real.innerHTML = total_price + ' 원';
 
-            menu_cnt += 1
+            menu_cnt += 1;
 
             //함수 끝
             console.log("reorder 함수 끝 줄");
