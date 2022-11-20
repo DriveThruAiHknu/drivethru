@@ -23,7 +23,7 @@
         <div class="row justify-content-center mb-4" id="bot">
             <div class="ai_img col-sm-3"></div>
             <div class="ai_txt col-sm-9">
-                <h2 id="ai_say">🌿어서오세요~ 스타벅스입니다!🌿</h2>
+                <h2 id="ai_say">🌿어서오세요~ 만나서 반갑습니다!🌿</h2>
             </div>
         </div>
 
@@ -71,7 +71,7 @@
                                         </h5>
                                     </div>
                                     <h5 class="menu_price">
-                                        <button type="none" class="btn-btn-outline-primary">$</button>
+                                        <button type="none" class="btn-btn-outline-primary">￦</button>
                                         {{prod_1.prod_price}}
                                     </h5>
                                 </div>
@@ -106,7 +106,7 @@
                                             {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
-                                            <button type="none" class="btn-btn-outline-primary">$</button>
+                                            <button type="none" class="btn-btn-outline-primary">￦</button>
                                             {{prod_2.prod_price}}
                                         </h5>
                                     </div>
@@ -155,7 +155,7 @@
                                         </h5>
                                     </div>
                                     <h5 class="menu_price">
-                                        <button type="none" class="btn-btn-outline-primary">$</button>
+                                        <button type="none" class="btn-btn-outline-primary">￦</button>
                                         {{prod_3.prod_price}}
                                     </h5>
                                 </div>
@@ -189,7 +189,7 @@
                                             {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
-                                            <button type="none" class="btn-btn-outline-primary">$</button>
+                                            <button type="none" class="btn-btn-outline-primary">￦</button>
                                             {{prod_4.prod_price}}
                                         </h5>
                                     </div>
@@ -224,7 +224,7 @@
                                             {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
-                                            <button type="none" class="btn-btn-outline-primary">$</button>
+                                            <button type="none" class="btn-btn-outline-primary">￦</button>
                                             {{max_prod_1.prod_price}}
                                         </h5>
                                     </div>
@@ -259,7 +259,7 @@
                                             {% endif %}
                                         </h5>
                                         <h5 class="menu_price">
-                                            <button type="none" class="btn-btn-outline-primary">$</button>
+                                            <button type="none" class="btn-btn-outline-primary">￦</button>
                                             {{max_prod_2.prod_price}}
                                         </h5>
                                     </div>
@@ -378,6 +378,7 @@
         var modalContent = document.getElementById("modalContent");
         var left = document.getElementById("left");
         var right = document.getElementById("right");
+        var scroll_tb = document.getElementById("menu_table");
 
         var price_list = new Array(); //상품 1개 가격*수량 + 옵션
         var morpheme_str = "";
@@ -392,8 +393,17 @@
                 Math.floor(value) === value;
         };
 
+        /* 스크롤 자동 내려가는 함수 */
+        function startScroll(interval) {
+            setInterval("autoScroll()", interval);
+        };
 
-        txt.innerHTML = "🌿어서오세요~ 스타벅스입니다!🌿";
+        function autoScroll() {
+            scroll_tb.scrollBy({ top: 50, left: 0, behavior: 'smooth' })
+        };
+
+
+        txt.innerHTML = "🌿어서오세요~ 만나서 반갑습니다!🌿";
 
         window.onload = function () {
             setTimeout(() => {
@@ -449,11 +459,11 @@
 
             try {
 
-                var audio1 = await tts("어서오세요. 스타벅스입니다!");
+                var audio1 = await tts("어서오세요. 만나서 반갑습니다!");
 
-                txt.innerHTML = "<p style='margin-top: -0.2em;'>주문을 원하시는 번호나 <span style='text-decoration: underline;'>메뉴</span>를 말씀해주세요💚\
+                txt.innerHTML = "<p style='margin-top: -0.2em;'>주문을 원하시는 <span style='text-decoration: underline;'>메뉴</span>를 말씀해주세요💚\
                 <h5 style='color:#eb5050 !important; margin-top: -0.35em; font-weight: 700;'>💡TIP💡 메뉴명 ▶️ 옵션 ▶️ 수량 순서로 한 문장을 또박또박 말해주세요!</h5></p>";
-                var audio2 = await tts("주문을 원하시는 메뉴를 번호나, 메뉴명, 옵션, 수량 순서로 말씀해주세요!");
+                var audio2 = await tts("주문을 원하시는 메뉴를 메뉴명, 옵션, 수량 순서로 말씀해주세요!");
 
                 txt.innerHTML = '<p style="margin-top: -0.2em;"><span class="record">🔴</span><span class="circle"> 인식 중</span></p>\
                 <h5 style="color: #545454 !important; margin-top: -0.3em; font-weight: 700;">(예) 카푸치노 바닐라 시럽 2번, 디카페인으로 한잔 주세요.</p>'; //로딩 애니메이션 들어가면 좋을 거 같음
@@ -1302,7 +1312,7 @@
 
 
 
-                            var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
+                            //var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
                             console.log('추가된 메뉴', before_list[before_list.length - 1][0]);
                             console.log('메뉴 가격', before_list[before_list.length - 1][1]);
@@ -1645,11 +1655,18 @@
                             real_forms = forms_list[0];
                             forms.innerHTML = real_forms;
 
+
+
+
                             total_price = 0;
                             for (var i = 0; i < price_list.length; i++) {
                                 total_price += price_list[i];
                             }
                             total_real.innerHTML = total_price + ' 원';
+
+
+                            scroll_tb.scrollTop = scroll_tb.scrollHeight;
+                            var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
                             txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
                             var audio4 = await tts("결제 또는 추가할 메뉴를 말씀해주세요!");
@@ -1704,6 +1721,13 @@
                                 right.className = 'col-xxl-10'; // 기존 클래스명은 사라지니 주의!
                                 right.style.float = 'none';
                                 right.style.margin = '0 auto';
+                                right.style.fontsize = '0.9em !important';
+                                right.style.maxHeight = '95%';
+
+                                scroll_tb.scrollTop = 0;
+
+                                startScroll(1000);
+
 
                                 var audio6 = await tts("주문하신 메뉴가 " + menu_last + " 맞으신가요?");
                                 txt.innerHTML = '<p style="margin-top: -0.2em;">"네" / "아니오"로 말씀해주세요❗</p>\
@@ -1712,7 +1736,7 @@
                                 var stt_last = await speech_to_text();
 
                                 //정상적으로 주문 끝남
-                                if (stt_last == "네" || stt_last == "네.") {
+                                if (stt_last == "내" || stt_last == "내." || stt_last == "네" || stt_last == "네.") {
 
                                     //DB에 주문 영수증 추가
                                     var rcp_todayUser = document.querySelector('input[name="todayUserId"]');
@@ -1984,7 +2008,7 @@
                                                     console.log("영수증 폼 제출");
                                                     var submit = await document.getElementById("receipt").submit();
                                                     //2000까지 
-                                                    await new Promise((resolve, reject) => setTimeout(resolve, 1800));
+                                                    await new Promise((resolve, reject) => setTimeout(resolve, 3500));
 
 
                                                     // DB에 아이템 추가
@@ -2036,7 +2060,7 @@
 
                                                         console.log("아이템" + i + " 폼 제출"); //alert 말고 console로 바꾸기
                                                         submit_list.push(await document.getElementById("item").submit());
-                                                        await new Promise((resolve, reject) => setTimeout(resolve, 400));
+                                                        await new Promise((resolve, reject) => setTimeout(resolve, 500));
                                                     }
 
                                                     //이동
@@ -2903,7 +2927,7 @@
                                 console.log("사용자가 추가한 옵션 : ", user_op_list);
 
 
-                                var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
+                                //var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
                                 console.log('추가된 메뉴', before_list[before_list.length - 1][0]);
                                 console.log('메뉴 가격', before_list[before_list.length - 1][1]);
@@ -3262,6 +3286,9 @@
                                     total_price += price_list[i];
                                 }
                                 total_real.innerHTML = total_price + ' 원';
+
+                                scroll_tb.scrollTop = scroll_tb.scrollHeight;
+                                var audio3 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
 
                                 txt.innerHTML = '"결제" / "추가할 메뉴"를 말씀해주세요❗';
@@ -4247,7 +4274,7 @@
             console.log("사용자가 추가한 옵션 : ", user_op_list);
 
 
-            var audio4 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
+            //var audio4 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
 
             console.log('추가된 메뉴', before_list[before_list.length - 1][0]);
             console.log('메뉴 가격', before_list[before_list.length - 1][1]);
@@ -4605,6 +4632,10 @@
                 total_price += price_list[i];
             }
             total_real.innerHTML = total_price + ' 원';
+
+            scroll_tb.scrollTop = scroll_tb.scrollHeight;
+            var audio4 = await tts(before_list[before_list.length - 1][0]/* menu_list[menu_list.length - 1] */ + "\n메뉴를 선택하셨습니다!");
+
 
             menu_cnt += 1;
 

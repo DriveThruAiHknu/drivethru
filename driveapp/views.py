@@ -402,12 +402,14 @@ print(prod_list[0])
 from drive_restapi.models import receipt, item
 receipts = receipt.objects.all() #receipt 데이터 가져오기
 items = item.objects.all()
+reque_post = False
 
 
 def member_order(request):
     #전역변수 사용
     global today_user_id
     global member_id
+    global reque_post
 
     context = {
         'today_user_id':today_user_id,
@@ -538,20 +540,19 @@ def member_order(request):
     print("최다 주문 내역:", max_prod_1, max_prod_2, max_prod_3, max_prod_4)
     "나온 거 없으면 에러 어떻게 해결할 지도 생각하기"
 
-
-
     #POST 전송이 들어오면 영수증 등록
     if request.method == 'POST':
         print("\n*************************************POST들어옴****************************************\n", request.POST)
         
         #1. receipt 영수증 form의 post인 경우
         if 'receiptPrice' in request.POST:
-            print("\n1. receipt 요청\n", request.POST)
+            print("\n\n\n1. receipt 요청\n\n\n", request.POST)
+            receipts = receipt.objects.all() #receipt 영수증 데이터 db에서
             #form에서 name에 해당하는 값 가져오기
             todayUserId = request.POST['todayUserId']  #ㅅㅂ 이거 차번호 말고 차 아이디가 들어가고 있는거지?
             memberId = request.POST['memberId']
             receiptPrice = request.POST['receiptPrice']
-            receiptTodayId = request.POST['receiptTodayId']
+            receiptTodayId = int(receipts.values().last()['receipt_today_id'])+1
 
             url = 'http://localhost:8000/api/receipt'
             #url = 'http://3.37.186.91:8000/api/receipt'
@@ -559,10 +560,13 @@ def member_order(request):
             response = requests.post(url, data=data)
             #messages.info(request, response.text) #-> 잘 들어갔는지 확인할 때 html 하단에 보면 나옴
             print(response.text);
+            reque_post = True
 
         #2. item 아이템 form의 post인 경우
-        elif 'itemPrice' in request.POST: #!!!!!!!elif로 변경
-            print("\n2. item 요청\n", request.POST)
+        elif ('itemPrice' in request.POST and reque_post == True): #!!!!!!!elif로 변경
+            
+            print("\n\n\n\n\n",reque_post,"\n================================================================")
+            print("\n\n\n2. item 요청\n\n\n", request.POST)
             receipts = receipt.objects.all() #receipt 영수증 데이터 db에서
             itemQuantity = request.POST['itemQuantity']
             itemSize = request.POST['itemSize']
@@ -668,7 +672,10 @@ def user_end(request):
     context = {
         'a':''
     }
-    return render(request, 'client/user_end.html', context)\
+
+    receipts = receipt.objects.all()
+    receipt_today_id = receipts.values().last()
+    return render(request, 'client/user_end.html', {'receipt_last':receipt_today_id})
 
 
 
